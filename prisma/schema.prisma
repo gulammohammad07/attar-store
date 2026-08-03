@@ -4,16 +4,67 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Brand {
+  id       String  @id @default(cuid())
+  name     String
+  slug     String  @unique
+  logoUrl  String?
+  isActive Boolean @default(true)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  price       Float
-  description String
-  imageUrl    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id String @id @default(cuid())
+
+  name String
+  slug String @unique
+
+  description String?
+
+  sku String? @unique
+
+  price     Float
+  salePrice Float?
+
+  stock Int @default(0)
+
+  imageUrl String
+  gallery  String[]
+
+  volume String
+
+  featured   Boolean @default(false)
+  bestSeller Boolean @default(false)
+  newArrival Boolean @default(false)
+
+  isActive Boolean @default(true)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  brandId String
+  brand   Brand  @relation(fields: [brandId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
