@@ -22,3 +22,33 @@ export async function getProducts() {
     },
   });
 }
+
+export async function getProductById(id: string) {
+  return prisma.product.findUnique({
+    where: { id },
+    include: {
+      category: true,
+      brand: true,
+    },
+  });
+}
+
+export async function updateProduct(
+  id: string,
+  data: Prisma.ProductUpdateInput,
+) {
+  return prisma.product.update({
+    where: { id },
+    data,
+    include: {
+      category: true,
+      brand: true,
+    },
+  });
+}
+
+export async function deleteProduct(id: string) {
+  return prisma.product.delete({
+    where: { id },
+  });
+}

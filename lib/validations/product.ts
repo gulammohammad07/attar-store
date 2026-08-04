@@ -11,4 +11,11 @@ export const productSchema = z.object({
   stock: z.coerce.number(),
   volume: z.string(),
   description: z.string().optional(),
+  notes: z.array(z.string()).optional(),
+  imageUrl: z
+    .string()
+    .url("Please upload a valid product image.")
+    .optional()
+    .or(z.literal("")),
+  imagePublicId: z.string().optional(),
 });
