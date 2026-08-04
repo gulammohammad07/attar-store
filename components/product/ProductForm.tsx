@@ -1,6 +1,10 @@
 "use client";
 
-import { createProductAction } from "@/lib/actions/product.actions";
+import { useActionState } from "react";
+import {
+  createProductAction,
+  type CreateProductState,
+} from "@/lib/actions/product.actions";
 
 interface ProductFormProps {
   categories: {
@@ -14,13 +18,32 @@ interface ProductFormProps {
   }[];
 }
 
+const initialState: CreateProductState = {
+  success: false,
+};
+
 export default function ProductForm({ categories, brands }: ProductFormProps) {
+  const [state, formAction, pending] = useActionState(
+    createProductAction,
+    initialState,
+  );
+
   return (
     <form
-      action={createProductAction}
+      action={formAction}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
       <h2 className="mb-6 text-2xl font-semibold">Add Product</h2>
+
+      {state.message && (
+        <p
+          className={`mb-4 text-sm ${
+            state.success ? "text-green-600" : "text-red-600"
+          }`}
+        >
+          {state.message}
+        </p>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* Product Name */}
@@ -32,6 +55,10 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             className="w-full rounded-lg border p-3"
             placeholder="Oud Royal"
           />
+
+          {state.errors?.name && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.name[0]}</p>
+          )}
         </div>
 
         {/* Slug */}
@@ -43,6 +70,10 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             className="w-full rounded-lg border p-3"
             placeholder="oud-royal"
           />
+
+          {state.errors?.slug && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.slug[0]}</p>
+          )}
         </div>
 
         {/* SKU */}
@@ -54,6 +85,10 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             className="w-full rounded-lg border p-3"
             placeholder="SKU001"
           />
+
+          {state.errors?.sku && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.sku[0]}</p>
+          )}
         </div>
 
         {/* Category */}
@@ -69,6 +104,12 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
               </option>
             ))}
           </select>
+
+          {state.errors?.categoryId && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.categoryId[0]}
+            </p>
+          )}
         </div>
 
         {/* Brand */}
@@ -84,6 +125,12 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
               </option>
             ))}
           </select>
+
+          {state.errors?.brandId && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.brandId[0]}
+            </p>
+          )}
         </div>
 
         {/* Price */}
@@ -93,8 +140,13 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
           <input
             name="price"
             type="number"
+            step="0.01"
             className="w-full rounded-lg border p-3"
           />
+
+          {state.errors?.price && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.price[0]}</p>
+          )}
         </div>
 
         {/* Sale Price */}
@@ -104,8 +156,15 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
           <input
             name="salePrice"
             type="number"
+            step="0.01"
             className="w-full rounded-lg border p-3"
           />
+
+          {state.errors?.salePrice && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.salePrice[0]}
+            </p>
+          )}
         </div>
 
         {/* Stock */}
@@ -117,6 +176,10 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             type="number"
             className="w-full rounded-lg border p-3"
           />
+
+          {state.errors?.stock && (
+            <p className="mt-1 text-sm text-red-600">{state.errors.stock[0]}</p>
+          )}
         </div>
 
         {/* Volume */}
@@ -132,6 +195,12 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             <option value="50ml">50ml</option>
             <option value="100ml">100ml</option>
           </select>
+
+          {state.errors?.volume && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.volume[0]}
+            </p>
+          )}
         </div>
       </div>
 
@@ -144,14 +213,21 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
           rows={5}
           className="w-full rounded-lg border p-3"
         />
+
+        {state.errors?.description && (
+          <p className="mt-1 text-sm text-red-600">
+            {state.errors.description[0]}
+          </p>
+        )}
       </div>
 
       {/* Save Button */}
       <button
         type="submit"
-        className="mt-6 rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800"
+        disabled={pending}
+        className="mt-6 rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800 disabled:opacity-50"
       >
-        Save Product
+        {pending ? "Saving..." : "Save Product"}
       </button>
     </form>
   );

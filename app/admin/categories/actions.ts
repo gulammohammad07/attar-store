@@ -4,8 +4,16 @@ import { prisma } from "@/lib/prisma";
 import { categorySchema } from "@/lib/validations/category";
 import { revalidatePath } from "next/cache";
 
-console.log(Object.keys(prisma));
-export async function createCategory(formData: FormData) {
+export type CreateCategoryState = {
+  success: boolean;
+  message?: string;
+  errors?: Record<string, string[] | undefined>;
+};
+
+export async function createCategory(
+  prevState: CreateCategoryState,
+  formData: FormData,
+): Promise<CreateCategoryState> {
   const values = {
     name: formData.get("name")?.toString() ?? "",
     slug: formData.get("slug")?.toString() ?? "",
@@ -43,5 +51,4 @@ export async function createCategory(formData: FormData) {
     success: true,
     message: "Category created successfully.",
   };
-
 }

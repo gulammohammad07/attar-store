@@ -1,7 +1,7 @@
 interface Product {
   id: string;
   name: string;
-  sku: string;
+  sku: string | null;
   price: number;
   stock: number;
   volume: string;

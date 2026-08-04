@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/prisma";
+import RecentOrders from "@/components/dashboard/RecentOrders";
+import LowStockProducts from "@/components/dashboard/LowStockProducts";
 import StatsCard from "@/components/dashboard/StatsCard";
 
 import { Package, FolderTree, ShoppingBag, ShoppingCart } from "lucide-react";
@@ -19,7 +21,7 @@ export default async function DashboardPage() {
         <h1 className="text-4xl font-bold">Dashboard</h1>
 
         <p className="text-muted-foreground mt-2">
-          Welcome back 👋 Here's what's happening today.
+          Welcome back 👋 Here&apos;s what&apos;s happening today.
         </p>
       </div>
 

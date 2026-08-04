@@ -7,7 +7,6 @@ export async function createProduct(data: Prisma.ProductCreateInput) {
     include: {
       category: true,
       brand: true,
-      images: true,
     },
   });
 }
@@ -17,7 +16,6 @@ export async function getProducts() {
     include: {
       category: true,
       brand: true,
-      images: true,
     },
     orderBy: {
       createdAt: "desc",

@@ -4,7 +4,16 @@ import { revalidatePath } from "next/cache";
 import { createProduct } from "@/lib/services/product.service";
 import { productSchema } from "@/lib/validations/product";
 
-export async function createProductAction(formData: FormData) {
+export type CreateProductState = {
+  success: boolean;
+  message?: string;
+  errors?: Record<string, string[] | undefined>;
+};
+
+export async function createProductAction(
+  prevState: CreateProductState,
+  formData: FormData,
+): Promise<CreateProductState> {
   const values = {
     name: formData.get("name")?.toString() ?? "",
     slug: formData.get("slug")?.toString() ?? "",
@@ -57,15 +66,8 @@ export async function createProductAction(formData: FormData) {
       },
     },
 
-    images: {
-      create: [
-        {
-          imageUrl: "/placeholder-product.png",
-          altText: result.data.name,
-          sortOrder: 0,
-        },
-      ],
-    },
+    gallery: ["/placeholder-product.png"],
+    imageUrl: "/placeholder-product.png",
   });
 
   revalidatePath("/admin/products");
