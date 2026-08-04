@@ -7,7 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Search, ShoppingBag, User, Menu, X } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useWishlist } from "@/lib/store/wishlist-context";
-import { categories, notes, occasions, products } from "@/lib/data/products";
+import { notes, occasions } from "@/lib/data/products";
+import type { Product } from "@/lib/data/products";
+import type { StorefrontCategory } from "@/lib/services/storefront-data";
 import SearchOverlay from "@/components/layout/SearchOverlay";
 
 const menuItems = [
@@ -18,7 +20,13 @@ const menuItems = [
   { label: "Our Story", href: "/#story" },
 ];
 
-export default function Navbar() {
+export default function Navbar({
+  categories,
+  featured,
+}: {
+  categories: StorefrontCategory[];
+  featured: Product[];
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -165,13 +173,21 @@ export default function Navbar() {
                           className="group"
                         >
                           <div className="relative h-24 overflow-hidden rounded-xl">
-                            <Image
-                              src={category.image}
-                              alt={category.name}
-                              fill
-                              sizes="120px"
-                              className="object-contain p-3 transition-transform duration-500 group-hover:scale-110"
-                            />
+                            {category.imageUrl ? (
+                              <Image
+                                src={category.imageUrl}
+                                alt={category.name}
+                                fill
+                                sizes="120px"
+                                className="object-contain p-3 transition-transform duration-500 group-hover:scale-110"
+                              />
+                            ) : (
+                              <div className="flex h-full items-center justify-center bg-white/5">
+                                <span className="font-display text-4xl text-[#f0ebe2]/25">
+                                  {category.name.charAt(0)}
+                                </span>
+                              </div>
+                            )}
                             <div className="absolute inset-0 bg-black/10" />
                           </div>
                           <p className="mt-2 text-sm font-medium text-[#f0ebe2] group-hover:text-gold-light">
@@ -228,8 +244,7 @@ export default function Navbar() {
                       Featured
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      {products
-                        .filter((p) => p.featured)
+                      {featured
                         .slice(0, 2)
                         .map((product) => (
                           <Link

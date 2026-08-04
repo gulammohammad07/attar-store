@@ -12,7 +12,13 @@ import {
 import { useRef } from "react";
 import LuxuryParticles from "@/components/landing/LuxuryParticles";
 
-export default function Hero() {
+type HeroBanner = {
+  title: string | null;
+  subtitle: string | null;
+  imageUrl: string;
+};
+
+export default function Hero({ banner }: { banner?: HeroBanner }) {
   const ref = useRef<HTMLElement>(null);
 
   const mx = useMotionValue(0);
@@ -51,7 +57,11 @@ export default function Hero() {
       {/* Content */}
       <motion.div
         style={{ y: contentY, opacity }}
-        className="relative z-10 mx-auto grid w-full max-w-7xl gap-12 px-6 py-24 lg:grid-cols-2 lg:items-center lg:py-0"
+        className={`relative z-10 mx-auto grid w-full max-w-7xl gap-12 px-6 py-24 lg:items-center lg:py-0 ${
+          banner?.imageUrl
+            ? "lg:grid-cols-2"
+            : "max-w-4xl lg:grid-cols-1"
+        }`}
       >
         {/* Copy */}
         <div className="text-center lg:text-left">
@@ -61,7 +71,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-[11px] font-semibold tracking-[0.4em] text-gold uppercase"
           >
-            The Art of Oriental Fragrance
+            {banner?.subtitle ?? "The Art of Oriental Fragrance"}
           </motion.p>
 
           <motion.h1
@@ -133,50 +143,52 @@ export default function Hero() {
         </div>
 
         {/* 3D Bottle */}
-        <motion.div
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-          className="relative mx-auto w-full max-w-md lg:max-w-none"
-        >
+        {banner?.imageUrl && (
           <motion.div
-            animate={{ y: [0, -18, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="relative"
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            className="relative mx-auto w-full max-w-md lg:max-w-none"
           >
-            {/* Halo */}
-            <div className="absolute inset-0 scale-75 rounded-full bg-gold/15 blur-3xl" />
-
             <motion.div
-              style={{ y: imageY }}
-              className="relative mx-auto aspect-square max-h-[540px] w-full"
+              animate={{ y: [0, -18, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="relative"
             >
-              <Image
-                src="/images/hero/hero-attar.png"
-                alt="Signature Attar bottle"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-contain drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)]"
-              />
+              {/* Halo */}
+              <div className="absolute inset-0 scale-75 rounded-full bg-gold/15 blur-3xl" />
+
+              <motion.div
+                style={{ y: imageY }}
+                className="relative mx-auto aspect-square max-h-[540px] w-full"
+              >
+                <Image
+                  src={banner.imageUrl}
+                  alt={banner.title ?? "Signature Attar bottle"}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-contain drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)]"
+                />
+              </motion.div>
+
+              {/* Floating accents */}
+              <motion.span
+                animate={{ y: [0, -12, 0], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+                className="absolute left-4 top-8 rounded-full border border-gold/40 px-4 py-1.5 text-[10px] tracking-[0.2em] text-gold uppercase backdrop-blur"
+              >
+                Pure Oud
+              </motion.span>
+
+              <motion.span
+                animate={{ y: [0, -14, 0], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 6, repeat: Infinity, delay: 2 }}
+                className="absolute bottom-16 right-2 rounded-full border border-gold/40 px-4 py-1.5 text-[10px] tracking-[0.2em] text-gold uppercase backdrop-blur"
+              >
+                Hand-Poured
+              </motion.span>
             </motion.div>
-
-            {/* Floating accents */}
-            <motion.span
-              animate={{ y: [0, -12, 0], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-              className="absolute left-4 top-8 rounded-full border border-gold/40 px-4 py-1.5 text-[10px] tracking-[0.2em] text-gold uppercase backdrop-blur"
-            >
-              Pure Oud
-            </motion.span>
-
-            <motion.span
-              animate={{ y: [0, -14, 0], opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 6, repeat: Infinity, delay: 2 }}
-              className="absolute bottom-16 right-2 rounded-full border border-gold/40 px-4 py-1.5 text-[10px] tracking-[0.2em] text-gold uppercase backdrop-blur"
-            >
-              Hand-Poured
-            </motion.span>
           </motion.div>
-        </motion.div>
+        )}
       </motion.div>
 
       {/* Scroll indicator */}

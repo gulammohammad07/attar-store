@@ -16,7 +16,6 @@ import {
   Zap,
 } from "lucide-react";
 import type { Product } from "@/lib/data/products";
-import { products } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
@@ -31,9 +30,11 @@ const tabs = ["Description", "Fragrance Notes", "Reviews", "Shipping"] as const;
 export default function ProductDetails({
   product,
   related,
+  allProducts,
 }: {
   product: Product;
   related: Product[];
+  allProducts: Product[];
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -61,13 +62,13 @@ export default function ProductDetails({
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setRecentlyViewed(
         list
-          .map((id: string) => products.find((p) => p.id === id))
+          .map((id: string) => allProducts.find((p) => p.id === id))
           .filter(Boolean) as Product[],
       );
     } catch {
       // ignore
     }
-  }, [product.id]);
+  }, [product.id, allProducts]);
 
   const share = async () => {
     const url = window.location.href;

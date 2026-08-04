@@ -9,6 +9,7 @@ import {
   FolderTree,
   Settings,
   Store,
+  Image as ImageIcon,
 } from "lucide-react";
 
 const menuItems = [
@@ -26,6 +27,11 @@ const menuItems = [
     title: "Products",
     href: "/admin/products",
     icon: Package,
+  },
+  {
+    title: "Banners",
+    href: "/admin/banners",
+    icon: ImageIcon,
   },
   {
     title: "Orders",

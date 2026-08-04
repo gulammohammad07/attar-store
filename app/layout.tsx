@@ -4,6 +4,63 @@ import "./globals.css";
 import { Providers } from "@/lib/store/providers";
 import { Toaster } from "@/components/ui/sonner";
 
+const EXTENSION_HYDRATION_FIX = `
+(function () {
+  var STRIP_ATTRS = ["fdprocessedid"];
+  var FORM_TAGS = { FORM: true, INPUT: true, SELECT: true, TEXTAREA: true, BUTTON: true };
+
+  function cleanNode(node) {
+    if (!node || node.nodeType !== 1) return;
+    for (var i = 0; i < STRIP_ATTRS.length; i++) {
+      if (node.hasAttribute(STRIP_ATTRS[i])) {
+        node.removeAttribute(STRIP_ATTRS[i]);
+      }
+    }
+    if (FORM_TAGS[node.nodeName] && node.style && node.style.position === "relative") {
+      node.style.removeProperty("position");
+    }
+  }
+
+  function cleanTree(root) {
+    if (!root) return;
+    cleanNode(root);
+    if (root.querySelectorAll) {
+      var nodes = root.querySelectorAll("*");
+      for (var i = 0; i < nodes.length; i++) cleanNode(nodes[i]);
+    }
+  }
+
+  function start() {
+    cleanTree(document.body || document.documentElement);
+    if (document.documentElement) {
+      new MutationObserver(function (mutations) {
+        for (var i = 0; i < mutations.length; i++) {
+          var mutation = mutations[i];
+          if (mutation.type === "attributes") {
+            cleanNode(mutation.target);
+          } else if (mutation.type === "childList") {
+            for (var j = 0; j < mutation.addedNodes.length; j++) {
+              cleanTree(mutation.addedNodes[j]);
+            }
+          }
+        }
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: STRIP_ATTRS.concat(["style"]),
+        childList: true,
+        subtree: true,
+      });
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
+  }
+})();
+`;
+
 const inter = Inter({
   variable: "--font-sans",
   subsets: ["latin"],
@@ -50,6 +107,12 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${cormorant.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          id="extension-hydration-fix"
+          dangerouslySetInnerHTML={{ __html: EXTENSION_HYDRATION_FIX }}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-[#F7F3EC] text-[#1C1712]">
         <Providers>
           <main className="flex-1">{children}</main>

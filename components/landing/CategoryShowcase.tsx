@@ -3,17 +3,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { categories } from "@/lib/data/products";
+import type { StorefrontCategory } from "@/lib/services/storefront-data";
 import SectionHeading from "@/components/landing/SectionHeading";
 
-export default function CategoryShowcase() {
+export default function CategoryShowcase({
+  categories,
+}: {
+  categories: StorefrontCategory[];
+}) {
   return (
     <section className="bg-[#F7F3EC] py-24">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="The Collection"
           title="Shop by Category"
-          description="Six olfactory families, each a world of its own. Find the note that speaks to you."
+          description="Our olfactory families, each a world of its own. Find the note that speaks to you."
         />
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6 lg:gap-6">
@@ -30,13 +34,21 @@ export default function CategoryShowcase() {
                 className="group block"
               >
                 <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-[#efe8dc]">
-                  <Image
-                    src={category.image}
-                    alt={category.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 16vw"
-                    className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-110"
-                  />
+                  {category.imageUrl ? (
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.name}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 16vw"
+                      className="object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="flex h-full items-center justify-center">
+                      <span className="font-display text-5xl font-medium text-[#1c1712]/20 transition-colors duration-500 group-hover:text-gold/40">
+                        {category.name.charAt(0)}
+                      </span>
+                    </div>
+                  )}
 
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
@@ -51,9 +63,11 @@ export default function CategoryShowcase() {
                   <h3 className="font-display text-xl font-medium text-[#1c1712] transition-colors group-hover:text-gold">
                     {category.name}
                   </h3>
-                  <p className="mt-0.5 text-[11px] tracking-wide text-[#1c1712]/40">
-                    {category.tagline}
-                  </p>
+                  {category.tagline && (
+                    <p className="mt-0.5 text-[11px] tracking-wide text-[#1c1712]/40">
+                      {category.tagline}
+                    </p>
+                  )}
                 </div>
               </Link>
             </motion.div>

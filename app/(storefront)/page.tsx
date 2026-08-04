@@ -6,19 +6,33 @@ import BrandStory from "@/components/landing/BrandStory";
 import NewArrivals from "@/components/landing/NewArrivals";
 import Testimonials from "@/components/landing/Testimonials";
 import Newsletter from "@/components/landing/Newsletter";
-import InstagramGallery from "@/components/landing/InstagramGallery";
+import {
+  getStorefrontBanners,
+  getStorefrontCategories,
+  getStorefrontProducts,
+} from "@/lib/services/storefront-data";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const [products, categories, banners] = await Promise.all([
+    getStorefrontProducts(),
+    getStorefrontCategories(),
+    getStorefrontBanners(),
+  ]);
+
+  const heroBanner = banners.find((b) => b.section === "hero");
+  const storyBanner = banners.find((b) => b.section === "story");
+
   return (
     <>
-      <Hero />
+      <Hero banner={heroBanner} />
       <Marquee />
-      <CategoryShowcase />
-      <BestSellers />
-      <BrandStory />
-      <NewArrivals />
+      <CategoryShowcase categories={categories} />
+      <BestSellers products={products} />
+      <BrandStory banner={storyBanner} />
+      <NewArrivals products={products} />
       <Testimonials />
-      <InstagramGallery />
       <Newsletter />
     </>
   );

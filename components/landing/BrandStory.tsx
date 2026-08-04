@@ -22,45 +22,55 @@ const pillars = [
   },
 ];
 
-export default function BrandStory() {
+export default function BrandStory({
+  banner,
+}: {
+  banner?: { title: string | null; imageUrl: string };
+}) {
   return (
     <section id="story" className="overflow-hidden bg-charcoal py-24 text-[#f0ebe2]">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid items-center gap-16 lg:grid-cols-2">
+        <div
+          className={`grid items-center gap-16 ${
+            banner?.imageUrl ? "lg:grid-cols-2" : "lg:grid-cols-1 lg:max-w-3xl lg:mx-auto"
+          }`}
+        >
           {/* Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-            className="relative"
-          >
-            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
-              <Image
-                src="/images/products/oud.png"
-                alt="The art of attar making"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover transition-transform duration-700 hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            </div>
-
+          {banner?.imageUrl && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-gold p-6 shadow-2xl sm:block"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7 }}
+              className="relative"
             >
-              <p className="font-display text-4xl font-semibold text-white">
-                8+ Yrs
-              </p>
-              <p className="mt-1 text-xs tracking-[0.2em] text-white/80 uppercase">
-                of Craft
-              </p>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
+                <Image
+                  src={banner.imageUrl}
+                  alt={banner.title ?? "The art of attar making"}
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-gold p-6 shadow-2xl sm:block"
+              >
+                <p className="font-display text-4xl font-semibold text-white">
+                  8+ Yrs
+                </p>
+                <p className="mt-1 text-xs tracking-[0.2em] text-white/80 uppercase">
+                  of Craft
+                </p>
+              </motion.div>
             </motion.div>
-          </motion.div>
+          )}
 
           {/* Copy */}
           <div>

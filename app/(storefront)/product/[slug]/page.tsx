@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   getStorefrontProductBySlug,
-  getStorefrontRelated,
+  getStorefrontProducts,
 } from "@/lib/services/storefront-data";
 import ProductDetails from "@/components/product/ProductDetails";
 
@@ -35,7 +35,22 @@ export default async function ProductPage({
   const product = await getStorefrontProductBySlug(params.slug);
   if (!product) notFound();
 
-  const related = await getStorefrontRelated(product);
+  const allProducts = await getStorefrontProducts();
 
-  return <ProductDetails product={product} related={related} />;
+  const related = allProducts
+    .filter(
+      (p) =>
+        p.id !== product.id &&
+        (p.category.toLowerCase() === product.category.toLowerCase() ||
+          p.occasions.some((o) => product.occasions.includes(o))),
+    )
+    .slice(0, 4);
+
+  return (
+    <ProductDetails
+      product={product}
+      related={related}
+      allProducts={allProducts}
+    />
+  );
 }

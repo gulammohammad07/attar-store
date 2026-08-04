@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { products } from "@/lib/data/products";
+import type { Product } from "@/lib/data/products";
 import ProductCard from "@/components/product/ProductCard";
 import SectionHeading from "@/components/landing/SectionHeading";
 
-export default function NewArrivals() {
-  const arrivals = products.filter(
-    (p) => p.badge === "New Arrival" || p.id >= "p09",
-  );
+export default function NewArrivals({ products }: { products: Product[] }) {
+  const arrivals = products.filter((p) => p.badge === "New Arrival");
 
   return (
     <section className="bg-[#efe8dc] py-24">

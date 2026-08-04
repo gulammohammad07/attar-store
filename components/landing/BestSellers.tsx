@@ -1,8 +1,8 @@
-import { products } from "@/lib/data/products";
+import type { Product } from "@/lib/data/products";
 import ProductCard from "@/components/product/ProductCard";
 import SectionHeading from "@/components/landing/SectionHeading";
 
-export default function BestSellers() {
+export default function BestSellers({ products }: { products: Product[] }) {
   const bestSellers = products.filter(
     (p) => p.badge === "Bestseller" || p.rating >= 4.8,
   );

@@ -10,8 +10,6 @@ import {
 import { productSchema } from "@/lib/validations/product";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
 
-const PLACEHOLDER_IMAGE = "/placeholder-product.png";
-
 export type ProductActionState = {
   success: boolean;
   message?: string;
@@ -56,8 +54,15 @@ export async function createProductAction(
     };
   }
 
-  const imageUrl = result.data.imageUrl || PLACEHOLDER_IMAGE;
+  const imageUrl = result.data.imageUrl;
   const imagePublicId = result.data.imagePublicId || null;
+
+  if (!imageUrl) {
+    return {
+      success: false,
+      errors: { imageUrl: ["Please upload a product image."] },
+    };
+  }
 
   try {
     await createProduct({
@@ -128,9 +133,15 @@ export async function updateProductAction(
 
   const newImageUrl = result.data.imageUrl || null;
   const newImagePublicId = result.data.imagePublicId || null;
-  const imageChanged =
-    newImageUrl !== null &&
-    newImageUrl !== (existing.imageUrl ?? PLACEHOLDER_IMAGE);
+
+  if (!newImageUrl) {
+    return {
+      success: false,
+      errors: { imageUrl: ["Please upload a product image."] },
+    };
+  }
+
+  const imageChanged = newImageUrl !== existing.imageUrl;
 
   try {
     await updateProduct(productId, {
@@ -143,9 +154,9 @@ export async function updateProductAction(
       stock: result.data.stock,
       volume: result.data.volume,
       notes: result.data.notes ?? [],
-      imageUrl: newImageUrl ?? PLACEHOLDER_IMAGE,
+      imageUrl: newImageUrl,
       imagePublicId: imageChanged ? newImagePublicId : existing.imagePublicId,
-      gallery: [newImageUrl ?? PLACEHOLDER_IMAGE],
+      gallery: [newImageUrl],
       category: {
         connect: {
           id: result.data.categoryId,

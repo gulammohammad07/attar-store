@@ -1,9 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import {
-  products as mockProducts,
-  type FragranceNote,
-  type Product,
-} from "@/lib/data/products";
+import type { FragranceNote, Product } from "@/lib/data/products";
 
 function toNote(name: string): FragranceNote {
   return { name, intensity: 70 };
@@ -41,7 +37,7 @@ function mapDbProduct(db: {
     name: db.name,
     slug: db.slug,
     brand: db.brand.name,
-    category: db.category.name as Product["category"],
+    category: db.category.name,
     notes: {
       top: noteNames.slice(0, 1).map(toNote),
       heart: noteNames.slice(1, 3).map(toNote),
@@ -63,6 +59,54 @@ function mapDbProduct(db: {
   };
 }
 
+export type StorefrontCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  imageUrl: string | null;
+  tagline: string | null;
+};
+
+export type StorefrontBanner = {
+  id: string;
+  section: string;
+  title: string | null;
+  subtitle: string | null;
+  imageUrl: string;
+  linkUrl: string | null;
+};
+
+export async function getStorefrontCategories(): Promise<StorefrontCategory[]> {
+  const dbCategories = await prisma.category.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return dbCategories.map((category) => ({
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    imageUrl: category.imageUrl,
+    tagline: category.description,
+  }));
+}
+
+export async function getStorefrontBanners(): Promise<StorefrontBanner[]> {
+  const dbBanners = await prisma.banner.findMany({
+    where: { isActive: true },
+    orderBy: { createdAt: "asc" },
+  });
+
+  return dbBanners.map((banner) => ({
+    id: banner.id,
+    section: banner.section,
+    title: banner.title,
+    subtitle: banner.subtitle,
+    imageUrl: banner.imageUrl,
+    linkUrl: banner.linkUrl,
+  }));
+}
+
 export async function getStorefrontProducts(): Promise<Product[]> {
   const dbProducts = await prisma.product.findMany({
     where: { isActive: true },
@@ -75,10 +119,7 @@ export async function getStorefrontProducts(): Promise<Product[]> {
     },
   });
 
-  const dbSlugs = new Set(dbProducts.map((p) => p.slug));
-  const mocks = mockProducts.filter((p) => !dbSlugs.has(p.slug));
-
-  return [...dbProducts.map(mapDbProduct), ...mocks];
+  return dbProducts.map(mapDbProduct);
 }
 
 export async function getStorefrontProductBySlug(
@@ -94,7 +135,7 @@ export async function getStorefrontProductBySlug(
 
   if (dbProduct) return mapDbProduct(dbProduct);
 
-  return mockProducts.find((p) => p.slug === slug);
+  return undefined;
 }
 
 export async function getStorefrontRelated(
