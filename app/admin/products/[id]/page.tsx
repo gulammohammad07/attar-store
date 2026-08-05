@@ -7,11 +7,12 @@ export const dynamic = "force-dynamic";
 export default async function EditProductPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const [product, categories, brands] = await Promise.all([
     prisma.product.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         category: true,
         brand: true,

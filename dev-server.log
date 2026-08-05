@@ -136,3 +136,94 @@ Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and mus
   18 |
   19 |   return {
  GET /product/aurum 200 in 612ms (next.js: 66ms, application-code: 546ms)
+ GET / 200 in 752ms (next.js: 8ms, application-code: 744ms)
+ GET / 200 in 501ms (next.js: 6ms, application-code: 496ms)
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at ProductPage (app\(storefront)\product\[slug]\page.tsx:35:59)
+  33 |   params: { slug: string };
+  34 | }) {
+> 35 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  36 |   if (!product) notFound();
+  37 |
+  38 |   const allProducts = await getStorefrontProducts();
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Module.generateMetadata (app\(storefront)\product\[slug]\page.tsx:16:59)
+  14 |   params: { slug: string };
+  15 | }): Promise<Metadata> {
+> 16 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  17 |   if (!product) return { title: "Product not found" };
+  18 |
+  19 |   return {
+ GET /product/aurum 200 in 790ms (next.js: 38ms, application-code: 752ms)
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at ProductPage (app\(storefront)\product\[slug]\page.tsx:35:59)
+  33 |   params: { slug: string };
+  34 | }) {
+> 35 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  36 |   if (!product) notFound();
+  37 |
+  38 |   const allProducts = await getStorefrontProducts();
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Module.generateMetadata (app\(storefront)\product\[slug]\page.tsx:16:59)
+  14 |   params: { slug: string };
+  15 | }): Promise<Metadata> {
+> 16 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  17 |   if (!product) return { title: "Product not found" };
+  18 |
+  19 |   return {
+ GET /product/kool 200 in 463ms (next.js: 9ms, application-code: 454ms)
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at ProductPage (app\(storefront)\product\[slug]\page.tsx:35:59)
+  33 |   params: { slug: string };
+  34 | }) {
+> 35 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  36 |   if (!product) notFound();
+  37 |
+  38 |   const allProducts = await getStorefrontProducts();
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Module.generateMetadata (app\(storefront)\product\[slug]\page.tsx:16:59)
+  14 |   params: { slug: string };
+  15 | }): Promise<Metadata> {
+> 16 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  17 |   if (!product) return { title: "Product not found" };
+  18 |
+  19 |   return {
+ GET /product/aurum 200 in 671ms (next.js: 40ms, application-code: 631ms)
+✓ Compiled in 311ms
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at ProductPage (app\(storefront)\product\[slug]\page.tsx:36:59)
+  34 |   params: { slug: string };
+  35 | }) {
+> 36 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  37 |   if (!product) notFound();
+  38 |
+  39 |   const allProducts = await getStorefrontProducts();
+Error: Route "/product/[slug]" used `params.slug`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at ProductPage (app\(storefront)\product\[slug]\page.tsx:36:59)
+  34 |   params: { slug: string };
+  35 | }) {
+> 36 |   const product = await getStorefrontProductBySlug(params.slug);
+     |                                                           ^
+  37 |   if (!product) notFound();
+  38 |
+  39 |   const allProducts = await getStorefrontProducts();
+ GET /product/aurum 200 in 2.0s (next.js: 511ms, application-code: 1534ms)
+ GET /admin/products 200 in 1282ms (next.js: 356ms, proxy.ts: 238ms, application-code: 688ms)
+ GET /admin/products 200 in 500ms (next.js: 118ms, proxy.ts: 48ms, application-code: 334ms)
+ GET /product/aurum 200 in 1027ms (next.js: 23ms, application-code: 1004ms)
+✓ Compiled in 270ms
+ GET /admin/products 200 in 1985ms (next.js: 463ms, proxy.ts: 164ms, application-code: 1357ms)
+ GET /admin/products 200 in 1327ms (next.js: 658ms, proxy.ts: 23ms, application-code: 646ms)
+ GET /product/aurum 200 in 1308ms (next.js: 477ms, application-code: 831ms)
+ GET /product/aurum 200 in 264ms (next.js: 14ms, application-code: 250ms)
+ GET /product/aurum 200 in 1146ms (next.js: 44ms, application-code: 1102ms)
+ GET /product/kool 200 in 509ms (next.js: 49ms, application-code: 460ms)
+ GET / 200 in 379ms (next.js: 48ms, application-code: 331ms)
+ GET /product/royal-oud 200 in 431ms (next.js: 99ms, application-code: 332ms)

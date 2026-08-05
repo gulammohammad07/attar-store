@@ -11,9 +11,10 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const product = await getStorefrontProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getStorefrontProductBySlug(slug);
   if (!product) return { title: "Product not found" };
 
   return {
@@ -30,9 +31,10 @@ export async function generateMetadata({
 export default async function ProductPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const product = await getStorefrontProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getStorefrontProductBySlug(slug);
   if (!product) notFound();
 
   const allProducts = await getStorefrontProducts();
