@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import {
   motion,
   useMotionValue,
@@ -11,11 +10,7 @@ import {
 } from "framer-motion";
 import { useRef, useState } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
-
-const AttarBottleScene = dynamic(
-  () => import("@/components/three/AttarBottleScene"),
-  { ssr: false, loading: () => null },
-);
+import HeroVisual from "@/components/landing/HeroVisual";
 
 type HeroBanner = {
   title: string | null;
@@ -68,11 +63,6 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
         <div className="rays absolute -right-[25%] top-1/2 h-[160%] w-[90%] -translate-y-1/2 motion-reduce:animate-none" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_28%_38%,rgba(198,161,91,0.14),transparent_58%)]" />
         <div className="absolute -left-40 top-1/3 h-[460px] w-[460px] bg-[radial-gradient(circle,rgba(198,161,91,0.14),transparent_70%)]" />
-      </motion.div>
-
-      {/* 3D Scene */}
-      <motion.div style={{ y: sceneY }} className="absolute inset-0">
-        <AttarBottleScene />
       </motion.div>
 
       {/* Depth + readability overlays */}
@@ -179,12 +169,23 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           </motion.div>
         </div>
 
-        {/* Right column — floating labels over the bottle */}
+        {/* Right column — CSS bottle + floating labels */}
         <div className="relative hidden h-full min-h-[420px] lg:block">
+          <motion.div
+            style={{
+              y: sceneY,
+              rotateX: motionOk ? rotateX : 0,
+              rotateY: motionOk ? rotateY : 0,
+              transformStyle: "preserve-3d",
+            }}
+            className="h-full"
+          >
+            <HeroVisual motionOk={motionOk} />
+          </motion.div>
+
           <motion.span
             animate={motionOk ? { y: [0, -14, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-            style={{ rotateX, rotateY }}
             className="absolute right-[6%] top-[16%] flex items-center gap-2 rounded-full border border-gold/40 bg-[#0a0908]/80 px-5 py-2 text-[10px] tracking-[0.22em] text-gold uppercase"
           >
             <Sparkles size={12} /> Pure Oud
@@ -193,7 +194,6 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -16, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 6, repeat: Infinity, delay: 2 }}
-            style={{ rotateX, rotateY }}
             className="absolute bottom-[22%] right-[0%] flex items-center gap-2 rounded-full border border-gold/40 bg-[#0a0908]/80 px-5 py-2 text-[10px] tracking-[0.22em] text-gold uppercase"
           >
             <Sparkles size={12} /> Hand-Poured
@@ -202,7 +202,6 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -12, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5.5, repeat: Infinity, delay: 3 }}
-            style={{ rotateX, rotateY }}
             className="absolute right-[30%] top-[58%] flex items-center gap-2 rounded-full border border-gold/40 bg-[#0a0908]/80 px-5 py-2 text-[10px] tracking-[0.22em] text-gold uppercase"
           >
             <Sparkles size={12} /> Sun-Rested

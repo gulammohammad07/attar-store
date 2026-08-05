@@ -11,13 +11,14 @@ export default function SmoothScroll() {
 
     if (prefersReduced) return;
 
+    // Lenis virtual scroll is only beneficial on precise pointers (desktop).
+    // Coarse pointers (touch/mobile) keep buttery native scrolling.
     const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+    if (isCoarse) return;
 
     const lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
-      syncTouch: isCoarse,
-      touchMultiplier: 1.1,
       wheelMultiplier: 1,
       autoRaf: true,
     });
