@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Eye, Heart, ShoppingBag, Star } from "lucide-react";
+import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingBag, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
@@ -22,6 +22,22 @@ export default function ProductCard({
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
+
+  const images = product.gallery.length ? product.gallery : [product.image];
+  const hasMultiple = images.length > 1;
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setImgIndex((i) => (i - 1 + images.length) % images.length);
+  };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setImgIndex((i) => (i + 1) % images.length);
+  };
 
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
@@ -110,21 +126,75 @@ export default function ProductCard({
           </div>
 
           {/* Image */}
-          <Link
-            href={`/product/${product.slug}`}
-            className="block"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative h-72 w-full overflow-hidden bg-[#f8f5f0]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 300px"
-                className="object-contain p-8 transition-transform duration-700 ease-out group-hover:scale-110"
-              />
-            </div>
-          </Link>
+          <div className="relative h-72 w-full overflow-hidden bg-[#f8f5f0]">
+            <Link
+              href={`/product/${product.slug}`}
+              className="block h-full w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={imgIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={images[imgIndex]}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    className="object-contain p-8 transition-transform duration-700 ease-out group-hover:scale-110"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </Link>
+
+            {hasMultiple && (
+              <>
+                <button
+                  type="button"
+                  onClick={prevImage}
+                  aria-label="Previous image"
+                  className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#1c1712]"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={nextImage}
+                  aria-label="Next image"
+                  className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#1c1712]"
+                >
+                  <ChevronRight size={16} />
+                </button>
+
+                <div className="absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-1.5">
+                  {images.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setImgIndex(i);
+                      }}
+                      aria-label={`View image ${i + 1}`}
+                      className={cn(
+                        "h-1.5 rounded-full transition-all duration-300",
+                        i === imgIndex
+                          ? "w-4 bg-gold"
+                          : "w-1.5 bg-white/80 hover:bg-gold/70",
+                      )}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Info */}
           <div className="p-5">
@@ -180,6 +250,7 @@ export default function ProductCard({
       </motion.div>
 
       <QuickViewModal
+        key={`${product.id}-${quickViewOpen}`}
         product={product}
         open={quickViewOpen}
         onClose={() => setQuickViewOpen(false)}

@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import HeroVisual from "@/components/landing/HeroVisual";
 
@@ -18,15 +18,23 @@ type HeroBanner = {
   imageUrl: string;
 };
 
+function useMediaQuery(query: string): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+
 export default function Hero({ banner }: { banner?: HeroBanner }) {
   const ref = useRef<HTMLElement>(null);
-  const [motionOk, setMotionOk] = useState(false);
-
-  useEffect(() => {
-    const fine = window.matchMedia("(pointer: fine)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setMotionOk(fine && !reduced);
-  }, []);
+  const finePointer = useMediaQuery("(pointer: fine)");
+  const prefersReduced = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const motionOk = finePointer && !prefersReduced;
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);

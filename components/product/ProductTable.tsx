@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { ImageOff } from "lucide-react";
 import { deleteProductAction } from "@/lib/actions/product.actions";
 
 interface Product {
@@ -33,6 +35,28 @@ interface ProductTableProps {
 
 function formatDate(date: Date) {
   return date.toISOString().slice(0, 10);
+}
+
+function ProductImage({ src, alt }: { src: string; alt: string }) {
+  const [failed, setFailed] = useState(false);
+
+  if (failed) {
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <ImageOff size={16} className="text-gray-400" />
+      </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      className="h-full w-full object-contain"
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 export default function ProductTable({ products }: ProductTableProps) {
@@ -90,12 +114,7 @@ export default function ProductTable({ products }: ProductTableProps) {
                 <tr key={product.id} className="border-t hover:bg-gray-50">
                   <td className="p-4">
                     <div className="h-14 w-14 overflow-hidden rounded-lg border bg-gray-50">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="h-full w-full object-contain"
-                      />
+                      <ProductImage src={product.imageUrl} alt={product.name} />
                     </div>
                   </td>
 

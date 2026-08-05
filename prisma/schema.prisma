@@ -108,6 +108,7 @@ model Product {
   categoryId  String
   featured    Boolean  @default(false)
   gallery     String[]
+  galleryPublicIds String[] @default([])
   isActive    Boolean  @default(true)
   newArrival  Boolean  @default(false)
   salePrice   Float?

@@ -45,6 +45,8 @@ export default async function EditProductPage({
           description: product.description,
           imageUrl: product.imageUrl,
           imagePublicId: product.imagePublicId,
+          gallery: product.gallery,
+          galleryPublicIds: product.galleryPublicIds,
           categoryId: product.categoryId,
           brandId: product.brandId,
         }}

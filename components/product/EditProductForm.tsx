@@ -9,6 +9,7 @@ import {
 import ImageUploader, {
   type ImageValue,
 } from "@/components/admin/ImageUploader";
+import GalleryUploader from "@/components/admin/GalleryUploader";
 
 const QUICK_NOTES = [
   "Oud",
@@ -36,6 +37,8 @@ export type EditableProduct = {
   description: string | null;
   imageUrl: string;
   imagePublicId: string | null;
+  gallery: string[];
+  galleryPublicIds: string[];
   categoryId: string;
   brandId: string;
 };
@@ -71,6 +74,12 @@ export default function EditProductForm({
     url: product.imageUrl,
     publicId: product.imagePublicId,
   });
+  const [gallery, setGallery] = useState<ImageValue[]>(
+    product.gallery.map((url, i) => ({
+      url,
+      publicId: product.galleryPublicIds[i] ?? null,
+    })),
+  );
 
   const toggleNote = (note: string) => {
     setNotes((prev) => {
@@ -332,6 +341,25 @@ export default function EditProductForm({
             {state.errors.imageUrl[0]}
           </p>
         )}
+      </div>
+
+      {/* Gallery Images */}
+      <div className="mt-6">
+        <GalleryUploader
+          value={gallery}
+          onChange={setGallery}
+          label="Gallery Images"
+        />
+        <input
+          type="hidden"
+          name="galleryUrls"
+          value={gallery.map((g) => g.url).join(",")}
+        />
+        <input
+          type="hidden"
+          name="galleryPublicIds"
+          value={gallery.map((g) => g.publicId ?? "").join(",")}
+        />
       </div>
 
       {/* Save Button */}

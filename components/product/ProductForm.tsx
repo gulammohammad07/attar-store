@@ -8,6 +8,7 @@ import {
 import ImageUploader, {
   type ImageValue,
 } from "@/components/admin/ImageUploader";
+import GalleryUploader from "@/components/admin/GalleryUploader";
 
 const QUICK_NOTES = [
   "Oud",
@@ -45,6 +46,7 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
   );
   const [notes, setNotes] = useState("");
   const [image, setImage] = useState<ImageValue>({ url: "", publicId: null });
+  const [gallery, setGallery] = useState<ImageValue[]>([]);
 
   const toggleNote = (note: string) => {
     setNotes((prev) => {
@@ -308,6 +310,21 @@ export default function ProductForm({ categories, brands }: ProductFormProps) {
             {state.errors.imageUrl[0]}
           </p>
         )}
+      </div>
+
+      {/* Gallery Images */}
+      <div className="mt-6">
+        <GalleryUploader value={gallery} onChange={setGallery} />
+        <input
+          type="hidden"
+          name="galleryUrls"
+          value={gallery.map((g) => g.url).join(",")}
+        />
+        <input
+          type="hidden"
+          name="galleryPublicIds"
+          value={gallery.map((g) => g.publicId ?? "").join(",")}
+        />
       </div>
 
       {/* Save Button */}

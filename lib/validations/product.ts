@@ -18,4 +18,6 @@ export const productSchema = z.object({
     .optional()
     .or(z.literal("")),
   imagePublicId: z.string().optional(),
+  galleryUrls: z.string().optional(),
+  galleryPublicIds: z.string().optional(),
 });

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { ZoomIn } from "lucide-react";
+import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { cn } from "@/lib/utils";
 
@@ -112,6 +112,34 @@ export default function ProductViewer({ product }: { product: Product }) {
             />
           </motion.div>
         </motion.div>
+
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActive((a) => (a - 1 + images.length) % images.length);
+              }}
+              aria-label="Previous image"
+              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#1c1712]"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActive((a) => (a + 1) % images.length);
+              }}
+              aria-label="Next image"
+              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#1c1712]"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </>
+        )}
 
         {/* Zoom hint */}
         <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/60 opacity-0 shadow backdrop-blur transition-opacity group-hover:opacity-100">

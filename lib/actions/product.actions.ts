@@ -37,6 +37,40 @@ function parseValues(formData: FormData) {
         .filter(Boolean) ?? [],
     imageUrl: (formData.get("imageUrl")?.toString() ?? "").trim(),
     imagePublicId: formData.get("imagePublicId")?.toString() ?? "",
+    galleryUrls: formData.get("galleryUrls")?.toString() ?? "",
+    galleryPublicIds: formData.get("galleryPublicIds")?.toString() ?? "",
+  };
+}
+
+function buildGallery(
+  imageUrl: string,
+  imagePublicId: string,
+  galleryUrls: string,
+  galleryPublicIds: string,
+): { gallery: string[]; galleryPublicIds: string[] } {
+  const pairs: { url: string; publicId: string }[] = [];
+  const add = (url: string, publicId: string) => {
+    const clean = url.trim();
+    if (!clean) return;
+    if (pairs.some((p) => p.url === clean)) return;
+    pairs.push({ url: clean, publicId: publicId.trim() });
+  };
+
+  if (imageUrl) add(imageUrl, imagePublicId);
+
+  const urls = galleryUrls
+    .split(",")
+    .map((u) => u.trim())
+    .filter(Boolean);
+  const publicIds = galleryPublicIds.split(",");
+
+  urls.forEach((url, index) => {
+    add(url, publicIds[index] ?? "");
+  });
+
+  return {
+    gallery: pairs.map((p) => p.url),
+    galleryPublicIds: pairs.map((p) => p.publicId).filter((p) => p),
   };
 }
 
@@ -64,6 +98,13 @@ export async function createProductAction(
     };
   }
 
+  const { gallery, galleryPublicIds } = buildGallery(
+    imageUrl,
+    imagePublicId ?? "",
+    result.data.galleryUrls ?? "",
+    result.data.galleryPublicIds ?? "",
+  );
+
   try {
     await createProduct({
       name: result.data.name,
@@ -77,7 +118,8 @@ export async function createProductAction(
       notes: result.data.notes ?? [],
       imageUrl,
       imagePublicId,
-      gallery: [imageUrl],
+      gallery,
+      galleryPublicIds,
       featured: false,
       bestSeller: false,
       newArrival: false,
@@ -94,8 +136,8 @@ export async function createProductAction(
       },
     });
   } catch {
-    if (imagePublicId) {
-      await deleteImageFromCloudinary(imagePublicId);
+    for (const publicId of galleryPublicIds) {
+      await deleteImageFromCloudinary(publicId);
     }
     return {
       success: false,
@@ -143,6 +185,18 @@ export async function updateProductAction(
 
   const imageChanged = newImageUrl !== existing.imageUrl;
 
+  const oldPublicIds = [
+    existing.imagePublicId,
+    ...existing.galleryPublicIds,
+  ].filter((id): id is string => Boolean(id));
+
+  const { gallery, galleryPublicIds } = buildGallery(
+    newImageUrl,
+    newImagePublicId ?? "",
+    result.data.galleryUrls ?? "",
+    result.data.galleryPublicIds ?? "",
+  );
+
   try {
     await updateProduct(productId, {
       name: result.data.name,
@@ -156,7 +210,8 @@ export async function updateProductAction(
       notes: result.data.notes ?? [],
       imageUrl: newImageUrl,
       imagePublicId: imageChanged ? newImagePublicId : existing.imagePublicId,
-      gallery: [newImageUrl],
+      gallery,
+      galleryPublicIds,
       category: {
         connect: {
           id: result.data.categoryId,
@@ -169,16 +224,17 @@ export async function updateProductAction(
       },
     });
 
-    if (
-      imageChanged &&
-      existing.imagePublicId &&
-      existing.imagePublicId !== newImagePublicId
-    ) {
-      await deleteImageFromCloudinary(existing.imagePublicId);
+    const removedPublicIds = oldPublicIds.filter(
+      (id) => !galleryPublicIds.includes(id),
+    );
+    for (const publicId of removedPublicIds) {
+      await deleteImageFromCloudinary(publicId);
     }
   } catch {
-    if (imageChanged && newImagePublicId) {
-      await deleteImageFromCloudinary(newImagePublicId);
+    for (const publicId of galleryPublicIds) {
+      if (!oldPublicIds.includes(publicId)) {
+        await deleteImageFromCloudinary(publicId);
+      }
     }
     return {
       success: false,
@@ -204,8 +260,12 @@ export async function deleteProductAction(productId: string) {
   try {
     await deleteProduct(productId);
 
-    if (existing.imagePublicId) {
-      await deleteImageFromCloudinary(existing.imagePublicId);
+    const publicIds = [
+      existing.imagePublicId,
+      ...existing.galleryPublicIds,
+    ].filter((id): id is string => Boolean(id));
+    for (const publicId of publicIds) {
+      await deleteImageFromCloudinary(publicId);
     }
   } catch {
     return {

@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, ShoppingBag, Star, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, ShoppingBag, Star, X } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
@@ -21,9 +22,13 @@ export default function QuickViewModal({
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
+  const [imgIndex, setImgIndex] = useState(0);
   const wished = isWishlisted(product.id);
 
   if (!product) return null;
+
+  const images = product.gallery.length ? product.gallery : [product.image];
+  const hasMultiple = images.length > 1;
 
   return (
     <AnimatePresence>
@@ -54,13 +59,65 @@ export default function QuickViewModal({
 
             <div className="grid md:grid-cols-2">
               <div className="relative h-72 bg-[#f8f5f0] md:h-full">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  sizes="400px"
-                  className="object-contain p-8"
-                />
+                <AnimatePresence initial={false}>
+                  <motion.div
+                    key={imgIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={images[imgIndex]}
+                      alt={product.name}
+                      fill
+                      sizes="400px"
+                      className="object-contain p-8"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+
+                {hasMultiple && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setImgIndex((i) => (i - 1 + images.length) % images.length)
+                      }
+                      aria-label="Previous image"
+                      className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md transition-all hover:scale-110 hover:text-[#1c1712]"
+                    >
+                      <ChevronLeft size={18} />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setImgIndex((i) => (i + 1) % images.length)}
+                      aria-label="Next image"
+                      className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md transition-all hover:scale-110 hover:text-[#1c1712]"
+                    >
+                      <ChevronRight size={18} />
+                    </button>
+
+                    <div className="absolute inset-x-0 bottom-3 z-10 flex items-center justify-center gap-1.5">
+                      {images.map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setImgIndex(i)}
+                          aria-label={`View image ${i + 1}`}
+                          className={cn(
+                            "h-1.5 rounded-full transition-all duration-300",
+                            i === imgIndex
+                              ? "w-4 bg-gold"
+                              : "w-1.5 bg-white/80 hover:bg-gold/70",
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="flex flex-col p-8">

@@ -1,0 +1,30 @@
+
+> attar-store@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.12 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.4:3000
+- Environments: .env
+✓ Ready in 1771ms
+
+ POST /api/upload 401 in 458ms (next.js: 386ms, application-code: 72ms)
+ GET /placeholder-product.png 404 in 666ms (next.js: 281ms, application-code: 385ms)
+ GET /admin/products 200 in 6.2s (next.js: 1441ms, proxy.ts: 973ms, application-code: 3.8s)
+ GET /api/auth/session 200 in 209ms (next.js: 152ms, application-code: 58ms)
+ GET /sign-in 200 in 860ms (next.js: 134ms, application-code: 726ms)
+ POST /api/upload 200 in 2.8s (next.js: 9ms, application-code: 2.8s)
+✓ Compiled in 726ms
+ GET /admin/products 200 in 1231ms (next.js: 593ms, proxy.ts: 185ms, application-code: 453ms)
+✓ Compiled in 884ms
+ GET /admin/products 200 in 1223ms (next.js: 527ms, proxy.ts: 226ms, application-code: 469ms)
+ GET /admin/products 200 in 399ms (next.js: 11ms, proxy.ts: 51ms, application-code: 337ms)
+ GET /admin/products 200 in 235ms (next.js: 15ms, proxy.ts: 34ms, application-code: 186ms)
+✓ Compiled in 603ms
+ GET /admin/products 200 in 1001ms (next.js: 523ms, proxy.ts: 176ms, application-code: 301ms)
+✓ Compiled in 541ms
+ GET /admin/products 200 in 940ms (next.js: 484ms, proxy.ts: 216ms, application-code: 240ms)
+✓ Compiled in 583ms
+ GET /admin/products 200 in 903ms (next.js: 485ms, proxy.ts: 182ms, application-code: 237ms)
+✓ Compiled in 550ms
+ GET /admin/products 200 in 941ms (next.js: 490ms, proxy.ts: 199ms, application-code: 252ms)
