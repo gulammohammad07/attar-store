@@ -1,6 +1,9 @@
-import { ShoppingCart } from "lucide-react";
+import { getAllOrders } from "@/lib/services/order.service";
+import OrdersTable from "@/components/admin/OrdersTable";
 
-export default function OrdersPage() {
+export default async function OrdersPage() {
+  const orders = await getAllOrders();
+
   return (
     <div className="space-y-8">
       <div>
@@ -10,18 +13,7 @@ export default function OrdersPage() {
         </p>
       </div>
 
-      <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border bg-white px-6 py-20 text-center shadow-sm">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-          <ShoppingCart className="h-8 w-8 text-gray-400" />
-        </div>
-
-        <div>
-          <h2 className="text-xl font-semibold">No orders yet</h2>
-          <p className="text-gray-500 mt-1">
-            Orders will appear here once customers start shopping.
-          </p>
-        </div>
-      </div>
+      <OrdersTable orders={orders} />
     </div>
   );
 }

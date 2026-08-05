@@ -7,19 +7,20 @@ datasource db {
 }
 
 model User {
-  id              String              @id @default(cuid())
-  name            String
-  email           String              @unique
-  emailVerified   DateTime?
-  passwordHash    String?
-  image           String?
-  role            String              @default("USER")
-  provider        String              @default("credentials")
-  googleId        String?             @unique
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
-  accounts        Account[]
+  id                  String              @id @default(cuid())
+  name                String
+  email               String              @unique
+  emailVerified       DateTime?
+  passwordHash        String?
+  image               String?
+  role                String              @default("USER")
+  provider            String              @default("credentials")
+  googleId            String?             @unique
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  accounts            Account[]
   passwordResetTokens PasswordResetToken[]
+  orders              Order[]
 
   @@map("users")
 }
@@ -116,4 +117,69 @@ model Product {
   notes       String[] @default([])
   brand       Brand    @relation(fields: [brandId], references: [id])
   category    Category @relation(fields: [categoryId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Order {
+  id             String        @id @default(cuid())
+  orderNumber    String        @unique
+  idempotencyKey String        @unique
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  customerName   String
+  customerEmail  String
+  customerPhone  String
+
+  street         String
+  city           String
+  state          String
+  pincode        String
+
+  subtotal       Float
+  shippingFee    Float
+  total          Float
+
+  status         OrderStatus   @default(PENDING)
+  paymentStatus  PaymentStatus @default(PENDING)
+  paymentMethod  String        @default("pending")
+
+  items          OrderItem[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  productId    String?
+  productName  String
+  productImage String?
+  unitPrice    Float
+  quantity     Int
+  lineTotal    Float
+  order        Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order_items")
 }
