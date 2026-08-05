@@ -1,99 +1,203 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Package, User as UserIcon } from "lucide-react";
+import { toast } from "sonner";
+import {
+  Heart,
+  LogOut,
+  Mail,
+  Package,
+  ShieldCheck,
+  ShoppingBag,
+  User as UserIcon,
+} from "lucide-react";
+import { signOutAction } from "@/lib/actions/auth.actions";
+import { useAuth } from "@/lib/store/auth-context";
 
 export default function AccountPage() {
-  const [mode, setMode] = useState<"login" | "signup">("login");
+  const router = useRouter();
+  const { user, status, refresh } = useAuth();
+
+  const handleSignOut = async () => {
+    const result = await signOutAction();
+    toast.success(result.message);
+    await refresh();
+    router.push("/");
+    router.refresh();
+  };
+
+  if (status === "loading") {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center bg-[#F7F3EC] px-4">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#1c1712]/15 border-t-gold" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center bg-[#F7F3EC] px-4 py-16">
+        <div className="w-full max-w-md rounded-3xl border border-[#1c1712]/10 bg-white p-8 text-center shadow-xl">
+          <p className="text-sm text-[#1c1712]/55">
+            Your session expired. Please sign in again.
+          </p>
+          <Link
+            href="/sign-in"
+            className="mt-6 inline-block rounded-full bg-[#1c1712] px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-gold"
+          >
+            Sign in
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const initials = user.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  const joined = new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(user.createdAt));
+
+  const cards = [
+    {
+      icon: Package,
+      title: "Orders",
+      description: "Track purchases & reorder favourites.",
+      href: "/account/orders",
+    },
+    {
+      icon: Heart,
+      title: "Wishlist",
+      description: "Your saved fragrances.",
+      href: "/wishlist",
+    },
+    {
+      icon: ShoppingBag,
+      title: "Browse the collection",
+      description: "Discover new attars and ouds.",
+      href: "/shop",
+    },
+  ];
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center bg-[#F7F3EC] px-4 py-16">
+    <div className="min-h-screen bg-[#F7F3EC] px-4 py-14 sm:px-8">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
+        className="mx-auto max-w-4xl"
       >
-        <div className="rounded-3xl border border-[#1c1712]/10 bg-white p-8 shadow-xl sm:p-10">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#1c1712]">
-            <UserIcon size={22} className="text-gold" />
+        {/* Header */}
+        <div className="flex flex-col items-start gap-6 rounded-3xl border border-[#1c1712]/10 bg-white p-8 shadow-xl sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#1c1712] font-display text-xl font-semibold text-gold">
+              {initials}
+            </div>
+            <div>
+              <h1 className="font-display text-3xl font-medium text-[#1c1712]">
+                {user.name}
+              </h1>
+              <p className="mt-1 flex items-center gap-2 text-sm text-[#1c1712]/45">
+                <Mail size={14} className="text-gold" />
+                {user.email}
+              </p>
+              <p className="mt-1 text-xs text-[#1c1712]/35">
+                Member since {joined}
+              </p>
+            </div>
           </div>
 
-          <h1 className="mt-6 text-center font-display text-3xl font-medium text-[#1c1712]">
-            {mode === "login" ? "Welcome Back" : "Create Account"}
-          </h1>
-          <p className="mt-2 text-center text-sm text-[#1c1712]/45">
-            {mode === "login"
-              ? "Sign in to track orders and manage your wishlist."
-              : "Join the inner circle of fragrance connoisseurs."}
-          </p>
-
-          {/* Mode switch */}
-          <div className="mt-6 flex rounded-full bg-[#F7F3EC] p-1">
-            {(["login", "signup"] as const).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMode(m)}
-                className={`flex-1 rounded-full py-2.5 text-sm font-medium transition-all ${
-                  mode === m
-                    ? "bg-[#1c1712] text-white shadow"
-                    : "text-[#1c1712]/60"
-                }`}
+          <div className="flex items-center gap-3">
+            {user.role === "ADMIN" ? (
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-2 rounded-full border border-[#1c1712]/15 px-5 py-2.5 text-sm font-medium text-[#1c1712] transition-colors hover:border-gold hover:text-gold"
               >
-                {m === "login" ? "Sign In" : "Sign Up"}
-              </button>
-            ))}
-          </div>
-
-          <form
-            className="mt-8 space-y-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            {mode === "signup" && (
-              <input
-                required
-                type="text"
-                placeholder="Full name"
-                className="w-full rounded-xl border border-[#1c1712]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
-              />
-            )}
-            <input
-              required
-              type="email"
-              placeholder="Email"
-              className="w-full rounded-xl border border-[#1c1712]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
-            />
-            <input
-              required
-              type="password"
-              placeholder="Password"
-              className="w-full rounded-xl border border-[#1c1712]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
-            />
+                <ShieldCheck size={16} className="text-gold" />
+                Admin panel
+              </Link>
+            ) : null}
 
             <button
-              type="submit"
-              className="w-full rounded-full bg-[#1c1712] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-gold"
+              type="button"
+              onClick={handleSignOut}
+              className="inline-flex items-center gap-2 rounded-full bg-[#1c1712] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gold"
             >
-              {mode === "login" ? "Sign In" : "Create Account"}
+              <LogOut size={16} />
+              Sign out
             </button>
-          </form>
-
-          <p className="mt-6 text-center text-xs leading-relaxed text-[#1c1712]/45">
-            Authentication will be enabled in the next milestone. In the
-            meantime, explore{" "}
-            <Link href="/shop" className="text-gold hover:underline">
-              the collection
-            </Link>
-            .
-          </p>
+          </div>
         </div>
 
-        <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[#1c1712]/45">
-          <Package size={14} className="text-gold" />
-          Order tracking will appear here after your first purchase.
+        {/* Cards */}
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="group rounded-3xl border border-[#1c1712]/10 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1c1712]">
+                  <Icon size={20} className="text-gold" />
+                </span>
+                <h2 className="mt-5 font-display text-xl font-medium text-[#1c1712]">
+                  {card.title}
+                </h2>
+                <p className="mt-1.5 text-sm text-[#1c1712]/45">
+                  {card.description}
+                </p>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Account info */}
+        <div className="mt-8 rounded-3xl border border-[#1c1712]/10 bg-white p-8 shadow-xl">
+          <h2 className="flex items-center gap-2 font-display text-2xl font-medium text-[#1c1712]">
+            <UserIcon size={20} className="text-gold" />
+            Account details
+          </h2>
+
+          <dl className="mt-6 grid gap-6 sm:grid-cols-2">
+            <div className="rounded-2xl bg-[#F7F3EC] p-5">
+              <dt className="text-xs font-semibold tracking-wider text-[#1c1712]/40 uppercase">
+                Name
+              </dt>
+              <dd className="mt-1.5 font-medium text-[#1c1712]">{user.name}</dd>
+            </div>
+            <div className="rounded-2xl bg-[#F7F3EC] p-5">
+              <dt className="text-xs font-semibold tracking-wider text-[#1c1712]/40 uppercase">
+                Email
+              </dt>
+              <dd className="mt-1.5 font-medium text-[#1c1712]">{user.email}</dd>
+            </div>
+            <div className="rounded-2xl bg-[#F7F3EC] p-5">
+              <dt className="text-xs font-semibold tracking-wider text-[#1c1712]/40 uppercase">
+                Sign-in method
+              </dt>
+              <dd className="mt-1.5 font-medium text-[#1c1712] capitalize">
+                {user.provider}
+              </dd>
+            </div>
+            <div className="rounded-2xl bg-[#F7F3EC] p-5">
+              <dt className="text-xs font-semibold tracking-wider text-[#1c1712]/40 uppercase">
+                Account status
+              </dt>
+              <dd className="mt-1.5 font-medium text-[#1c1712]">
+                {user.emailVerified ? "Verified" : "Active"}
+              </dd>
+            </div>
+          </dl>
         </div>
       </motion.div>
     </div>

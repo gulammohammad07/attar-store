@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Search, ShoppingBag, User, Menu, X } from "lucide-react";
+import { toast } from "sonner";
+import { Heart, Search, ShoppingBag, User, Menu, X, LogOut } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useWishlist } from "@/lib/store/wishlist-context";
+import { useAuth } from "@/lib/store/auth-context";
+import { signOutAction } from "@/lib/actions/auth.actions";
 import { notes, occasions } from "@/lib/data/products";
 import type { Product } from "@/lib/data/products";
 import type { StorefrontCategory } from "@/lib/services/storefront-data";
@@ -33,6 +37,8 @@ export default function Navbar({
   const [searchOpen, setSearchOpen] = useState(false);
   const { totalItems, openCart } = useCart();
   const { items: wishlistItems } = useWishlist();
+  const { user, isAdmin, refresh } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -40,6 +46,14 @@ export default function Navbar({
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const handleSignOut = async () => {
+    const result = await signOutAction();
+    toast.success(result.message);
+    await refresh();
+    router.push("/");
+    router.refresh();
+  };
 
   return (
     <>
@@ -136,13 +150,36 @@ export default function Navbar({
                 )}
               </button>
 
-              <Link
-                href="/account"
-                className="hidden transition-colors hover:text-gold-light sm:block"
-                aria-label="Account"
-              >
-                <User size={19} />
-              </Link>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="hidden transition-colors hover:text-gold-light sm:block"
+                  aria-label="Admin panel"
+                >
+                  <span className="text-[10px] font-bold tracking-widest uppercase">
+                    Admin
+                  </span>
+                </Link>
+              )}
+
+              {user ? (
+                <Link
+                  href="/account"
+                  className="hidden h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-xs font-bold text-gold-light ring-1 ring-gold/30 transition-all hover:bg-gold/30 sm:flex"
+                  aria-label="Account"
+                  title={user.name}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </Link>
+              ) : (
+                <Link
+                  href="/sign-in"
+                  className="hidden transition-colors hover:text-gold-light sm:block"
+                  aria-label="Sign in"
+                >
+                  <User size={19} />
+                </Link>
+              )}
             </div>
           </div>
         </header>
@@ -353,13 +390,56 @@ export default function Navbar({
                   </div>
                 </div>
 
-                <div className="mt-10 flex gap-6 text-sm text-[#f0ebe2]/70">
+                <div className="mt-10 flex flex-col gap-4 text-sm text-[#f0ebe2]/70">
                   <Link href="/wishlist" onClick={() => setMobileOpen(false)}>
                     Wishlist
                   </Link>
-                  <Link href="/account" onClick={() => setMobileOpen(false)}>
-                    Account
-                  </Link>
+
+                  {user ? (
+                    <>
+                      <Link
+                        href="/account"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Account {user.name ? `(${user.name.split(" ")[0]})` : ""}
+                      </Link>
+                      {isAdmin ? (
+                        <Link
+                          href="/admin"
+                          onClick={() => setMobileOpen(false)}
+                          className="text-gold-light"
+                        >
+                          Admin panel
+                        </Link>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileOpen(false);
+                          void handleSignOut();
+                        }}
+                        className="flex items-center gap-2 text-left text-[#f0ebe2]/70"
+                      >
+                        <LogOut size={15} />
+                        Sign out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        href="/sign-in"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                        href="/sign-up"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        Create account
+                      </Link>
+                    </>
+                  )}
                 </div>
               </nav>
             </div>
