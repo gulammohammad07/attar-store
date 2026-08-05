@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
   const next = getSafeRedirectPath(
     request.nextUrl.searchParams.get("next"),
-    "/account",
+    "/",
   );
 
   const state = generateOAuthState();

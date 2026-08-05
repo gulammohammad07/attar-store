@@ -56,7 +56,7 @@ export function ResetPasswordForm() {
       }
       toast.success(result.message);
       await refresh();
-      router.push("/account");
+      router.push("/");
       router.refresh();
     });
   });

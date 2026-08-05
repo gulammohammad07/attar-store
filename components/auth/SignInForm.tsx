@@ -23,10 +23,10 @@ import {
 } from "@/components/auth/auth-buttons";
 
 function getSafeNext(raw: string | null): string {
-  if (!raw) return "/account";
+  if (!raw) return "/";
   return raw.startsWith("/") && !raw.startsWith("//") && !raw.includes(":")
     ? raw
-    : "/account";
+    : "/";
 }
 
 export function SignInForm() {
@@ -133,7 +133,7 @@ export function SignInForm() {
       <p className="mt-8 text-center text-sm text-ink/50">
         New to MD Perfumes?{" "}
         <Link
-          href={`/sign-up${next !== "/account" ? `?next=${encodeURIComponent(next)}` : ""}`}
+          href={`/sign-up${next !== "/" ? `?next=${encodeURIComponent(next)}` : ""}`}
           className="font-semibold text-gold transition-colors hover:text-gold-light hover:underline"
         >
           Create an account

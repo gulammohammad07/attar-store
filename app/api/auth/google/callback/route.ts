@@ -152,7 +152,7 @@ export async function GET(request: NextRequest) {
       oauthState.next.startsWith("/") &&
       !oauthState.next.startsWith("//")
         ? oauthState.next
-        : "/account";
+        : "/";
 
     return NextResponse.redirect(new URL(destination, request.nextUrl));
   } catch {

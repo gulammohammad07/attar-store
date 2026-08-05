@@ -20,10 +20,10 @@ import {
 } from "@/components/auth/auth-buttons";
 
 function getSafeNext(raw: string | null): string {
-  if (!raw) return "/account";
+  if (!raw) return "/";
   return raw.startsWith("/") && !raw.startsWith("//") && !raw.includes(":")
     ? raw
-    : "/account";
+    : "/";
 }
 
 export function SignUpForm() {
@@ -136,7 +136,7 @@ export function SignUpForm() {
       <p className="mt-8 text-center text-sm text-ink/50">
         Already have an account?{" "}
         <Link
-          href={`/sign-in${next !== "/account" ? `?next=${encodeURIComponent(next)}` : ""}`}
+          href={`/sign-in${next !== "/" ? `?next=${encodeURIComponent(next)}` : ""}`}
           className="font-semibold text-gold transition-colors hover:text-gold-light hover:underline"
         >
           Sign in

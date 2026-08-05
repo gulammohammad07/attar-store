@@ -7,7 +7,7 @@ import "server-only";
  */
 export function getSafeRedirectPath(
   value: string | null | undefined,
-  fallback = "/account",
+  fallback = "/",
 ): string {
   if (!value) return fallback;
   const trimmed = value.trim();
