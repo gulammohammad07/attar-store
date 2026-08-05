@@ -1,85 +1,77 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Quote, Star } from "lucide-react";
 import { testimonials } from "@/lib/data/products";
 import SectionHeading from "@/components/landing/SectionHeading";
-import { cn } from "@/lib/utils";
+
+const cards = [...testimonials, ...testimonials];
 
 export default function Testimonials() {
-  const [active, setActive] = useState(0);
-
   return (
-    <section className="bg-[#F7F3EC] py-24">
-      <div className="mx-auto max-w-5xl px-6">
+    <section className="relative overflow-hidden bg-[#0a0908] py-28 text-[#f0ebe2]">
+      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,rgba(198,161,91,0.08),transparent_70%)]" />
+
+      <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
+          dark
           eyebrow="Word of Mouth"
           title="Loved by Connoisseurs"
           description="Real reviews from clients who made MD Perfumes their signature."
         />
+      </div>
 
-        <div className="relative">
-          <Quote
-            size={80}
-            className="absolute -top-6 left-0 text-gold/20"
-          />
+      <div className="relative mt-4">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0908] to-transparent sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0908] to-transparent sm:w-32" />
 
-          <div className="relative min-h-[220px] pt-10 sm:min-h-[200px]">
-            <AnimatePresence mode="wait">
-              <motion.figure
-                key={active}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-                className="mx-auto max-w-3xl text-center"
+        <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+          <div
+            className="group flex w-max gap-6 animate-marquee gpu group-hover:[animation-play-state:paused]"
+            style={{ animationDuration: "70s", animationDirection: "reverse" }}
+          >
+            {cards.map((t, i) => (
+              <article
+                key={`${t.name}-${i}`}
+                className="relative w-[320px] shrink-0 rounded-[1.75rem] border border-white/10 bg-[#0a0908]/50 p-8 transition-colors duration-500 hover:border-gold/40 sm:w-[400px]"
               >
-                <div className="flex items-center justify-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
+                <Quote
+                  size={36}
+                  className="absolute right-6 top-6 text-gold/20"
+                />
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: 5 }).map((_, starIndex) => (
                     <Star
-                      key={i}
-                      size={18}
+                      key={starIndex}
+                      size={15}
                       className={
-                        i < testimonials[active].rating
+                        starIndex < t.rating
                           ? "fill-gold text-gold"
-                          : "text-[#1c1712]/20"
+                          : "text-white/15"
                       }
                     />
                   ))}
                 </div>
 
-                <blockquote className="mt-6 font-display text-2xl font-medium leading-relaxed text-[#1c1712] sm:text-3xl">
-                  &ldquo;{testimonials[active].quote}&rdquo;
+                <blockquote className="mt-5 text-sm leading-relaxed text-[#f0ebe2]/75">
+                  &ldquo;{t.quote}&rdquo;
                 </blockquote>
 
-                <figcaption className="mt-8">
-                  <p className="text-sm font-semibold tracking-[0.15em] text-[#1c1712] uppercase">
-                    {testimonials[active].name}
-                  </p>
-                  <p className="mt-1 text-xs tracking-wide text-[#1c1712]/40">
-                    {testimonials[active].location}
-                  </p>
-                </figcaption>
-              </motion.figure>
-            </AnimatePresence>
-          </div>
-
-          {/* Dots */}
-          <div className="mt-10 flex justify-center gap-2.5">
-            {testimonials.map((t, i) => (
-              <button
-                key={t.name}
-                type="button"
-                onClick={() => setActive(i)}
-                aria-label={`View review from ${t.name}`}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  active === i
-                    ? "w-8 bg-gold"
-                    : "w-2 bg-[#1c1712]/20 hover:bg-[#1c1712]/40",
-                )}
-              />
+                <footer className="mt-7 flex items-center gap-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold/40 to-gold/10 font-display text-lg font-semibold text-gold-light">
+                    {t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold tracking-[0.12em] text-[#f0ebe2] uppercase">
+                      {t.name}
+                    </p>
+                    <p className="mt-0.5 text-[11px] tracking-wide text-[#f0ebe2]/40">
+                      {t.location}
+                    </p>
+                  </div>
+                </footer>
+              </article>
             ))}
           </div>
         </div>

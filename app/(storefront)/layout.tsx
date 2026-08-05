@@ -1,6 +1,8 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/cart/CartDrawer";
+import Preloader from "@/components/landing/Preloader";
+import SmoothScroll from "@/components/landing/SmoothScroll";
 import {
   getStorefrontCategories,
   getStorefrontProducts,
@@ -20,6 +22,8 @@ export default async function StorefrontLayout({
 
   return (
     <>
+      <SmoothScroll />
+      <Preloader />
       <Navbar categories={categories} featured={featured} />
       <main className="flex-1">{children}</main>
       <Footer />

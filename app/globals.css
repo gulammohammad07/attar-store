@@ -20,12 +20,58 @@
   --animate-shimmer: shimmer 2.5s linear infinite;
   --animate-pulse-slow: pulse 6s ease-in-out infinite;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  --animate-shine: shine 3.5s linear infinite;
+
   @keyframes marquee {
     from {
-      transform: translateX(0);
+      transform: translate3d(0, 0, 0);
     }
     to {
-      transform: translateX(-50%);
+      transform: translate3d(-50%, 0, 0);
     }
   }
 
@@ -35,6 +81,15 @@
     }
     to {
       background-position: -200% 0;
+    }
+  }
+
+  @keyframes shine {
+    from {
+      background-position: 0% 50%;
+    }
+    to {
+      background-position: 200% 50%;
     }
   }
 }
@@ -198,9 +253,6 @@
     background: var(--gold);
     color: #fff;
   }
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 @layer utilities {
@@ -218,6 +270,20 @@
     border: 1px solid rgb(255 255 255 / 0.1);
   }
 
+  .glass-luxury {
+    background: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.78),
+      rgb(255 255 255 / 0.5)
+    );
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid rgb(255 255 255 / 0.65);
+    box-shadow:
+      0 24px 50px -22px rgb(28 23 18 / 0.18),
+      inset 0 1px 0 rgb(255 255 255 / 0.7);
+  }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -229,6 +295,7 @@
       var(--gold-light) 50%,
       var(--gold) 100%
     );
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -244,4 +311,67 @@
     background-size: 200% 100%;
     animation: shimmer 2.5s linear infinite;
   }
+
+  .rays {
+    background: conic-gradient(
+      from 180deg at 50% 50%,
+      transparent 0deg,
+      rgb(198 161 91 / 0.1) 12deg,
+      transparent 28deg,
+      rgb(198 161 91 / 0.14) 46deg,
+      transparent 60deg,
+      rgb(230 200 144 / 0.08) 90deg,
+      transparent 120deg,
+      rgb(198 161 91 / 0.12) 150deg,
+      transparent 180deg,
+      rgb(198 161 91 / 0.1) 210deg,
+      transparent 250deg,
+      rgb(230 200 144 / 0.1) 290deg,
+      transparent 330deg
+    );
+    filter: blur(20px);
+    animation: rays-spin 45s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes rays-spin {
+    from {
+      transform: translateY(-50%) rotate(0deg);
+    }
+    to {
+      transform: translateY(-50%) rotate(360deg);
+    }
+  }
+
+  .noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  .gpu {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

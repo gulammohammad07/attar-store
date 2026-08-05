@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Sparkles, Droplets, Clock } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import { Sparkles, Droplets, Clock, ChevronRight } from "lucide-react";
 
 const pillars = [
   {
@@ -22,17 +23,49 @@ const pillars = [
   },
 ];
 
+const milestones = [
+  {
+    year: "2018",
+    title: "A Single Copper Still",
+    text: "MD Perfumes is born in the attar bazaars of the Middle East.",
+  },
+  {
+    year: "2020",
+    title: "The First Atelier",
+    text: "Our workshop opens, and hand-poured batches find their first collectors.",
+  },
+  {
+    year: "2023",
+    title: "50 Rare Blends",
+    text: "Kashmiri oud and Mysore sandalwood join a growing, hand-curated maison.",
+  },
+  {
+    year: "Today",
+    title: "Loved Worldwide",
+    text: "10,000+ collectors across the globe wear an MD signature.",
+  },
+];
+
 export default function BrandStory({
   banner,
 }: {
   banner?: { title: string | null; imageUrl: string };
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+
   return (
-    <section id="story" className="overflow-hidden bg-charcoal py-24 text-[#f0ebe2]">
+    <section id="story" className="overflow-hidden bg-charcoal py-28 text-[#f0ebe2]">
       <div className="mx-auto max-w-7xl px-6">
         <div
           className={`grid items-center gap-16 ${
-            banner?.imageUrl ? "lg:grid-cols-2" : "lg:grid-cols-1 lg:max-w-3xl lg:mx-auto"
+            banner?.imageUrl
+              ? "lg:grid-cols-2"
+              : "lg:grid-cols-1 lg:mx-auto lg:max-w-3xl"
           }`}
         >
           {/* Visual */}
@@ -42,9 +75,12 @@ export default function BrandStory({
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.7 }}
-              className="relative"
+              className="relative order-2 lg:order-1"
             >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
+              <motion.div
+                style={{ y: imageY }}
+                className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10"
+              >
                 <Image
                   src={banner.imageUrl}
                   alt={banner.title ?? "The art of attar making"}
@@ -52,20 +88,20 @@ export default function BrandStory({
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-gold p-6 shadow-2xl sm:block"
+                className="absolute -bottom-6 -right-6 hidden rounded-2xl border border-gold/40 bg-[#0e0c0a] p-6 shadow-[0_0_50px_rgba(198,161,91,0.25)] sm:block"
               >
-                <p className="font-display text-4xl font-semibold text-white">
+                <p className="gold-gradient-text font-display text-4xl font-semibold">
                   8+ Yrs
                 </p>
-                <p className="mt-1 text-xs tracking-[0.2em] text-white/80 uppercase">
+                <p className="mt-1 text-xs tracking-[0.2em] text-white/60 uppercase">
                   of Craft
                 </p>
               </motion.div>
@@ -73,7 +109,7 @@ export default function BrandStory({
           )}
 
           {/* Copy */}
-          <div>
+          <div className="order-1 lg:order-2">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -92,7 +128,10 @@ export default function BrandStory({
               className="mt-4 font-display text-4xl font-medium sm:text-5xl"
             >
               Perfume, the way
-              <span className="gold-gradient-text italic"> it was meant to be</span>
+              <span className="gold-gradient-text italic">
+                {" "}
+                it was meant to be
+              </span>
             </motion.h2>
 
             <motion.p
@@ -117,7 +156,7 @@ export default function BrandStory({
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-                  className="flex gap-4"
+                  className="group flex gap-4 rounded-2xl border border-white/5 bg-white/[0.03] p-4 transition-colors duration-500 hover:border-gold/30 hover:bg-white/[0.05]"
                 >
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gold/30 bg-gold/10">
                     <pillar.icon size={20} className="text-gold" />
@@ -134,6 +173,37 @@ export default function BrandStory({
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Timeline */}
+        <div ref={ref} className="mt-28 grid gap-10 lg:grid-cols-4 lg:gap-6">
+          {milestones.map((milestone, index) => (
+            <motion.div
+              key={milestone.year}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.6, delay: index * 0.12 }}
+              className="relative"
+            >
+              {index < milestones.length - 1 && (
+                <div className="absolute left-[5px] top-7 hidden h-full w-px bg-gradient-to-b from-gold/50 to-gold/10 lg:block" />
+              )}
+              <div className="absolute left-0 top-1.5 hidden h-[11px] w-[11px] rounded-full border-2 border-gold bg-[#0e0c0a] lg:block" />
+              <div className="lg:pl-8">
+                <p className="gold-gradient-text font-display text-3xl font-semibold">
+                  {milestone.year}
+                </p>
+                <h3 className="mt-3 font-display text-lg font-medium">
+                  {milestone.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-[#f0ebe2]/50">
+                  {milestone.text}
+                </p>
+                <ChevronRight size={14} className="mt-3 hidden text-gold/50 lg:block" />
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>

@@ -2,9 +2,10 @@ import Hero from "@/components/landing/Hero";
 import Marquee from "@/components/landing/Marquee";
 import CategoryShowcase from "@/components/landing/CategoryShowcase";
 import BestSellers from "@/components/landing/BestSellers";
-import BrandStory from "@/components/landing/BrandStory";
-import NewArrivals from "@/components/landing/NewArrivals";
+import LuxuryCollections from "@/components/landing/LuxuryCollections";
+import WhyChoose from "@/components/landing/WhyChoose";
 import Testimonials from "@/components/landing/Testimonials";
+import BrandStory from "@/components/landing/BrandStory";
 import Newsletter from "@/components/landing/Newsletter";
 import {
   getStorefrontBanners,
@@ -28,12 +29,25 @@ export default async function Home() {
     <>
       <Hero banner={heroBanner} />
       <Marquee />
-      <CategoryShowcase categories={categories} />
-      <BestSellers products={products} />
-      <BrandStory banner={storyBanner} />
-      <NewArrivals products={products} />
-      <Testimonials />
-      <Newsletter />
+      <div className="cv-auto">
+        <CategoryShowcase categories={categories} />
+      </div>
+      <div className="cv-auto">
+        <BestSellers products={products} />
+      </div>
+      <LuxuryCollections categories={categories} />
+      <div className="cv-auto">
+        <WhyChoose />
+      </div>
+      <div className="cv-auto">
+        <Testimonials />
+      </div>
+      <div className="cv-auto">
+        <BrandStory banner={storyBanner} />
+      </div>
+      <div className="cv-auto">
+        <Newsletter />
+      </div>
     </>
   );
 }
