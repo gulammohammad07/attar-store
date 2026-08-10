@@ -55,7 +55,6 @@ export default function HomeSections({
   return (
     <>
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="The Collection"
@@ -70,7 +69,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="Most Loved"
@@ -85,7 +83,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="Curated Worlds"
@@ -99,7 +96,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="The MD Difference"
@@ -114,7 +110,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="Word of Mouth"
@@ -129,7 +124,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="Our Story"
@@ -143,7 +137,6 @@ export default function HomeSections({
       </LazyMount>
 
       <LazyMount
-        className="cv-auto"
         fallback={
           <SectionSkeleton
             eyebrow="Inner Circle"

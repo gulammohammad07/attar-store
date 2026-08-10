@@ -36,7 +36,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
             </p>
           </div>
 
-          <h2 className="mt-6 font-display text-6xl font-medium leading-[0.98] text-[#174A63] sm:text-7xl">
+          <h2 className="mt-6 font-display text-5xl font-medium leading-[0.98] text-[#174A63] sm:text-7xl">
             The{" "}
             <span className="gold-gradient-text animate-shine italic motion-reduce:animate-none">
               Oud

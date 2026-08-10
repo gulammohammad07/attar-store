@@ -38,7 +38,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
                 key={`${product.id}-${i}`}
                 className="w-[300px] shrink-0 sm:w-[320px]"
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} loading="eager" />
               </div>
             ))}
           </div>

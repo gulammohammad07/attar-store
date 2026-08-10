@@ -363,17 +363,20 @@
     transform: translateZ(0);
     will-change: transform;
   }
-
-  .cv-auto {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 900px;
-  }
 }
 
 /* Lenis smooth scroll */
 html.lenis,
 html.lenis body {
   height: auto;
+}
+
+@media (max-width: 639px) {
+  html,
+  body {
+    overflow-x: clip;
+    max-width: 100%;
+  }
 }
 
 .lenis.lenis-smooth {

@@ -134,7 +134,7 @@ export default function PlpHero() {
           </motion.div>
 
           <h1
-            className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#174A63] sm:text-7xl lg:text-[6.5rem]"
+            className="mt-6 font-display text-5xl font-medium leading-[1.02] text-[#174A63] sm:text-7xl lg:text-[6.5rem]"
           >
             Attar
             <br />

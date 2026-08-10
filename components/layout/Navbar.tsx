@@ -68,7 +68,7 @@ export default function Navbar({
               : "bg-charcoal/80 backdrop-blur-md"
           }`}
         >
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6">
+          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:gap-6 sm:px-6">
             {/* Mobile hamburger */}
             <button
               type="button"
@@ -85,7 +85,7 @@ export default function Navbar({
               className="shrink-0"
               onClick={() => setActiveMenu(null)}
             >
-              <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#F8FCFE]">
+              <span className="font-display text-lg font-semibold tracking-[0.12em] text-[#F8FCFE] sm:text-2xl sm:tracking-[0.18em]">
                 DANISH<span className="text-gold"> PERFUMES</span>
               </span>
             </Link>
@@ -113,7 +113,7 @@ export default function Navbar({
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center gap-4 text-[#F8FCFE] sm:gap-5">
+            <div className="flex items-center gap-3 text-[#F8FCFE] sm:gap-5">
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}

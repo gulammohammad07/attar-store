@@ -15,9 +15,11 @@ import { toast } from "sonner";
 export default function ProductCard({
   product,
   className,
+  loading = "lazy",
 }: {
   product: Product;
   className?: string;
+  loading?: "lazy" | "eager";
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -145,6 +147,7 @@ export default function ProductCard({
                     src={images[imgIndex]}
                     alt={product.name}
                     fill
+                    loading={loading}
                     sizes="(max-width: 768px) 100vw, 300px"
                     className="object-contain p-8 transition-transform duration-700 ease-out group-hover:scale-110"
                   />
