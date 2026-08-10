@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import LuxuryProductCard from "@/components/plp/LuxuryProductCard";

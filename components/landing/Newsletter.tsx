@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Mail, Send } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,12 +17,12 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="relative overflow-hidden py-28 text-[#f0ebe2]">
-      {/* Gold gradient backdrop */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#8a6b3d] via-[#0e0c0a] to-[#0e0c0a]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(230,200,144,0.28),transparent_55%)]" />
-      <div className="absolute -left-24 top-1/2 h-[340px] w-[340px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(198,161,91,0.2),transparent_70%)]" />
-      <div className="absolute -right-24 top-1/4 h-[280px] w-[280px] bg-[radial-gradient(circle,rgba(227,199,149,0.18),transparent_70%)]" />
+    <section className="relative overflow-hidden bg-[#f3ecdf] py-28 text-[#1c1712]">
+      {/* Marble backdrop */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#f7f2e8] via-[#f3ecdf] to-[#efe6d3]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(230,200,144,0.35),transparent_55%)]" />
+      <div className="absolute -left-24 top-1/2 h-[340px] w-[340px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(214,185,138,0.3),transparent_70%)]" />
+      <div className="absolute -right-24 top-1/4 h-[280px] w-[280px] bg-[radial-gradient(circle,rgba(227,199,149,0.3),transparent_70%)]" />
 
       {/* floating gold specks */}
       {[
@@ -60,18 +60,18 @@ export default function Newsletter() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 bg-white/10 shadow-[0_0_40px_rgba(198,161,91,0.4)] backdrop-blur">
-            <Mail size={22} className="text-gold-light" />
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-white/70 shadow-[0_0_40px_rgba(198,161,91,0.4)] backdrop-blur-md">
+            <Mail size={22} className="text-gold" />
           </div>
 
-          <h2 className="mt-6 font-display text-4xl font-medium sm:text-6xl">
+          <h2 className="mt-6 font-display text-4xl font-medium text-[#1c1712] sm:text-6xl">
             Join the{" "}
             <span className="gold-gradient-text animate-shine italic">
               Inner Circle
             </span>
           </h2>
 
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-[#f0ebe2]/65">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-[#1c1712]/55">
             Early access to limited drops, private sales and fragrance notes
             from the atelier. One elegant email a week.
           </p>
@@ -80,10 +80,10 @@ export default function Newsletter() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mx-auto mt-10 max-w-md rounded-2xl border border-gold/40 bg-white/[0.06] p-8 backdrop-blur-xl"
+              className="mx-auto mt-10 max-w-md rounded-2xl border border-gold/30 bg-white/70 p-8 shadow-[0_24px_50px_-24px_rgba(28,23,18,0.3)] backdrop-blur-md"
             >
-              <p className="font-display text-2xl">Welcome, connoisseur. ✦</p>
-              <p className="mt-2 text-sm text-[#f0ebe2]/60">
+              <p className="font-display text-2xl text-[#1c1712]">Welcome, connoisseur. ✦</p>
+              <p className="mt-2 text-sm text-[#1c1712]/55">
                 Your first private drop is on its way.
               </p>
             </motion.div>
@@ -99,7 +99,7 @@ export default function Newsletter() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email address"
-                  className="w-full rounded-full border border-white/20 bg-white/[0.06] px-6 py-4 text-sm text-[#f0ebe2] placeholder:text-[#f0ebe2]/40 backdrop-blur-xl focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full rounded-full border border-gold/30 bg-white/70 px-6 py-4 text-sm text-[#1c1712] placeholder:text-[#1c1712]/35 shadow-[inset_0_1px_3px_rgba(28,23,18,0.06)] backdrop-blur-md focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25"
                 />
               </div>
               <button
@@ -115,7 +115,7 @@ export default function Newsletter() {
             </form>
           )}
 
-          <p className="mt-5 text-[11px] tracking-wide text-[#f0ebe2]/40">
+          <p className="mt-5 text-[11px] tracking-wide text-[#1c1712]/40">
             No spam. Unsubscribe anytime.
           </p>
         </motion.div>

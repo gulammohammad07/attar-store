@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { AnimatePresence, m as motion, useMotionValue, useSpring } from "framer-motion";
 import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingBag, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";

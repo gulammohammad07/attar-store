@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m as motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Heart, Search, ShoppingBag, User, Menu, X, LogOut } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
@@ -125,6 +125,7 @@ export default function Navbar({
 
               <Link
                 href="/wishlist"
+                prefetch={false}
                 className="relative hidden transition-colors hover:text-gold-light sm:block"
                 aria-label="Wishlist"
               >
@@ -153,6 +154,7 @@ export default function Navbar({
               {isAdmin && (
                 <Link
                   href="/admin"
+                  prefetch={false}
                   className="hidden transition-colors hover:text-gold-light sm:block"
                   aria-label="Admin panel"
                 >
@@ -165,6 +167,7 @@ export default function Navbar({
               {user ? (
                 <Link
                   href="/account"
+                  prefetch={false}
                   className="hidden h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-xs font-bold text-gold-light ring-1 ring-gold/30 transition-all hover:bg-gold/30 sm:flex"
                   aria-label="Account"
                   title={user.name}
@@ -174,6 +177,7 @@ export default function Navbar({
               ) : (
                 <Link
                   href="/sign-in"
+                  prefetch={false}
                   className="hidden transition-colors hover:text-gold-light sm:block"
                   aria-label="Sign in"
                 >

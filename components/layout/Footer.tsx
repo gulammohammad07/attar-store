@@ -110,6 +110,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
+                      prefetch={link.href === "/account" ? false : undefined}
                       className="text-sm text-[#f0ebe2]/70 transition-colors hover:text-gold-light"
                     >
                       {link.label}

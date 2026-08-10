@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { cn } from "@/lib/utils";

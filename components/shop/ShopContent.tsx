@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m as motion } from "framer-motion";
 import { LayoutGrid, List } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import ProductCard from "@/components/product/ProductCard";

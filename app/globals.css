@@ -334,6 +334,13 @@
     will-change: transform;
   }
 
+  @media (pointer: coarse) {
+    .rays {
+      animation: none;
+      filter: blur(8px);
+    }
+  }
+
   @keyframes rays-spin {
     from {
       transform: translateY(-50%) rotate(0deg);

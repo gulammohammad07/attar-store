@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, animate } from "framer-motion";
+import { m as motion, useInView, animate } from "framer-motion";
 import {
   Gem,
   Leaf,

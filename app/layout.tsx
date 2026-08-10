@@ -59,7 +59,7 @@ const EXTENSION_HYDRATION_FIX = `
   if (document.documentElement) {
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: STRIP_ATTRS.concat(["style"]),
+      attributeFilter: STRIP_ATTRS,
       childList: true,
       subtree: true,
     });
@@ -87,7 +87,7 @@ const inter = Inter({
 const cormorant = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 

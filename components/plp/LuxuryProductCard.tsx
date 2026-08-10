@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Heart, Plus, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {
-  motion,
+  m as motion,
   useMotionValue,
   useScroll,
   useSpring,
@@ -133,10 +133,7 @@ export default function PlpHero() {
             <span className="hidden h-px w-12 bg-gradient-to-l from-transparent to-gold sm:block" />
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: 0.25 }}
+          <h1
             className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#1c1712] sm:text-7xl lg:text-[6.5rem]"
           >
             Attar
@@ -144,7 +141,7 @@ export default function PlpHero() {
             <span className="gold-gradient-text animate-shine italic motion-reduce:animate-none">
               Collection
             </span>
-          </motion.h1>
+          </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 28 }}

@@ -24,6 +24,13 @@
 .DS_Store
 *.pem
 
+# build/log output
+*.log
+lh-*.json
+home*.html
+build-output*.txt
+server-perf.log
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { CreditCard, Loader2, Lock } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useAuth } from "@/lib/store/auth-context";

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Heart, MessageCircle } from "lucide-react";
 import { InstagramIcon } from "@/components/layout/SocialIcons";
 import type { Product } from "@/lib/data/products";

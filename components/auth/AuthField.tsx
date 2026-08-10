@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ComponentProps } from "react";
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 import { Eye, EyeOff, type LucideIcon } from "lucide-react";
 
 type AuthFieldProps = ComponentProps<"input"> & {

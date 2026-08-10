@@ -8,13 +8,12 @@ const cards = [...testimonials, ...testimonials];
 
 export default function Testimonials() {
   return (
-    <section className="relative overflow-hidden bg-[#0a0908] py-28 text-[#f0ebe2]">
+    <section className="relative overflow-hidden bg-[#efe6d3] py-28 text-[#1c1712]">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,rgba(198,161,91,0.08),transparent_70%)]" />
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,rgba(214,185,138,0.2),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
-          dark
           eyebrow="Word of Mouth"
           title="Loved by Connoisseurs"
           description="Real reviews from clients who made MD Perfumes their signature."
@@ -22,8 +21,8 @@ export default function Testimonials() {
       </div>
 
       <div className="relative mt-4">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#0a0908] to-transparent sm:w-32" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#0a0908] to-transparent sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#efe6d3] to-transparent sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#efe6d3] to-transparent sm:w-32" />
 
         <div className="overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
           <div
@@ -33,11 +32,11 @@ export default function Testimonials() {
             {cards.map((t, i) => (
               <article
                 key={`${t.name}-${i}`}
-                className="relative w-[320px] shrink-0 rounded-[1.75rem] border border-white/10 bg-[#0a0908]/50 p-8 transition-colors duration-500 hover:border-gold/40 sm:w-[400px]"
+                className="relative w-[320px] shrink-0 rounded-[1.75rem] border border-gold/20 bg-white/70 p-8 shadow-[0_24px_50px_-24px_rgba(28,23,18,0.3)] backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_34px_60px_-24px_rgba(176,141,87,0.45)] sm:w-[400px]"
               >
                 <Quote
                   size={36}
-                  className="absolute right-6 top-6 text-gold/20"
+                  className="absolute right-6 top-6 text-gold/25"
                 />
 
                 <div className="flex items-center gap-1">
@@ -48,25 +47,25 @@ export default function Testimonials() {
                       className={
                         starIndex < t.rating
                           ? "fill-gold text-gold"
-                          : "text-white/15"
+                          : "text-[#1c1712]/15"
                       }
                     />
                   ))}
                 </div>
 
-                <blockquote className="mt-5 text-sm leading-relaxed text-[#f0ebe2]/75">
+                <blockquote className="mt-5 text-sm leading-relaxed text-[#1c1712]/70">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
 
                 <footer className="mt-7 flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold/40 to-gold/10 font-display text-lg font-semibold text-gold-light">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold/40 to-gold/10 font-display text-lg font-semibold text-gold">
                     {t.name.charAt(0)}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold tracking-[0.12em] text-[#f0ebe2] uppercase">
+                    <p className="text-sm font-semibold tracking-[0.12em] text-[#1c1712] uppercase">
                       {t.name}
                     </p>
-                    <p className="mt-0.5 text-[11px] tracking-wide text-[#f0ebe2]/40">
+                    <p className="mt-0.5 text-[11px] tracking-wide text-[#1c1712]/45">
                       {t.location}
                     </p>
                   </div>

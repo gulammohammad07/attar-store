@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m as motion } from "framer-motion";
 
 const sparkles = [
   { top: "16%", left: "16%", size: 5, delay: 0.4, duration: 6 },
