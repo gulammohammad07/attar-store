@@ -13,7 +13,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
   const doubled = [...items, ...items];
 
   return (
-    <section className="relative overflow-hidden bg-[#F7F3EC] py-28">
+    <section className="relative overflow-hidden bg-[#F8FCFE] py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
 
       <div className="mx-auto max-w-7xl px-6">
@@ -25,8 +25,8 @@ export default function BestSellers({ products }: { products: Product[] }) {
       </div>
 
       <div className="relative">
-        <div className="group pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#F7F3EC] to-transparent sm:w-32" />
-        <div className="group pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#F7F3EC] to-transparent sm:w-32" />
+        <div className="group pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#F8FCFE] to-transparent sm:w-32" />
+        <div className="group pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#F8FCFE] to-transparent sm:w-32" />
 
         <div className="overflow-hidden px-6 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] sm:px-0">
           <div
@@ -45,7 +45,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <p className="mt-10 text-center text-[11px] tracking-[0.3em] text-[#1c1712]/35 uppercase">
+      <p className="mt-10 text-center text-[11px] tracking-[0.3em] text-[#174A63]/35 uppercase">
         Hover to pause · Drag nothing — simply gaze
       </p>
     </section>

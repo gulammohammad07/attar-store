@@ -27,16 +27,16 @@ export default function CartDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "tween", duration: 0.35, ease: "easeInOut" }}
-            className="fixed right-0 top-0 z-[90] flex h-full w-full max-w-md flex-col bg-[#F7F3EC] shadow-2xl"
+            className="fixed right-0 top-0 z-[90] flex h-full w-full max-w-md flex-col bg-[#F8FCFE] shadow-2xl"
           >
-            <div className="flex items-center justify-between border-b border-[#1c1712]/10 px-6 py-5">
-              <h2 className="font-display text-2xl font-semibold text-[#1c1712]">
+            <div className="flex items-center justify-between border-b border-[#174A63]/10 px-6 py-5">
+              <h2 className="font-display text-2xl font-semibold text-[#174A63]">
                 Your Bag
               </h2>
               <button
                 type="button"
                 onClick={closeCart}
-                className="rounded-full p-2 text-[#1c1712]/60 hover:bg-black/5"
+                className="rounded-full p-2 text-[#174A63]/60 hover:bg-black/5"
                 aria-label="Close cart"
               >
                 <X size={22} />
@@ -45,19 +45,19 @@ export default function CartDrawer() {
 
             {items.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#1c1712]/5">
-                  <ShoppingBag size={30} className="text-[#1c1712]/40" />
+                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#174A63]/5">
+                  <ShoppingBag size={30} className="text-[#174A63]/40" />
                 </div>
-                <p className="text-lg font-medium text-[#1c1712]">
+                <p className="text-lg font-medium text-[#174A63]">
                   Your bag is empty
                 </p>
-                <p className="text-sm text-[#1c1712]/50">
+                <p className="text-sm text-[#174A63]/50">
                   Discover our hand-curated collection of rare attars.
                 </p>
                 <Link
                   href="/shop"
                   onClick={closeCart}
-                  className="mt-2 rounded-full bg-[#1c1712] px-6 py-3 text-sm font-medium text-white"
+                  className="mt-2 rounded-full bg-[#174A63] px-6 py-3 text-sm font-medium text-white"
                 >
                   Shop Attars
                 </Link>
@@ -69,7 +69,7 @@ export default function CartDrawer() {
                     {items.map(({ product, quantity }) => (
                       <li
                         key={product.id}
-                        className="flex gap-4 border-b border-[#1c1712]/10 pb-6"
+                        className="flex gap-4 border-b border-[#174A63]/10 pb-6"
                       >
                         <Link
                           href={`/product/${product.slug}`}
@@ -88,17 +88,17 @@ export default function CartDrawer() {
                         <div className="flex flex-1 flex-col">
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <p className="font-medium text-[#1c1712]">
+                              <p className="font-medium text-[#174A63]">
                                 {product.name}
                               </p>
-                              <p className="text-xs text-[#1c1712]/50">
+                              <p className="text-xs text-[#174A63]/50">
                                 {product.volume}
                               </p>
                             </div>
                             <button
                               type="button"
                               onClick={() => removeFromCart(product.id)}
-                              className="text-[#1c1712]/40 hover:text-red-600"
+                              className="text-[#174A63]/40 hover:text-red-600"
                               aria-label="Remove item"
                             >
                               <Trash2 size={16} />
@@ -106,18 +106,18 @@ export default function CartDrawer() {
                           </div>
 
                           <div className="mt-auto flex items-center justify-between pt-3">
-                            <div className="flex items-center gap-3 rounded-full border border-[#1c1712]/15 px-3 py-1">
+                            <div className="flex items-center gap-3 rounded-full border border-[#174A63]/15 px-3 py-1">
                               <button
                                 type="button"
                                 onClick={() =>
                                   updateQuantity(product.id, quantity - 1)
                                 }
-                                className="text-[#1c1712]/60"
+                                className="text-[#174A63]/60"
                                 aria-label="Decrease quantity"
                               >
                                 <Minus size={14} />
                               </button>
-                              <span className="w-5 text-center text-sm font-medium text-[#1c1712]">
+                              <span className="w-5 text-center text-sm font-medium text-[#174A63]">
                                 {quantity}
                               </span>
                               <button
@@ -125,14 +125,14 @@ export default function CartDrawer() {
                                 onClick={() =>
                                   updateQuantity(product.id, quantity + 1)
                                 }
-                                className="text-[#1c1712]/60"
+                                className="text-[#174A63]/60"
                                 aria-label="Increase quantity"
                               >
                                 <Plus size={14} />
                               </button>
                             </div>
 
-                            <p className="font-semibold text-[#1c1712]">
+                            <p className="font-semibold text-[#174A63]">
                               {formatPrice(
                                 (product.salePrice ?? product.price) *
                                   quantity,
@@ -145,27 +145,27 @@ export default function CartDrawer() {
                   </ul>
                 </div>
 
-                <div className="border-t border-[#1c1712]/10 px-6 py-6">
+                <div className="border-t border-[#174A63]/10 px-6 py-6">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm text-[#1c1712]/60">Subtotal</span>
-                    <span className="font-semibold text-[#1c1712]">
+                    <span className="text-sm text-[#174A63]/60">Subtotal</span>
+                    <span className="font-semibold text-[#174A63]">
                       {formatPrice(subtotal)}
                     </span>
                   </div>
-                  <p className="mb-5 text-xs text-[#1c1712]/40">
+                  <p className="mb-5 text-xs text-[#174A63]/40">
                     Shipping and taxes calculated at checkout.
                   </p>
                   <Link
                     href="/checkout"
                     onClick={closeCart}
-                    className="block rounded-full bg-[#1c1712] py-4 text-center font-medium text-white transition-colors hover:bg-[#1c1712]/90"
+                    className="block rounded-full bg-[#174A63] py-4 text-center font-medium text-white transition-colors hover:bg-[#174A63]/90"
                   >
                     Checkout — {formatPrice(subtotal)}
                   </Link>
                   <button
                     type="button"
                     onClick={closeCart}
-                    className="mt-3 w-full rounded-full border border-[#1c1712]/20 py-3 text-sm font-medium text-[#1c1712]/70"
+                    className="mt-3 w-full rounded-full border border-[#174A63]/20 py-3 text-sm font-medium text-[#174A63]/70"
                   >
                     Continue Shopping
                   </button>

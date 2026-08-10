@@ -66,30 +66,30 @@ export async function sendPasswordResetEmail(input: {
   const expiresInHours = 1;
 
   const html = `
-    <div style="background:#f7f3ec;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
-      <div style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e8e0d2;border-radius:16px;overflow:hidden;">
-        <div style="background:#1c1712;padding:28px 32px;text-align:center;">
-          <p style="margin:0;color:#b08d57;font-size:18px;letter-spacing:4px;font-weight:600;">MD PERFUMES</p>
+    <div style="background:#F8FCFE;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
+      <div style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #DCEFF7;border-radius:16px;overflow:hidden;">
+        <div style="background:#174A63;padding:28px 32px;text-align:center;">
+          <p style="margin:0;color:#C9A96E;font-size:18px;letter-spacing:4px;font-weight:600;">MD PERFUMES</p>
         </div>
         <div style="padding:32px;">
-          <h1 style="margin:0 0 12px;color:#1c1712;font-size:22px;">Reset your password</h1>
-          <p style="margin:0 0 20px;color:#5c5448;font-size:15px;line-height:1.6;">
+          <h1 style="margin:0 0 12px;color:#174A63;font-size:22px;">Reset your password</h1>
+          <p style="margin:0 0 20px;color:#5F7788;font-size:15px;line-height:1.6;">
             Hello ${name}, we received a request to reset the password for your account.
             This link is valid for the next ${expiresInHours} hour${expiresInHours > 1 ? "s" : ""}.
           </p>
-          <a href="${resetUrl}" style="display:inline-block;background:#1c1712;color:#ffffff;padding:14px 28px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;">
+          <a href="${resetUrl}" style="display:inline-block;background:#174A63;color:#ffffff;padding:14px 28px;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;">
             Reset Password
           </a>
-          <p style="margin:24px 0 0;color:#8a8173;font-size:13px;line-height:1.6;">
+          <p style="margin:24px 0 0;color:#6B7C88;font-size:13px;line-height:1.6;">
             If you didn't request this, you can safely ignore this email. Your password won't change.
           </p>
-          <p style="margin:8px 0 0;color:#8a8173;font-size:13px;line-height:1.6;">
+          <p style="margin:8px 0 0;color:#6B7C88;font-size:13px;line-height:1.6;">
             Or copy and paste this link into your browser:<br/>
-            <span style="word-break:break-all;color:#b08d57;">${resetUrl}</span>
+            <span style="word-break:break-all;color:#C9A96E;">${resetUrl}</span>
           </p>
         </div>
-        <div style="background:#f7f3ec;padding:16px 32px;text-align:center;">
-          <p style="margin:0;color:#8a8173;font-size:12px;">© ${new Date().getFullYear()} MD Perfumes · ${appUrl}</p>
+        <div style="background:#F8FCFE;padding:16px 32px;text-align:center;">
+          <p style="margin:0;color:#6B7C88;font-size:12px;">© ${new Date().getFullYear()} MD Perfumes · ${appUrl}</p>
         </div>
       </div>
     </div>

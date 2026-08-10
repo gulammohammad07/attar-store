@@ -20,7 +20,7 @@ export default function AnnouncementBar() {
   }, []);
 
   return (
-    <div className="bg-charcoal text-[#efe8dc]">
+    <div className="bg-charcoal text-[#E3F2F9]">
       <div className="relative h-9 overflow-hidden">
         <AnimatedMessage message={messages[index]} />
       </div>

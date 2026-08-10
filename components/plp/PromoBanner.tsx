@@ -12,11 +12,11 @@ export default function PromoBanner({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden bg-[#efe6d3] py-24 sm:py-32">
+    <section className="relative overflow-hidden bg-[#DCEFF7] py-24 sm:py-32">
       {/* Decorative oversized numerals */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-10 right-4 font-display text-[16rem] leading-none font-semibold text-[#1c1712]/[0.04] sm:text-[24rem]"
+        className="pointer-events-none absolute -top-10 right-4 font-display text-[16rem] leading-none font-semibold text-[#174A63]/[0.04] sm:text-[24rem]"
       >
         02
       </span>
@@ -36,7 +36,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
             </p>
           </div>
 
-          <h2 className="mt-6 font-display text-6xl font-medium leading-[0.98] text-[#1c1712] sm:text-7xl">
+          <h2 className="mt-6 font-display text-6xl font-medium leading-[0.98] text-[#174A63] sm:text-7xl">
             The{" "}
             <span className="gold-gradient-text animate-shine italic motion-reduce:animate-none">
               Oud
@@ -44,7 +44,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
             Edit
           </h2>
 
-          <p className="mt-6 max-w-md text-sm leading-relaxed text-[#1c1712]/60">
+          <p className="mt-6 max-w-md text-sm leading-relaxed text-[#174A63]/60">
             Aged in darkness, poured at dawn. Our most coveted resins —
             distilled to their purest essence and bottled for those who wear
             rarity with ease.
@@ -52,7 +52,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
 
           <Link
             href="/shop"
-            className="group mt-10 inline-flex items-center gap-3 border-b border-[#1c1712]/30 pb-2 text-xs font-semibold tracking-[0.22em] text-[#1c1712] uppercase transition-colors hover:border-gold hover:text-gold"
+            className="group mt-10 inline-flex items-center gap-3 border-b border-[#174A63]/30 pb-2 text-xs font-semibold tracking-[0.22em] text-[#174A63] uppercase transition-colors hover:border-gold hover:text-gold"
           >
             Discover the Edit
             <ArrowUpRight
@@ -71,7 +71,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
           className="relative mx-auto h-[420px] w-full max-w-md sm:h-[500px]"
         >
           {/* Back plate */}
-          <div className="absolute left-[6%] top-[6%] h-[82%] w-[62%] -rotate-6 overflow-hidden rounded-[2rem] border border-white/60 bg-white/40 shadow-[0_40px_90px_-30px_rgba(28,23,18,0.35)] backdrop-blur-sm">
+          <div className="absolute left-[6%] top-[6%] h-[82%] w-[62%] -rotate-6 overflow-hidden rounded-[2rem] border border-white/60 bg-white/40 shadow-[0_40px_90px_-30px_rgba(23,74,99,0.35)] backdrop-blur-sm">
             {second && (
               <div className="relative h-full w-full">
                 <Image
@@ -82,7 +82,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
                   className="object-contain p-10"
                 />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-white/70 to-transparent p-5 pt-14">
-                  <p className="font-display text-lg font-semibold text-[#1c1712]">
+                  <p className="font-display text-lg font-semibold text-[#174A63]">
                     {second.name}
                   </p>
                 </div>
@@ -91,7 +91,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
           </div>
 
           {/* Front plate */}
-          <div className="absolute right-0 top-[16%] h-[78%] w-[58%] rotate-6 overflow-hidden rounded-[2rem] border border-gold/30 bg-[#fbf6ea] shadow-[0_50px_100px_-35px_rgba(176,141,87,0.55)]">
+          <div className="absolute right-0 top-[16%] h-[78%] w-[58%] rotate-6 overflow-hidden rounded-[2rem] border border-gold/30 bg-[#F4FAFD] shadow-[0_50px_100px_-35px_rgba(201,169,110,0.55)]">
             {first && (
               <div className="relative h-full w-full">
                 <Image
@@ -101,8 +101,8 @@ export default function PromoBanner({ products }: { products: Product[] }) {
                   sizes="(max-width: 1024px) 80vw, 380px"
                   className="object-contain p-10"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#fbf6ea] to-transparent p-5 pt-14">
-                  <p className="font-display text-lg font-semibold text-[#1c1712]">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#F4FAFD] to-transparent p-5 pt-14">
+                  <p className="font-display text-lg font-semibold text-[#174A63]">
                     {first.name}
                   </p>
                 </div>
@@ -119,7 +119,7 @@ export default function PromoBanner({ products }: { products: Product[] }) {
             <p className="font-display text-3xl font-semibold text-gold">
               12
             </p>
-            <p className="mt-0.5 text-[9px] font-semibold tracking-[0.2em] text-[#1c1712]/60 uppercase">
+            <p className="mt-0.5 text-[9px] font-semibold tracking-[0.2em] text-[#174A63]/60 uppercase">
               Bottles Per Batch
             </p>
           </motion.div>

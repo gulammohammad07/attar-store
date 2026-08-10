@@ -46,7 +46,7 @@ export default function QuickViewModal({
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-3xl overflow-hidden rounded-3xl bg-[#F7F3EC]"
+            className="relative w-full max-w-3xl overflow-hidden rounded-3xl bg-[#F8FCFE]"
           >
             <button
               type="button"
@@ -58,7 +58,7 @@ export default function QuickViewModal({
             </button>
 
             <div className="grid md:grid-cols-2">
-              <div className="relative h-72 bg-[#f8f5f0] md:h-full">
+              <div className="relative h-72 bg-[#EFF8FC] md:h-full">
                 <AnimatePresence initial={false}>
                   <motion.div
                     key={imgIndex}
@@ -86,7 +86,7 @@ export default function QuickViewModal({
                         setImgIndex((i) => (i - 1 + images.length) % images.length)
                       }
                       aria-label="Previous image"
-                      className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md transition-all hover:scale-110 hover:text-[#1c1712]"
+                      className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md transition-all hover:scale-110 hover:text-[#174A63]"
                     >
                       <ChevronLeft size={18} />
                     </button>
@@ -95,7 +95,7 @@ export default function QuickViewModal({
                       type="button"
                       onClick={() => setImgIndex((i) => (i + 1) % images.length)}
                       aria-label="Next image"
-                      className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md transition-all hover:scale-110 hover:text-[#1c1712]"
+                      className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md transition-all hover:scale-110 hover:text-[#174A63]"
                     >
                       <ChevronRight size={18} />
                     </button>
@@ -124,7 +124,7 @@ export default function QuickViewModal({
                 <p className="text-[10px] font-semibold tracking-[0.2em] text-gold uppercase">
                   {product.brand}
                 </p>
-                <h2 className="mt-2 font-display text-3xl font-semibold text-[#1c1712]">
+                <h2 className="mt-2 font-display text-3xl font-semibold text-[#174A63]">
                   {product.name}
                 </h2>
 
@@ -137,32 +137,32 @@ export default function QuickViewModal({
                         className={
                           i < Math.round(product.rating)
                             ? "fill-gold text-gold"
-                            : "text-[#1c1712]/20"
+                            : "text-[#174A63]/20"
                         }
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-[#1c1712]/50">
+                  <span className="text-sm text-[#174A63]/50">
                     {product.rating} ({product.reviewCount} reviews)
                   </span>
                 </div>
 
                 <div className="mt-4 flex items-center gap-3">
-                  <span className="text-2xl font-semibold text-[#1c1712]">
+                  <span className="text-2xl font-semibold text-[#174A63]">
                     {formatPrice(product.salePrice ?? product.price)}
                   </span>
                   {product.salePrice && (
-                    <span className="text-lg text-[#1c1712]/35 line-through">
+                    <span className="text-lg text-[#174A63]/35 line-through">
                       {formatPrice(product.price)}
                     </span>
                   )}
                 </div>
 
-                <p className="mt-4 text-sm leading-relaxed text-[#1c1712]/60">
+                <p className="mt-4 text-sm leading-relaxed text-[#174A63]/60">
                   {product.description}
                 </p>
 
-                <p className="mt-4 text-xs text-[#1c1712]/40">
+                <p className="mt-4 text-xs text-[#174A63]/40">
                   Volume: <span className="font-medium">{product.volume}</span>{" "}
                   • {product.gender} • {product.category}
                 </p>
@@ -174,7 +174,7 @@ export default function QuickViewModal({
                       addToCart(product);
                       toast.success(`${product.name} added to bag`);
                     }}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#1c1712] py-3 text-sm font-medium text-white transition-colors hover:bg-gold"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#174A63] py-3 text-sm font-medium text-white transition-colors hover:bg-gold"
                   >
                     <ShoppingBag size={16} />
                     Add to Bag
@@ -188,7 +188,7 @@ export default function QuickViewModal({
                       "flex h-11 w-11 items-center justify-center rounded-full border transition-colors",
                       wished
                         ? "border-red-200 bg-red-50 text-red-500"
-                        : "border-[#1c1712]/20 text-[#1c1712]/50 hover:border-gold hover:text-gold",
+                        : "border-[#174A63]/20 text-[#174A63]/50 hover:border-gold hover:text-gold",
                     )}
                   >
                     <Heart size={18} fill={wished ? "currentColor" : "none"} />
@@ -198,7 +198,7 @@ export default function QuickViewModal({
                 <Link
                   href={`/product/${product.slug}`}
                   onClick={onClose}
-                  className="mt-3 text-center text-sm font-medium text-[#1c1712]/60 underline-offset-4 hover:underline"
+                  className="mt-3 text-center text-sm font-medium text-[#174A63]/60 underline-offset-4 hover:underline"
                 >
                   View full details
                 </Link>

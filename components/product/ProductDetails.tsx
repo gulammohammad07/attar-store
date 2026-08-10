@@ -96,10 +96,10 @@ export default function ProductDetails({
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F7F3EC] pb-20">
+    <div className="min-h-screen bg-[#F8FCFE] pb-20">
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
-        <nav className="flex items-center gap-2 text-xs text-[#1c1712]/45">
+        <nav className="flex items-center gap-2 text-xs text-[#174A63]/45">
           <Link href="/" className="hover:text-gold">
             Home
           </Link>
@@ -115,7 +115,7 @@ export default function ProductDetails({
             {product.category}
           </Link>
           <span>/</span>
-          <span className="font-medium text-[#1c1712]">{product.name}</span>
+          <span className="font-medium text-[#174A63]">{product.name}</span>
         </nav>
       </div>
 
@@ -141,7 +141,7 @@ export default function ProductDetails({
               {product.brand}
             </p>
 
-            <h1 className="mt-3 font-display text-4xl font-medium text-[#1c1712] sm:text-5xl">
+            <h1 className="mt-3 font-display text-4xl font-medium text-[#174A63] sm:text-5xl">
               {product.name}
             </h1>
 
@@ -155,27 +155,27 @@ export default function ProductDetails({
                     className={
                       i < Math.round(product.rating)
                         ? "fill-gold text-gold"
-                        : "text-[#1c1712]/20"
+                        : "text-[#174A63]/20"
                     }
                   />
                 ))}
               </div>
-              <span className="text-sm font-medium text-[#1c1712]">
+              <span className="text-sm font-medium text-[#174A63]">
                 {product.rating}
               </span>
-              <span className="text-sm text-[#1c1712]/45">
+              <span className="text-sm text-[#174A63]/45">
                 ({product.reviewCount} reviews)
               </span>
             </div>
 
             {/* Price */}
             <div className="mt-6 flex items-center gap-3">
-              <span className="text-3xl font-semibold text-[#1c1712]">
+              <span className="text-3xl font-semibold text-[#174A63]">
                 {formatPrice(price)}
               </span>
               {product.salePrice && (
                 <>
-                  <span className="text-xl text-[#1c1712]/35 line-through">
+                  <span className="text-xl text-[#174A63]/35 line-through">
                     {formatPrice(product.price)}
                   </span>
                   <span className="rounded-full bg-red-100 px-2.5 py-1 text-xs font-bold text-red-600">
@@ -202,9 +202,9 @@ export default function ProductDetails({
                     "In stock — ready to ship"
                   )}
                 </span>
-                <span className="text-[#1c1712]/40">{stockPercent}%</span>
+                <span className="text-[#174A63]/40">{stockPercent}%</span>
               </div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#1c1712]/10">
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-[#174A63]/10">
                 <div
                   className={cn(
                     "h-full rounded-full",
@@ -216,7 +216,7 @@ export default function ProductDetails({
             </div>
 
             {/* Description */}
-            <p className="mt-6 text-sm leading-relaxed text-[#1c1712]/65">
+            <p className="mt-6 text-sm leading-relaxed text-[#174A63]/65">
               {product.description}
             </p>
 
@@ -230,7 +230,7 @@ export default function ProductDetails({
               ].map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-[#1c1712]/15 px-3 py-1 text-xs text-[#1c1712]/60"
+                  className="rounded-full border border-[#174A63]/15 px-3 py-1 text-xs text-[#174A63]/60"
                 >
                   {tag}
                 </span>
@@ -239,20 +239,20 @@ export default function ProductDetails({
 
             {/* Quantity + CTA */}
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-              <div className="flex items-center justify-between rounded-full border border-[#1c1712]/20 px-5 sm:w-36">
+              <div className="flex items-center justify-between rounded-full border border-[#174A63]/20 px-5 sm:w-36">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="py-4 text-[#1c1712]/60"
+                  className="py-4 text-[#174A63]/60"
                   aria-label="Decrease quantity"
                 >
                   <Minus size={16} />
                 </button>
-                <span className="font-semibold text-[#1c1712]">{quantity}</span>
+                <span className="font-semibold text-[#174A63]">{quantity}</span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="py-4 text-[#1c1712]/60"
+                  className="py-4 text-[#174A63]/60"
                   aria-label="Increase quantity"
                 >
                   <Plus size={16} />
@@ -262,7 +262,7 @@ export default function ProductDetails({
               <button
                 type="button"
                 onClick={handleAddToCart}
-                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#1c1712] py-4 text-sm font-semibold text-white transition-colors hover:bg-gold"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#174A63] py-4 text-sm font-semibold text-white transition-colors hover:bg-gold"
               >
                 <ShoppingBag size={18} />
                 Add to Bag — {formatPrice(price * quantity)}
@@ -273,7 +273,7 @@ export default function ProductDetails({
               <Link
                 href="/checkout"
                 onClick={handleAddToCart}
-                className="flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#1c1712] py-3.5 text-sm font-semibold text-[#1c1712] transition-colors hover:bg-[#1c1712] hover:text-white"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full border-2 border-[#174A63] py-3.5 text-sm font-semibold text-[#174A63] transition-colors hover:bg-[#174A63] hover:text-white"
               >
                 <Zap size={16} />
                 Buy Now
@@ -287,7 +287,7 @@ export default function ProductDetails({
                   "flex h-12 w-12 items-center justify-center rounded-full border-2 transition-colors",
                   wished
                     ? "border-red-200 bg-red-50 text-red-500"
-                    : "border-[#1c1712]/20 text-[#1c1712]/60 hover:border-gold hover:text-gold",
+                    : "border-[#174A63]/20 text-[#174A63]/60 hover:border-gold hover:text-gold",
                 )}
               >
                 <Heart size={18} fill={wished ? "currentColor" : "none"} />
@@ -297,7 +297,7 @@ export default function ProductDetails({
                 type="button"
                 onClick={share}
                 aria-label="Share product"
-                className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#1c1712]/20 text-[#1c1712]/60 transition-colors hover:border-gold hover:text-gold"
+                className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#174A63]/20 text-[#174A63]/60 transition-colors hover:border-gold hover:text-gold"
               >
                 <Share2 size={18} />
               </button>
@@ -305,32 +305,32 @@ export default function ProductDetails({
 
             {/* Delivery info */}
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-[#1c1712]/10 bg-white p-4">
+              <div className="rounded-2xl border border-[#174A63]/10 bg-white p-4">
                 <Truck size={18} className="text-gold" />
-                <p className="mt-2 text-xs font-semibold text-[#1c1712]">
+                <p className="mt-2 text-xs font-semibold text-[#174A63]">
                   Free Delivery
                 </p>
-                <p className="mt-0.5 text-[11px] text-[#1c1712]/45">
+                <p className="mt-0.5 text-[11px] text-[#174A63]/45">
                   Arrives by {deliveryDate}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#1c1712]/10 bg-white p-4">
+              <div className="rounded-2xl border border-[#174A63]/10 bg-white p-4">
                 <RefreshCcw size={18} className="text-gold" />
-                <p className="mt-2 text-xs font-semibold text-[#1c1712]">
+                <p className="mt-2 text-xs font-semibold text-[#174A63]">
                   Easy Returns
                 </p>
-                <p className="mt-0.5 text-[11px] text-[#1c1712]/45">
+                <p className="mt-0.5 text-[11px] text-[#174A63]/45">
                   14-day return window
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-[#1c1712]/10 bg-white p-4">
+              <div className="rounded-2xl border border-[#174A63]/10 bg-white p-4">
                 <Check size={18} className="text-gold" />
-                <p className="mt-2 text-xs font-semibold text-[#1c1712]">
+                <p className="mt-2 text-xs font-semibold text-[#174A63]">
                   Authentic
                 </p>
-                <p className="mt-0.5 text-[11px] text-[#1c1712]/45">
+                <p className="mt-0.5 text-[11px] text-[#174A63]/45">
                   Certified genuine
                 </p>
               </div>
@@ -340,7 +340,7 @@ export default function ProductDetails({
 
         {/* Tabs */}
         <div className="mt-20">
-          <div className="flex gap-8 overflow-x-auto border-b border-[#1c1712]/15 [scrollbar-width:none]">
+          <div className="flex gap-8 overflow-x-auto border-b border-[#174A63]/15 [scrollbar-width:none]">
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -349,8 +349,8 @@ export default function ProductDetails({
                 className={cn(
                   "relative whitespace-nowrap pb-4 text-sm font-semibold tracking-wide transition-colors",
                   activeTab === tab
-                    ? "text-[#1c1712]"
-                    : "text-[#1c1712]/40 hover:text-[#1c1712]/70",
+                    ? "text-[#174A63]"
+                    : "text-[#174A63]/40 hover:text-[#174A63]/70",
                 )}
               >
                 {tab}
@@ -372,12 +372,12 @@ export default function ProductDetails({
           <div className="py-10">
             {activeTab === "Description" && (
               <div className="max-w-3xl space-y-5">
-                <p className="leading-relaxed text-[#1c1712]/70">
+                <p className="leading-relaxed text-[#174A63]/70">
                   {product.description}
                 </p>
-                <p className="leading-relaxed text-[#1c1712]/70">
+                <p className="leading-relaxed text-[#174A63]/70">
                   A{" "}
-                  <span className="font-medium text-[#1c1712]">
+                  <span className="font-medium text-[#174A63]">
                     {product.category.toLowerCase()}
                   </span>{" "}
                   composition from {product.brand}, crafted for{" "}
@@ -400,21 +400,21 @@ export default function ProductDetails({
             )}
 
             {activeTab === "Shipping" && (
-              <div className="max-w-2xl space-y-4 text-sm leading-relaxed text-[#1c1712]/70">
+              <div className="max-w-2xl space-y-4 text-sm leading-relaxed text-[#174A63]/70">
                 <p>
-                  <span className="font-semibold text-[#1c1712]">
+                  <span className="font-semibold text-[#174A63]">
                     Delivery:{" "}
                   </span>
                   Dispatched within 24 hours. Free standard shipping on orders
                   over ₹1,500; express delivery available at checkout.
                 </p>
                 <p>
-                  <span className="font-semibold text-[#1c1712]">Returns: </span>
+                  <span className="font-semibold text-[#174A63]">Returns: </span>
                   Unopened items may be returned within 14 days for a full
                   refund.
                 </p>
                 <p>
-                  <span className="font-semibold text-[#1c1712]">
+                  <span className="font-semibold text-[#174A63]">
                     Gift Packaging:{" "}
                   </span>
                   Complimentary premium gift wrapping with every order.

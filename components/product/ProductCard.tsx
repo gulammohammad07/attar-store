@@ -87,7 +87,7 @@ export default function ProductCard({
                 product.badge === "Sale"
                   ? "bg-red-600 text-white"
                   : product.badge === "Limited Edition"
-                    ? "bg-[#1c1712] text-gold"
+                    ? "bg-[#174A63] text-gold"
                     : "bg-gold text-white",
               )}
             >
@@ -109,7 +109,7 @@ export default function ProductCard({
               aria-label="Add to wishlist"
               className={cn(
                 "flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow backdrop-blur transition-all hover:scale-110",
-                wished ? "text-red-500" : "text-[#1c1712]/50 hover:text-red-500",
+                wished ? "text-red-500" : "text-[#174A63]/50 hover:text-red-500",
               )}
             >
               <Heart size={16} fill={wished ? "currentColor" : "none"} />
@@ -121,12 +121,12 @@ export default function ProductCard({
               aria-label="Quick view"
               className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow backdrop-blur transition-all hover:scale-110"
             >
-              <Eye size={16} className="text-[#1c1712]/50" />
+              <Eye size={16} className="text-[#174A63]/50" />
             </button>
           </div>
 
           {/* Image */}
-          <div className="relative h-72 w-full overflow-hidden bg-[#f8f5f0]">
+          <div className="relative h-72 w-full overflow-hidden bg-[#EFF8FC]">
             <Link
               href={`/product/${product.slug}`}
               className="block h-full w-full"
@@ -158,7 +158,7 @@ export default function ProductCard({
                   type="button"
                   onClick={prevImage}
                   aria-label="Previous image"
-                  className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#1c1712]"
+                  className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#174A63]"
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -167,7 +167,7 @@ export default function ProductCard({
                   type="button"
                   onClick={nextImage}
                   aria-label="Next image"
-                  className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#1c1712]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#1c1712]"
+                  className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#174A63]"
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -204,31 +204,31 @@ export default function ProductCard({
               </p>
               <div className="flex items-center gap-1 text-xs">
                 <Star size={12} className="fill-gold text-gold" />
-                <span className="font-medium text-[#1c1712]">
+                <span className="font-medium text-[#174A63]">
                   {product.rating}
                 </span>
-                <span className="text-[#1c1712]/40">
+                <span className="text-[#174A63]/40">
                   ({product.reviewCount})
                 </span>
               </div>
             </div>
 
             <Link href={`/product/${product.slug}`} className="mt-1 block">
-              <h3 className="font-display text-xl font-semibold text-[#1c1712] transition-colors group-hover:text-gold">
+              <h3 className="font-display text-xl font-semibold text-[#174A63] transition-colors group-hover:text-gold">
                 {product.name}
               </h3>
             </Link>
 
-            <p className="mt-1 text-xs text-[#1c1712]/45">
+            <p className="mt-1 text-xs text-[#174A63]/45">
               {product.volume} • {product.category}
             </p>
 
             <div className="mt-3 flex items-center gap-2">
-              <span className="text-lg font-semibold text-[#1c1712]">
+              <span className="text-lg font-semibold text-[#174A63]">
                 {formatPrice(price)}
               </span>
               {product.salePrice && (
-                <span className="text-sm text-[#1c1712]/35 line-through">
+                <span className="text-sm text-[#174A63]/35 line-through">
                   {formatPrice(product.price)}
                 </span>
               )}
@@ -240,7 +240,7 @@ export default function ProductCard({
                 addToCart(product);
                 toast.success(`${product.name} added to bag`);
               }}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#1c1712] py-3 text-sm font-medium text-white transition-all hover:bg-gold"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#174A63] py-3 text-sm font-medium text-white transition-all hover:bg-gold"
             >
               <ShoppingBag size={16} />
               Add to Bag

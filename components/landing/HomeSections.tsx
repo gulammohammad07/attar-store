@@ -61,7 +61,7 @@ export default function HomeSections({
             eyebrow="The Collection"
             title="Shop by Category"
             description="Our olfactory families, each a world of its own. Find the note that speaks to you."
-            className="bg-[#f7f3ec]"
+            className="bg-[#F8FCFE]"
             style={{ minHeight: 680 }}
           />
         }
@@ -76,7 +76,7 @@ export default function HomeSections({
             eyebrow="Most Loved"
             title="Best Sellers"
             description="The fragrances our clients return for, again and again."
-            className="bg-[#F7F3EC]"
+            className="bg-[#F8FCFE]"
             style={{ minHeight: 820 }}
           />
         }
@@ -90,7 +90,7 @@ export default function HomeSections({
           <SectionSkeleton
             eyebrow="Curated Worlds"
             title="Luxury Collections"
-            className="bg-[#f3ecdf]"
+            className="bg-[#E3F2F9]"
             style={{ minHeight: "100vh" }}
           />
         }
@@ -105,7 +105,7 @@ export default function HomeSections({
             eyebrow="The MD Difference"
             title="Why Choose MD Perfumes"
             description="More than fragrance — a promise of purity, patience and obsession with detail."
-            className="bg-[#F7F3EC]"
+            className="bg-[#F8FCFE]"
             style={{ minHeight: 1100 }}
           />
         }
@@ -120,7 +120,7 @@ export default function HomeSections({
             eyebrow="Word of Mouth"
             title="Loved by Connoisseurs"
             description="Real reviews from clients who made MD Perfumes their signature."
-            className="bg-[#efe6d3]"
+            className="bg-[#DCEFF7]"
             style={{ minHeight: 660 }}
           />
         }
@@ -134,7 +134,7 @@ export default function HomeSections({
           <SectionSkeleton
             eyebrow="Our Story"
             title="Perfume, the way it was meant to be"
-            className="bg-[#f7f3ec]"
+            className="bg-[#F8FCFE]"
             style={{ minHeight: 1240 }}
           />
         }
@@ -149,7 +149,7 @@ export default function HomeSections({
             eyebrow="Inner Circle"
             title="Join the Inner Circle"
             description="Early access to limited drops, private sales and fragrance notes from the atelier."
-            className="bg-[#f3ecdf]"
+            className="bg-[#E3F2F9]"
             style={{ minHeight: 640 }}
           />
         }

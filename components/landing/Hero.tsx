@@ -61,13 +61,13 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
     <section
       ref={ref}
       onMouseMove={handleMove}
-      className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#f3ecdf]"
+      className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#E3F2F9]"
     >
       {/* Desert sky gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f7f1e4] via-[#f3ecdf] to-[#eadfc9]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#EDF7FB] via-[#E3F2F9] to-[#D3E7F1]" />
 
       {/* Sun glow */}
-      <div className="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(230,200,144,0.5),rgba(230,200,144,0.12)_55%,transparent_72%)]" />
+      <div className="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(224,199,149,0.5),rgba(224,199,149,0.12)_55%,transparent_72%)]" />
       <div className="absolute left-1/2 top-[-30%] h-[46vmin] w-[46vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.7),transparent_68%)]" />
 
       {/* Golden rays */}
@@ -77,18 +77,18 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
         aria-hidden
       >
         <div className="rays absolute -right-[25%] top-1/2 h-[160%] w-[90%] -translate-y-1/2 opacity-60 motion-reduce:animate-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_28%_38%,rgba(214,185,138,0.16),transparent_58%)]" />
-        <div className="absolute -left-40 top-1/3 h-[460px] w-[460px] bg-[radial-gradient(circle,rgba(198,161,91,0.12),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_28%_38%,rgba(220,201,160,0.16),transparent_58%)]" />
+        <div className="absolute -left-40 top-1/3 h-[460px] w-[460px] bg-[radial-gradient(circle,rgba(201,169,110,0.12),transparent_70%)]" />
       </motion.div>
 
       {/* Desert dunes */}
-      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[radial-gradient(ellipse_120%_100%_at_50%_100%,rgba(214,185,138,0.45),rgba(214,185,138,0)_62%)]" />
-      <div className="absolute inset-x-[-10%] bottom-[-14%] h-[42%] rounded-[100%] bg-[#e5d6b8]/70 blur-xl" />
-      <div className="absolute inset-x-[-6%] bottom-[-20%] h-[38%] rounded-[100%] bg-[#d9c39b]/60 blur-2xl" />
+      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[radial-gradient(ellipse_120%_100%_at_50%_100%,rgba(220,201,160,0.45),rgba(220,201,160,0)_62%)]" />
+      <div className="absolute inset-x-[-10%] bottom-[-14%] h-[42%] rounded-[100%] bg-[#DCCDA6]/70 blur-xl" />
+      <div className="absolute inset-x-[-6%] bottom-[-20%] h-[38%] rounded-[100%] bg-[#C9A96E]/60 blur-2xl" />
 
       {/* Depth + readability overlays */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#f3ecdf]/45 via-transparent to-transparent lg:from-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#f3ecdf] to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#E3F2F9]/45 via-transparent to-transparent lg:from-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#E3F2F9] to-transparent" />
 
       {/* Content */}
       <motion.div
@@ -109,7 +109,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           </motion.div>
 
           <h1
-            className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#1c1712] sm:text-7xl lg:text-8xl"
+            className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#174A63] sm:text-7xl lg:text-8xl"
           >
             Rare Attars,
             <br />
@@ -122,7 +122,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.15 }}
-            className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-[#1c1712]/55 lg:mx-0"
+            className="mx-auto mt-6 max-w-md text-sm leading-relaxed text-[#174A63]/55 lg:mx-0"
           >
             Small-batch ouds and attars aged in the traditional way. Each blend
             is hand-poured, sun-rested and bottled to be worn like a memory.
@@ -136,7 +136,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           >
             <Link
               href="/shop"
-              className="group relative overflow-hidden rounded-full bg-gold px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-[0_0_40px_rgba(198,161,91,0.35)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(198,161,91,0.55)]"
+              className="group relative overflow-hidden rounded-full bg-gold px-8 py-4 text-sm font-semibold tracking-wide text-white shadow-[0_0_40px_rgba(201,169,110,0.35)] transition-all hover:scale-105 hover:shadow-[0_0_60px_rgba(201,169,110,0.55)]"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Explore Collection
@@ -150,7 +150,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
 
             <Link
               href="/#story"
-              className="rounded-full border border-[#1c1712]/25 px-8 py-4 text-sm font-semibold tracking-wide text-[#1c1712] backdrop-blur-sm transition-colors hover:border-gold hover:text-gold"
+              className="rounded-full border border-[#174A63]/25 px-8 py-4 text-sm font-semibold tracking-wide text-[#174A63] backdrop-blur-sm transition-colors hover:border-gold hover:text-gold"
             >
               Our Story
             </Link>
@@ -175,10 +175,10 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
                 {i > 0 && (
                   <span className="absolute -left-5 -top-2 h-12 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent sm:-left-7" />
                 )}
-                <p className="font-display text-3xl font-semibold text-[#1c1712] sm:text-4xl">
+                <p className="font-display text-3xl font-semibold text-[#174A63] sm:text-4xl">
                   {stat.value}
                 </p>
-                <p className="mt-1 text-[10px] tracking-[0.2em] text-[#1c1712]/45 uppercase">
+                <p className="mt-1 text-[10px] tracking-[0.2em] text-[#174A63]/45 uppercase">
                   {stat.label}
                 </p>
               </div>
@@ -203,7 +203,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -14, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-            className="absolute right-[6%] top-[16%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#1c1712]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute right-[6%] top-[16%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
           >
             <Sparkles size={12} className="text-gold" /> Pure Oud
           </motion.span>
@@ -211,7 +211,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -16, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 6, repeat: Infinity, delay: 2 }}
-            className="absolute bottom-[22%] right-[0%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#1c1712]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute bottom-[22%] right-[0%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
           >
             <Sparkles size={12} className="text-gold" /> Hand-Poured
           </motion.span>
@@ -219,7 +219,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -12, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5.5, repeat: Infinity, delay: 3 }}
-            className="absolute right-[30%] top-[58%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#1c1712]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute right-[30%] top-[58%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
           >
             <Sparkles size={12} className="text-gold" /> Sun-Rested
           </motion.span>

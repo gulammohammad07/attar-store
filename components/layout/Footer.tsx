@@ -50,7 +50,7 @@ const trustBadges = [
 
 export default function Footer() {
   return (
-    <footer className="bg-charcoal text-[#f0ebe2]">
+    <footer className="bg-charcoal text-[#F8FCFE]">
       {/* Trust badges */}
       <div className="border-b border-white/10">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-10 lg:grid-cols-4">
@@ -59,7 +59,7 @@ export default function Footer() {
               <badge.icon size={26} className="shrink-0 text-gold" />
               <div>
                 <p className="font-medium">{badge.label}</p>
-                <p className="text-xs text-[#f0ebe2]/50">{badge.sub}</p>
+                <p className="text-xs text-[#F8FCFE]/50">{badge.sub}</p>
               </div>
             </div>
           ))}
@@ -74,7 +74,7 @@ export default function Footer() {
             <p className="font-display text-3xl font-semibold tracking-[0.18em]">
               MD<span className="text-gold"> PERFUMES</span>
             </p>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#f0ebe2]/60">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#F8FCFE]/60">
               A curated house of rare ouds, attars and oriental fragrances.
               Every blend is hand-poured in small batches and aged with
               patience — because true luxury cannot be rushed.
@@ -91,7 +91,7 @@ export default function Footer() {
                   key={social.label}
                   href="#"
                   aria-label={social.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-[#f0ebe2]/70 transition-all hover:border-gold hover:bg-gold hover:text-white"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-[#F8FCFE]/70 transition-all hover:border-gold hover:bg-gold hover:text-white"
                 >
                   <social.icon size={17} />
                 </a>
@@ -111,7 +111,7 @@ export default function Footer() {
                     <Link
                       href={link.href}
                       prefetch={link.href === "/account" ? false : undefined}
-                      className="text-sm text-[#f0ebe2]/70 transition-colors hover:text-gold-light"
+                      className="text-sm text-[#F8FCFE]/70 transition-colors hover:text-gold-light"
                     >
                       {link.label}
                     </Link>
@@ -128,7 +128,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-xs text-[#f0ebe2]/40 sm:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-xs text-[#F8FCFE]/40 sm:flex-row">
           <p>© {new Date().getFullYear()} MD Perfumes. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-gold-light">

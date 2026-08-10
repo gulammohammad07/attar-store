@@ -136,17 +136,17 @@ export default function ShopContent({ products }: { products: Product[] }) {
   }, [hasMore, loading]);
 
   return (
-    <div className="min-h-screen bg-[#F7F3EC]">
+    <div className="min-h-screen bg-[#F8FCFE]">
       {/* Page header */}
-      <div className="border-b border-[#1c1712]/10 bg-[#efe8dc]">
+      <div className="border-b border-[#174A63]/10 bg-[#E3F2F9]">
         <div className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6">
           <p className="text-[11px] font-semibold tracking-[0.3em] text-gold uppercase">
             The Collection
           </p>
-          <h1 className="mt-3 font-display text-5xl font-medium text-[#1c1712]">
+          <h1 className="mt-3 font-display text-5xl font-medium text-[#174A63]">
             Shop Attars
           </h1>
-          <p className="mx-auto mt-4 max-w-md text-sm text-[#1c1712]/55">
+          <p className="mx-auto mt-4 max-w-md text-sm text-[#174A63]/55">
             {filtered.length} rare blends, hand-poured and ready to wear.
           </p>
         </div>
@@ -155,9 +155,9 @@ export default function ShopContent({ products }: { products: Product[] }) {
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         {/* Toolbar */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div className="text-sm text-[#1c1712]/50">
+          <div className="text-sm text-[#174A63]/50">
             Showing{" "}
-            <span className="font-semibold text-[#1c1712]">
+            <span className="font-semibold text-[#174A63]">
               {visibleProducts.length}
             </span>{" "}
             of {filtered.length} fragrances
@@ -165,7 +165,7 @@ export default function ShopContent({ products }: { products: Product[] }) {
 
           <div className="flex items-center gap-3">
             {/* Layout toggle */}
-            <div className="flex rounded-full border border-[#1c1712]/15 p-1">
+            <div className="flex rounded-full border border-[#174A63]/15 p-1">
               <button
                 type="button"
                 onClick={() => setLayout("grid")}
@@ -173,8 +173,8 @@ export default function ShopContent({ products }: { products: Product[] }) {
                 className={cn(
                   "rounded-full p-2 transition-colors",
                   layout === "grid"
-                    ? "bg-[#1c1712] text-white"
-                    : "text-[#1c1712]/50",
+                    ? "bg-[#174A63] text-white"
+                    : "text-[#174A63]/50",
                 )}
               >
                 <LayoutGrid size={16} />
@@ -186,8 +186,8 @@ export default function ShopContent({ products }: { products: Product[] }) {
                 className={cn(
                   "rounded-full p-2 transition-colors",
                   layout === "list"
-                    ? "bg-[#1c1712] text-white"
-                    : "text-[#1c1712]/50",
+                    ? "bg-[#174A63] text-white"
+                    : "text-[#174A63]/50",
                 )}
               >
                 <List size={16} />
@@ -198,7 +198,7 @@ export default function ShopContent({ products }: { products: Product[] }) {
             <select
               value={sort}
               onChange={(e) => handleSortChange(e.target.value as SortOption)}
-              className="rounded-full border border-[#1c1712]/15 bg-white px-4 py-2.5 text-sm font-medium text-[#1c1712] focus:border-gold focus:outline-none"
+              className="rounded-full border border-[#174A63]/15 bg-white px-4 py-2.5 text-sm font-medium text-[#174A63] focus:border-gold focus:outline-none"
               aria-label="Sort products"
             >
               {(Object.keys(SORT_LABELS) as SortOption[]).map((key) => (
@@ -243,10 +243,10 @@ export default function ShopContent({ products }: { products: Product[] }) {
 
         {filtered.length === 0 && (
           <div className="py-24 text-center">
-            <p className="font-display text-3xl font-medium text-[#1c1712]">
+            <p className="font-display text-3xl font-medium text-[#174A63]">
               No fragrances found
             </p>
-            <p className="mt-3 text-sm text-[#1c1712]/50">
+            <p className="mt-3 text-sm text-[#174A63]/50">
               Try a different category or note.
             </p>
           </div>
@@ -256,7 +256,7 @@ export default function ShopContent({ products }: { products: Product[] }) {
         <div ref={sentinelRef} className="h-10" />
 
         {!hasMore && filtered.length > 0 && (
-          <p className="py-8 text-center text-xs tracking-[0.2em] text-[#1c1712]/40 uppercase">
+          <p className="py-8 text-center text-xs tracking-[0.2em] text-[#174A63]/40 uppercase">
             You&apos;ve reached the end ✦
           </p>
         )}

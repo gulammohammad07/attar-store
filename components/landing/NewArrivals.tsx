@@ -7,7 +7,7 @@ export default function NewArrivals({ products }: { products: Product[] }) {
   const arrivals = products.filter((p) => p.badge === "New Arrival");
 
   return (
-    <section className="bg-[#efe8dc] py-24">
+    <section className="bg-[#E3F2F9] py-24">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Fresh From the Atelier"
@@ -24,7 +24,7 @@ export default function NewArrivals({ products }: { products: Product[] }) {
         <div className="mt-14 text-center">
           <Link
             href="/shop?sort=newest"
-            className="inline-block rounded-full border border-[#1c1712] px-8 py-3.5 text-sm font-semibold text-[#1c1712] transition-all hover:bg-[#1c1712] hover:text-white"
+            className="inline-block rounded-full border border-[#174A63] px-8 py-3.5 text-sm font-semibold text-[#174A63] transition-all hover:bg-[#174A63] hover:text-white"
           >
             View All Attars
           </Link>

@@ -75,22 +75,22 @@ export default function PlpHero() {
     <section
       ref={ref}
       onMouseMove={handleMove}
-      className="relative flex min-h-[92svh] items-center overflow-hidden bg-[#f3ecdf]"
+      className="relative flex min-h-[92svh] items-center overflow-hidden bg-[#E3F2F9]"
     >
       {/* Desert sky gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f7f1e4] via-[#f3ecdf] to-[#eadfc9]" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#EDF7FB] via-[#E3F2F9] to-[#D3E7F1]" />
 
       {/* Sun glow */}
-      <div className="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(230,200,144,0.5),rgba(230,200,144,0.12)_55%,transparent_72%)]" />
+      <div className="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(224,199,149,0.5),rgba(224,199,149,0.12)_55%,transparent_72%)]" />
       <div className="absolute left-1/2 top-[-30%] h-[46vmin] w-[46vmin] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.7),transparent_68%)]" />
 
       {/* Soft cinematic rays */}
       <div className="rays absolute -right-[18%] top-1/2 h-[150%] w-[70%] opacity-60 motion-reduce:animate-none" />
 
       {/* Desert dunes */}
-      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[radial-gradient(ellipse_120%_100%_at_50%_100%,rgba(214,185,138,0.55),rgba(214,185,138,0)_62%)]" />
-      <div className="absolute inset-x-[-10%] bottom-[-14%] h-[42%] rounded-[100%] bg-[#e5d6b8]/80 blur-xl" />
-      <div className="absolute inset-x-[-6%] bottom-[-20%] h-[38%] rounded-[100%] bg-[#d9c39b]/70 blur-2xl" />
+      <div className="absolute inset-x-0 bottom-0 h-[38%] bg-[radial-gradient(ellipse_120%_100%_at_50%_100%,rgba(220,201,160,0.55),rgba(220,201,160,0)_62%)]" />
+      <div className="absolute inset-x-[-10%] bottom-[-14%] h-[42%] rounded-[100%] bg-[#DCCDA6]/80 blur-xl" />
+      <div className="absolute inset-x-[-6%] bottom-[-20%] h-[38%] rounded-[100%] bg-[#C9A96E]/70 blur-2xl" />
 
       {/* Floating particles */}
       {particles.map((p, i) => (
@@ -103,8 +103,8 @@ export default function PlpHero() {
             width: p.size,
             height: p.size,
             background:
-              "radial-gradient(circle, rgba(198,161,91,0.9), rgba(198,161,91,0))",
-            boxShadow: "0 0 14px 2px rgba(198,161,91,0.28)",
+              "radial-gradient(circle, rgba(201,169,110,0.9), rgba(201,169,110,0))",
+            boxShadow: "0 0 14px 2px rgba(201,169,110,0.28)",
           }}
           animate={motionOk ? { y: [0, -34, 0], opacity: [0.15, 0.8, 0.15], scale: [1, 1.12, 1] } : { y: 0, opacity: 0.5 }}
           transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeInOut" }}
@@ -112,7 +112,7 @@ export default function PlpHero() {
       ))}
 
       {/* Bottom fade into cream */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#f3ecdf] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#E3F2F9] to-transparent" />
 
       <div className="relative z-20 mx-auto grid w-full max-w-7xl items-center gap-6 px-6 pt-28 pb-24 lg:grid-cols-2 lg:gap-0 lg:pt-24 lg:pb-20">
         {/* Copy */}
@@ -134,7 +134,7 @@ export default function PlpHero() {
           </motion.div>
 
           <h1
-            className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#1c1712] sm:text-7xl lg:text-[6.5rem]"
+            className="mt-6 font-display text-6xl font-medium leading-[1.02] text-[#174A63] sm:text-7xl lg:text-[6.5rem]"
           >
             Attar
             <br />
@@ -147,7 +147,7 @@ export default function PlpHero() {
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.85, delay: 0.4 }}
-            className="mx-auto mt-7 flex items-center justify-center gap-3 text-sm font-light tracking-[0.28em] text-[#1c1712]/55 uppercase lg:mx-0 lg:justify-start"
+            className="mx-auto mt-7 flex items-center justify-center gap-3 text-sm font-light tracking-[0.28em] text-[#174A63]/55 uppercase lg:mx-0 lg:justify-start"
           >
             <span>Pure</span>
             <span className="text-gold">•</span>
@@ -164,7 +164,7 @@ export default function PlpHero() {
           >
             <Link
               href="/shop#collection"
-              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-gold/70 bg-white/60 px-9 py-4 text-sm font-semibold tracking-wide text-[#1c1712] shadow-[0_12px_40px_-14px_rgba(176,141,87,0.6)] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-[#b08d57] hover:via-gold hover:to-[#e3c795] hover:text-white hover:shadow-[0_16px_50px_-10px_rgba(176,141,87,0.8)]"
+              className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-gold/70 bg-white/60 px-9 py-4 text-sm font-semibold tracking-wide text-[#174A63] shadow-[0_12px_40px_-14px_rgba(201,169,110,0.6)] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-[#C9A96E] hover:via-gold hover:to-[#E0C795] hover:text-white hover:shadow-[0_16px_50px_-10px_rgba(201,169,110,0.8)]"
             >
               <span className="relative z-10 flex items-center gap-2.5">
                 Explore the Collection
@@ -196,7 +196,7 @@ export default function PlpHero() {
               animate={motionOk ? { y: [0, -16, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
               transition={{ duration: 5.5, repeat: Infinity, delay: chip.delay }}
               style={{ top: chip.top, right: chip.right }}
-              className="absolute flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#1c1712]/75 uppercase shadow-lg backdrop-blur-md"
+              className="absolute flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
             >
               <Sparkles size={12} className="text-gold" />
               {chip.label}

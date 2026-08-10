@@ -26,11 +26,11 @@ export default function SectionSkeleton({
         <p className="text-[11px] font-semibold tracking-[0.3em] text-gold uppercase">
           {eyebrow}
         </p>
-        <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-[#1c1712] sm:text-5xl">
+        <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-[#174A63] sm:text-5xl">
           {title}
         </h2>
         {description && (
-          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#1c1712]/55">
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-[#174A63]/55">
             {description}
           </p>
         )}

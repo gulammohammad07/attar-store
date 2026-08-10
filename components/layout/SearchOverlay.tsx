@@ -104,7 +104,7 @@ export default function SearchOverlay({
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search by fragrance, note, brand..."
-                  className="flex-1 bg-transparent text-lg text-[#f0ebe2] placeholder:text-[#f0ebe2]/40 focus:outline-none"
+                  className="flex-1 bg-transparent text-lg text-[#F8FCFE] placeholder:text-[#F8FCFE]/40 focus:outline-none"
                 />
                 <button
                   type="button"
@@ -112,7 +112,7 @@ export default function SearchOverlay({
                   className={`rounded-full p-2 transition-colors ${
                     listening
                       ? "bg-gold text-white"
-                      : "text-[#f0ebe2]/60 hover:text-gold"
+                      : "text-[#F8FCFE]/60 hover:text-gold"
                   }`}
                   aria-label="Voice search"
                 >
@@ -121,7 +121,7 @@ export default function SearchOverlay({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="text-[#f0ebe2]/60 hover:text-white"
+                  className="text-[#F8FCFE]/60 hover:text-white"
                   aria-label="Close search"
                 >
                   <X size={20} />
@@ -137,7 +137,7 @@ export default function SearchOverlay({
 
               {query.trim().length === 0 ? (
                 <div className="mt-5">
-                  <p className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-[#f0ebe2]/50 uppercase">
+                  <p className="mb-3 flex items-center gap-2 text-xs font-semibold tracking-[0.2em] text-[#F8FCFE]/50 uppercase">
                     <TrendingUp size={14} /> Popular searches
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -146,7 +146,7 @@ export default function SearchOverlay({
                         key={term}
                         type="button"
                         onClick={() => setQuery(term)}
-                        className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-[#f0ebe2]/80 transition-colors hover:border-gold hover:text-gold"
+                        className="rounded-full border border-white/10 px-4 py-1.5 text-sm text-[#F8FCFE]/80 transition-colors hover:border-gold hover:text-gold"
                       >
                         {term}
                       </button>
@@ -154,12 +154,12 @@ export default function SearchOverlay({
                   </div>
                 </div>
               ) : searching && results.length === 0 ? (
-                <p className="mt-6 flex items-center gap-2 text-sm text-[#f0ebe2]/60">
+                <p className="mt-6 flex items-center gap-2 text-sm text-[#F8FCFE]/60">
                   <span className="h-2 w-2 animate-pulse rounded-full bg-gold" />
                   Searching the collection...
                 </p>
               ) : results.length === 0 ? (
-                <p className="mt-6 text-sm text-[#f0ebe2]/60">
+                <p className="mt-6 text-sm text-[#F8FCFE]/60">
                   No results for &quot;{query}&quot;. Try &quot;Oud&quot; or &quot;Musk&quot;.
                 </p>
               ) : (
@@ -181,10 +181,10 @@ export default function SearchOverlay({
                           />
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-[#f0ebe2]">
+                          <p className="font-medium text-[#F8FCFE]">
                             {product.name}
                           </p>
-                          <p className="text-xs text-[#f0ebe2]/50">
+                          <p className="text-xs text-[#F8FCFE]/50">
                             {product.brand} • {product.category}
                           </p>
                         </div>

@@ -7,16 +7,16 @@ function NoteBar({ note, delay }: { note: FragranceNote; delay: number }) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between">
-        <span className="text-sm font-medium text-[#1c1712]">{note.name}</span>
-        <span className="text-xs text-[#1c1712]/40">{note.intensity}%</span>
+        <span className="text-sm font-medium text-[#174A63]">{note.name}</span>
+        <span className="text-xs text-[#174A63]/40">{note.intensity}%</span>
       </div>
-      <div className="h-1.5 overflow-hidden rounded-full bg-[#1c1712]/10">
+      <div className="h-1.5 overflow-hidden rounded-full bg-[#174A63]/10">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${note.intensity}%` }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay, ease: "easeOut" }}
-          className="h-full rounded-full bg-gradient-to-r from-[#8a6b3d] to-gold"
+          className="h-full rounded-full bg-gradient-to-r from-[#A18758] to-gold"
         />
       </div>
     </div>
@@ -43,10 +43,10 @@ export default function NotesPyramid({
       {layers.map((layer, layerIndex) => (
         <div key={layer.key}>
           <div className="mb-4">
-            <h4 className="font-display text-lg font-medium text-[#1c1712]">
+            <h4 className="font-display text-lg font-medium text-[#174A63]">
               {layer.label}
             </h4>
-            <p className="text-xs text-[#1c1712]/40">{layer.sub}</p>
+            <p className="text-xs text-[#174A63]/40">{layer.sub}</p>
           </div>
 
           <div className="space-y-3">

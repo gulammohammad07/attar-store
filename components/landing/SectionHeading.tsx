@@ -34,7 +34,7 @@ export default function SectionHeading({
       <h2
         className={cn(
           "mt-4 font-display text-4xl font-medium tracking-tight sm:text-5xl",
-          dark ? "text-[#f0ebe2]" : "text-[#1c1712]",
+          dark ? "text-[#F8FCFE]" : "text-[#174A63]",
         )}
       >
         {title}
@@ -45,7 +45,7 @@ export default function SectionHeading({
           className={cn(
             "mx-auto mt-4 max-w-xl text-sm leading-relaxed",
             align === "center" && "mx-auto text-center",
-            dark ? "text-[#f0ebe2]/60" : "text-[#1c1712]/55",
+            dark ? "text-[#F8FCFE]/60" : "text-[#174A63]/55",
           )}
         >
           {description}

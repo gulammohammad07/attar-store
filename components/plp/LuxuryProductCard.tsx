@@ -44,14 +44,14 @@ export default function LuxuryProductCard({
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.55, ease: "easeOut" }}
       className={cn(
-        "group relative overflow-hidden rounded-[24px] bg-white shadow-[0_2px_14px_rgba(28,23,18,0.06)] transition-all duration-500",
-        "hover:-translate-y-2 hover:shadow-[0_32px_64px_-28px_rgba(28,23,18,0.35)]",
+        "group relative overflow-hidden rounded-[24px] bg-white shadow-[0_2px_14px_rgba(23,74,99,0.06)] transition-all duration-500",
+        "hover:-translate-y-2 hover:shadow-[0_32px_64px_-28px_rgba(23,74,99,0.35)]",
         className,
       )}
     >
       {/* Image area */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#faf6ec] via-[#f3ecdd] to-[#ecdfc6]">
-        <div className="absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(214,185,138,0.35),transparent_70%)]" />
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#F4FAFD] via-[#E3F2F9] to-[#D9EAF3]">
+        <div className="absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(220,201,160,0.35),transparent_70%)]" />
 
         <Link href={`/product/${product.slug}`} className="block h-full w-full">
           <Image
@@ -76,8 +76,8 @@ export default function LuxuryProductCard({
           onClick={handleWishlist}
           aria-label="Add to wishlist"
           className={cn(
-            "absolute right-5 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/75 shadow-[0_6px_18px_-6px_rgba(28,23,18,0.3)] backdrop-blur-md transition-all duration-300 hover:scale-110",
-            wished ? "text-red-500" : "text-[#1c1712]/45 hover:text-red-500",
+            "absolute right-5 top-5 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/75 shadow-[0_6px_18px_-6px_rgba(23,74,99,0.3)] backdrop-blur-md transition-all duration-300 hover:scale-110",
+            wished ? "text-red-500" : "text-[#174A63]/45 hover:text-red-500",
           )}
         >
           <Heart size={16} fill={wished ? "currentColor" : "none"} />
@@ -87,7 +87,7 @@ export default function LuxuryProductCard({
         <button
           type="button"
           onClick={handleAdd}
-          className="absolute inset-x-5 bottom-5 z-10 hidden translate-y-4 items-center justify-center gap-2 rounded-full bg-[#1c1712]/85 px-5 py-3.5 text-xs font-semibold tracking-[0.14em] text-[#f0ebe2] uppercase opacity-0 backdrop-blur-md transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-gold lg:flex"
+          className="absolute inset-x-5 bottom-5 z-10 hidden translate-y-4 items-center justify-center gap-2 rounded-full bg-[#174A63]/85 px-5 py-3.5 text-xs font-semibold tracking-[0.14em] text-[#F8FCFE] uppercase opacity-0 backdrop-blur-md transition-all duration-400 group-hover:translate-y-0 group-hover:opacity-100 hover:bg-gold lg:flex"
         >
           <Plus size={14} />
           Quick Add
@@ -98,7 +98,7 @@ export default function LuxuryProductCard({
           type="button"
           onClick={handleAdd}
           aria-label={`Add ${product.name} to bag`}
-          className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#1c1712] text-[#f0ebe2] shadow-lg transition-all hover:bg-gold lg:hidden"
+          className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#174A63] text-[#F8FCFE] shadow-lg transition-all hover:bg-gold lg:hidden"
         >
           <Plus size={18} />
         </button>
@@ -112,31 +112,31 @@ export default function LuxuryProductCard({
           </p>
           <span className="flex items-center gap-1.5">
             <Star size={12} className="fill-gold text-gold" />
-            <span className="text-xs font-medium text-[#1c1712]/80">
+            <span className="text-xs font-medium text-[#174A63]/80">
               {product.rating}
             </span>
-            <span className="text-[10px] text-[#1c1712]/35">
+            <span className="text-[10px] text-[#174A63]/35">
               ({product.reviewCount})
             </span>
           </span>
         </div>
 
         <Link href={`/product/${product.slug}`} className="mt-1.5 block">
-          <h3 className="font-display text-[22px] font-semibold leading-snug text-[#1c1712] transition-colors duration-300 group-hover:text-gold">
+          <h3 className="font-display text-[22px] font-semibold leading-snug text-[#174A63] transition-colors duration-300 group-hover:text-gold">
             {product.name}
           </h3>
         </Link>
 
         <div className="mt-2 flex items-baseline gap-2.5">
-          <span className="text-lg font-semibold tracking-tight text-[#1c1712]">
+          <span className="text-lg font-semibold tracking-tight text-[#174A63]">
             {formatPrice(price)}
           </span>
           {product.salePrice && (
-            <span className="text-sm text-[#1c1712]/35 line-through">
+            <span className="text-sm text-[#174A63]/35 line-through">
               {formatPrice(product.price)}
             </span>
           )}
-          <span className="ml-auto text-[10px] font-medium tracking-[0.14em] text-[#1c1712]/35 uppercase">
+          <span className="ml-auto text-[10px] font-medium tracking-[0.14em] text-[#174A63]/35 uppercase">
             {product.volume}
           </span>
         </div>

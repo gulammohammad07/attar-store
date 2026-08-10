@@ -58,7 +58,7 @@ export default function LuxuryProductGrid({
   };
 
   return (
-    <section id="collection" className="scroll-mt-20 bg-[#f3ecdf] pb-24 pt-4">
+    <section id="collection" className="scroll-mt-20 bg-[#E3F2F9] pb-24 pt-4">
       <div className="mx-auto max-w-7xl px-6">
         {/* Section header */}
         <div className="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
@@ -71,10 +71,10 @@ export default function LuxuryProductGrid({
             <p className="text-[11px] font-semibold tracking-[0.34em] text-gold uppercase">
               {sectionEyebrow}
             </p>
-            <h2 className="mt-3 font-display text-5xl font-medium text-[#1c1712] sm:text-6xl">
+            <h2 className="mt-3 font-display text-5xl font-medium text-[#174A63] sm:text-6xl">
               {sectionTitle}
             </h2>
-            <p className="mt-4 text-sm text-[#1c1712]/45">
+            <p className="mt-4 text-sm text-[#174A63]/45">
               {sorted.length}{" "}
               {sorted.length === 1 ? "rare blend" : "rare blends"} · hand-poured
               &amp; ready to wear
@@ -93,7 +93,7 @@ export default function LuxuryProductGrid({
               value={sort}
               onChange={(e) => handleSort(e.target.value as SortOption)}
               aria-label="Sort products"
-              className="cursor-pointer appearance-none rounded-full border border-[#1c1712]/15 bg-white/60 py-3 pl-5 pr-11 text-xs font-medium tracking-[0.12em] text-[#1c1712]/70 uppercase backdrop-blur-sm transition-colors focus:border-gold focus:outline-none"
+              className="cursor-pointer appearance-none rounded-full border border-[#174A63]/15 bg-white/60 py-3 pl-5 pr-11 text-xs font-medium tracking-[0.12em] text-[#174A63]/70 uppercase backdrop-blur-sm transition-colors focus:border-gold focus:outline-none"
             >
               {(Object.keys(SORT_LABELS) as SortOption[]).map((key) => (
                 <option key={key} value={key}>
@@ -128,10 +128,10 @@ export default function LuxuryProductGrid({
           </motion.div>
         ) : (
           <div className="py-28 text-center">
-            <p className="font-display text-4xl font-medium text-[#1c1712]">
+            <p className="font-display text-4xl font-medium text-[#174A63]">
               Nothing here yet
             </p>
-            <p className="mt-3 text-sm text-[#1c1712]/50">
+            <p className="mt-3 text-sm text-[#174A63]/50">
               New blends are poured every season.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default function LuxuryProductGrid({
               type="button"
               onClick={() => setVisible((v) => v + PAGE_SIZE)}
               whileTap={{ scale: 0.97 }}
-              className="group inline-flex items-center gap-3 rounded-full border border-gold/50 bg-white/50 px-10 py-4 text-xs font-semibold tracking-[0.22em] text-[#1c1712]/75 uppercase backdrop-blur-sm transition-all duration-300 hover:border-gold hover:bg-gold hover:text-white hover:shadow-[0_14px_40px_-12px_rgba(176,141,87,0.7)]"
+              className="group inline-flex items-center gap-3 rounded-full border border-gold/50 bg-white/50 px-10 py-4 text-xs font-semibold tracking-[0.22em] text-[#174A63]/75 uppercase backdrop-blur-sm transition-all duration-300 hover:border-gold hover:bg-gold hover:text-white hover:shadow-[0_14px_40px_-12px_rgba(201,169,110,0.7)]"
             >
               Load More
               <span className="flex h-6 w-6 items-center justify-center rounded-full border border-gold/40 transition-colors group-hover:border-white/40">

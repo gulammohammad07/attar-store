@@ -68,9 +68,9 @@ const pillars: Pillar[] = [
 
 export default function WhyChoose() {
   return (
-    <section className="relative overflow-hidden bg-[#F7F3EC] py-28">
-      <div className="pointer-events-none absolute -left-32 top-24 h-[380px] w-[380px] bg-[radial-gradient(circle,rgba(198,161,91,0.14),transparent_70%)]" />
-      <div className="pointer-events-none absolute -right-24 bottom-16 h-[340px] w-[340px] bg-[radial-gradient(circle,rgba(138,107,61,0.16),transparent_70%)]" />
+    <section className="relative overflow-hidden bg-[#F8FCFE] py-28">
+      <div className="pointer-events-none absolute -left-32 top-24 h-[380px] w-[380px] bg-[radial-gradient(circle,rgba(201,169,110,0.14),transparent_70%)]" />
+      <div className="pointer-events-none absolute -right-24 bottom-16 h-[340px] w-[340px] bg-[radial-gradient(circle,rgba(161,135,88,0.16),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
@@ -92,7 +92,7 @@ export default function WhyChoose() {
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
               <Counter {...stat} />
-              <p className="mt-2 text-[11px] font-semibold tracking-[0.2em] text-[#1c1712]/50 uppercase">
+              <p className="mt-2 text-[11px] font-semibold tracking-[0.2em] text-[#174A63]/50 uppercase">
                 {stat.label}
               </p>
             </motion.div>
@@ -108,18 +108,18 @@ export default function WhyChoose() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.55, delay: (i % 3) * 0.1 }}
-              className="group glass-luxury relative overflow-hidden rounded-3xl p-7 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-15px_rgba(176,141,87,0.35)]"
+              className="group glass-luxury relative overflow-hidden rounded-3xl p-7 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-15px_rgba(201,169,110,0.35)]"
             >
               <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-gold/10 blur-2xl transition-all duration-500 group-hover:bg-gold/25" />
 
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 text-gold transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(198,161,91,0.35)]">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 text-gold transition-all duration-500 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(201,169,110,0.35)]">
                 <pillar.icon size={24} strokeWidth={1.6} />
               </div>
 
-              <h3 className="mt-5 font-display text-xl font-semibold text-[#1c1712]">
+              <h3 className="mt-5 font-display text-xl font-semibold text-[#174A63]">
                 {pillar.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-[#1c1712]/55">
+              <p className="mt-2 text-sm leading-relaxed text-[#174A63]/55">
                 {pillar.text}
               </p>
             </motion.div>

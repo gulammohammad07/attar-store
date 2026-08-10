@@ -91,7 +91,7 @@ export default function LuxuryCollections({
   }));
 
   return (
-    <section ref={ref} className="relative bg-[#f3ecdf] text-[#1c1712]">
+    <section ref={ref} className="relative bg-[#E3F2F9] text-[#174A63]">
       <div
         className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden"
         aria-label="Luxury collections"
@@ -102,9 +102,9 @@ export default function LuxuryCollections({
             style={{ y: bgY }}
             className="absolute -right-40 top-0 h-[70%] w-[50%] opacity-60"
           >
-            <div className="h-full w-full bg-[radial-gradient(circle_at_center,rgba(214,185,138,0.25),transparent_65%)]" />
+            <div className="h-full w-full bg-[radial-gradient(circle_at_center,rgba(220,201,160,0.25),transparent_65%)]" />
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-b from-[#f3ecdf] via-transparent to-[#f3ecdf]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#E3F2F9] via-transparent to-[#E3F2F9]" />
         </div>
 
         <div className="relative z-10 mx-auto mb-10 w-full max-w-7xl px-6">
@@ -137,7 +137,7 @@ export default function LuxuryCollections({
             <Link
               key={collection.title}
               href={collection.href}
-              className="group relative block h-[54vh] w-[72vw] shrink-0 overflow-hidden rounded-[1.75rem] border border-gold/25 bg-[#f7f2e8] shadow-[0_40px_80px_-40px_rgba(28,23,18,0.4)] sm:h-[58vh] sm:w-[46vw] lg:h-[62vh] lg:w-[30vw]"
+              className="group relative block h-[54vh] w-[72vw] shrink-0 overflow-hidden rounded-[1.75rem] border border-gold/25 bg-[#EDF7FB] shadow-[0_40px_80px_-40px_rgba(23,74,99,0.4)] sm:h-[58vh] sm:w-[46vw] lg:h-[62vh] lg:w-[30vw]"
             >
               {/* image */}
               <div className="absolute inset-0">
@@ -156,11 +156,11 @@ export default function LuxuryCollections({
                     </span>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#f7f2e8] via-[#f7f2e8]/25 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#EDF7FB] via-[#EDF7FB]/25 to-transparent" />
               </div>
 
               {/* number */}
-              <span className="absolute left-6 top-6 font-display text-5xl font-light text-[#1c1712]/20 transition-colors duration-500 group-hover:text-gold/70">
+              <span className="absolute left-6 top-6 font-display text-5xl font-light text-[#174A63]/20 transition-colors duration-500 group-hover:text-gold/70">
                 {String(i + 1).padStart(2, "0")}
               </span>
 
@@ -169,13 +169,13 @@ export default function LuxuryCollections({
                 <p className="text-[10px] font-semibold tracking-[0.3em] text-gold uppercase">
                   {collection.subtitle}
                 </p>
-                <h3 className="mt-2 font-display text-3xl font-medium text-[#1c1712] sm:text-4xl">
+                <h3 className="mt-2 font-display text-3xl font-medium text-[#174A63] sm:text-4xl">
                   {collection.title}
                 </h3>
-                <p className="mt-3 max-w-xs text-sm leading-relaxed text-[#1c1712]/60">
+                <p className="mt-3 max-w-xs text-sm leading-relaxed text-[#174A63]/60">
                   {collection.description}
                 </p>
-                <div className="mt-5 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-[#1c1712] uppercase opacity-0 transition-all duration-500 group-hover:opacity-100">
+                <div className="mt-5 inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-[#174A63] uppercase opacity-0 transition-all duration-500 group-hover:opacity-100">
                   Discover
                   <ArrowRight
                     size={14}
@@ -192,11 +192,11 @@ export default function LuxuryCollections({
           {/* end card */}
           <Link
             href="/shop"
-            className="flex h-[54vh] w-[60vw] shrink-0 flex-col items-center justify-center gap-4 rounded-[1.75rem] border border-gold/40 bg-gradient-to-br from-[#fbf6ea] via-[#f3ecdf] to-[#efe6d3] text-center shadow-[0_40px_80px_-40px_rgba(28,23,18,0.35)] sm:h-[58vh] sm:w-[36vw] lg:h-[62vh] lg:w-[22vw]"
+            className="flex h-[54vh] w-[60vw] shrink-0 flex-col items-center justify-center gap-4 rounded-[1.75rem] border border-gold/40 bg-gradient-to-br from-[#F4FAFD] via-[#E3F2F9] to-[#DCEFF7] text-center shadow-[0_40px_80px_-40px_rgba(23,74,99,0.35)] sm:h-[58vh] sm:w-[36vw] lg:h-[62vh] lg:w-[22vw]"
           >
             <span className="font-display text-6xl font-light text-gold">✦</span>
-            <p className="font-display text-3xl font-medium text-[#1c1712]">View the Full Maison</p>
-            <p className="text-xs tracking-[0.25em] text-[#1c1712]/50 uppercase">
+            <p className="font-display text-3xl font-medium text-[#174A63]">View the Full Maison</p>
+            <p className="text-xs tracking-[0.25em] text-[#174A63]/50 uppercase">
               Explore all blends
             </p>
           </Link>

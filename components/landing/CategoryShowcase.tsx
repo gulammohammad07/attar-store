@@ -20,9 +20,9 @@ export default function CategoryShowcase({
   categories: StorefrontCategory[];
 }) {
   return (
-    <section className="relative overflow-hidden bg-[#f7f3ec] py-28">
+    <section className="relative overflow-hidden bg-[#F8FCFE] py-28">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-      <div className="pointer-events-none absolute -right-40 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(circle,rgba(198,161,91,0.12),transparent_70%)]" />
+      <div className="pointer-events-none absolute -right-40 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(circle,rgba(201,169,110,0.12),transparent_70%)]" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
@@ -59,7 +59,7 @@ const TiltCard = memo(function TiltCard({
   const rotateY = useSpring(mx, { stiffness: 180, damping: 16 });
   const glareX = useTransform(mx, [-0.5, 0.5], ["0%", "100%"]);
   const glareY = useTransform(my, [0.5, -0.5], ["0%", "100%"]);
-  const glare = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(230,200,144,0.22), transparent 55%)`;
+  const glare = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(224,199,149,0.22), transparent 55%)`;
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = ref.current?.getBoundingClientRect();
@@ -88,9 +88,9 @@ const TiltCard = memo(function TiltCard({
           onMouseMove={handleMove}
           onMouseLeave={reset}
           style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 900 }}
-          className="relative overflow-hidden rounded-[1.6rem] border border-gold/20 bg-white/60 p-[1px] shadow-[0_14px_36px_-18px_rgba(28,23,18,0.25)] transition-colors duration-500 group-hover:border-gold/60"
+          className="relative overflow-hidden rounded-[1.6rem] border border-gold/20 bg-white/60 p-[1px] shadow-[0_14px_36px_-18px_rgba(23,74,99,0.25)] transition-colors duration-500 group-hover:border-gold/60"
         >
-          <div className="relative aspect-[3/4] overflow-hidden rounded-[calc(1.6rem-1px)] bg-gradient-to-b from-[#faf6ec] via-[#f3ecdd] to-[#ecdfc6]">
+          <div className="relative aspect-[3/4] overflow-hidden rounded-[calc(1.6rem-1px)] bg-gradient-to-b from-[#F4FAFD] via-[#E3F2F9] to-[#D9EAF3]">
             {category.imageUrl ? (
               <Image
                 src={category.imageUrl}
@@ -107,7 +107,7 @@ const TiltCard = memo(function TiltCard({
               </div>
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#f7f3ec]/90 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#F8FCFE]/90 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-90" />
 
             {/* glare */}
             <motion.div
@@ -123,11 +123,11 @@ const TiltCard = memo(function TiltCard({
               className="absolute inset-x-0 bottom-0 p-4"
               style={{ transform: "translateZ(40px)" }}
             >
-              <h3 className="font-display text-xl font-medium text-[#1c1712]">
+              <h3 className="font-display text-xl font-medium text-[#174A63]">
                 {category.name}
               </h3>
               {category.tagline && (
-                <p className="mt-0.5 line-clamp-1 text-[10px] tracking-wide text-[#1c1712]/50">
+                <p className="mt-0.5 line-clamp-1 text-[10px] tracking-wide text-[#174A63]/50">
                   {category.tagline}
                 </p>
               )}

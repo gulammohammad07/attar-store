@@ -124,7 +124,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${cormorant.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#F7F3EC] text-[#1C1712]">
+      <body className="min-h-full flex flex-col bg-[#F8FCFE] text-[#174A63]">
         <Providers>
           <main className="flex-1">{children}</main>
           <Toaster richColors position="bottom-right" />

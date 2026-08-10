@@ -77,7 +77,7 @@ export default function ProductViewer({ product }: { product: Product }) {
           setZoomed(false);
         }}
         onClick={() => setZoomed((z) => !z)}
-        className="group relative order-1 cursor-zoom-in overflow-hidden rounded-3xl bg-[#f8f5f0] md:order-2"
+        className="group relative order-1 cursor-zoom-in overflow-hidden rounded-3xl bg-[#EFF8FC] md:order-2"
         style={{ perspective: 1000 }}
       >
         <motion.div
@@ -122,7 +122,7 @@ export default function ProductViewer({ product }: { product: Product }) {
                 setActive((a) => (a - 1 + images.length) % images.length);
               }}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#1c1712]"
+              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#174A63]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#174A63]"
             >
               <ChevronLeft size={20} />
             </button>
@@ -134,7 +134,7 @@ export default function ProductViewer({ product }: { product: Product }) {
                 setActive((a) => (a + 1) % images.length);
               }}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#1c1712]"
+              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#174A63]/70 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:scale-110 hover:text-[#174A63]"
             >
               <ChevronRight size={20} />
             </button>
@@ -142,7 +142,7 @@ export default function ProductViewer({ product }: { product: Product }) {
         )}
 
         {/* Zoom hint */}
-        <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-[#1c1712]/60 opacity-0 shadow backdrop-blur transition-opacity group-hover:opacity-100">
+        <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-[#174A63]/60 opacity-0 shadow backdrop-blur transition-opacity group-hover:opacity-100">
           <ZoomIn size={18} />
         </div>
 

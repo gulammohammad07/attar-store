@@ -17,7 +17,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
     <div className="grid min-h-screen bg-cream lg:grid-cols-[1.05fr_1fr]">
       {/* Brand panel (desktop) */}
       <div className="relative hidden overflow-hidden bg-charcoal lg:block">
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-[#171310] to-[#241c11]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-[#0F2838] to-[#174A63]" />
         <div className="absolute -top-40 -right-40 h-[34rem] w-[34rem] rounded-full bg-gold/15 blur-3xl" />
         <div className="absolute bottom-[-10rem] left-[-8rem] h-[26rem] w-[26rem] rounded-full bg-gold/10 blur-3xl" />
         <div className="noise absolute inset-0 opacity-40" />
@@ -25,7 +25,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
         <div className="relative z-10 flex h-full flex-col justify-between p-12 xl:p-16">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-[#f0ebe2]/70 transition-colors hover:text-gold-light"
+            className="inline-flex items-center gap-2 text-[#F8FCFE]/70 transition-colors hover:text-gold-light"
           >
             <ArrowLeft size={16} />
             <span className="text-xs font-medium tracking-[0.18em] uppercase">
@@ -34,13 +34,13 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
           </Link>
 
           <div>
-            <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#f0ebe2]">
+            <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#F8FCFE]">
               MD<span className="text-gold"> PERFUMES</span>
             </span>
-            <h2 className="mt-10 max-w-md font-display text-5xl leading-[1.05] font-medium text-[#f0ebe2] xl:text-6xl">
+            <h2 className="mt-10 max-w-md font-display text-5xl leading-[1.05] font-medium text-[#F8FCFE] xl:text-6xl">
               The art of <span className="gold-gradient-text">oriental fragrance</span>
             </h2>
-            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-[#f0ebe2]/55">
+            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-[#F8FCFE]/55">
               Sign in to track your orders, manage your wishlist and unlock
               member-only offers across our curated collection of luxury attars
               and ouds.
@@ -54,7 +54,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
               ].map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-3 text-sm text-[#f0ebe2]/75"
+                  className="flex items-center gap-3 text-sm text-[#F8FCFE]/75"
                 >
                   <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gold/15">
                     <span className="h-1.5 w-1.5 rounded-full bg-gold" />
@@ -65,7 +65,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
             </ul>
           </div>
 
-          <p className="text-xs tracking-[0.2em] text-[#f0ebe2]/30 uppercase">
+          <p className="text-xs tracking-[0.2em] text-[#F8FCFE]/30 uppercase">
             Hand-crafted · Limited editions · Worldwide shipping
           </p>
         </div>

@@ -9,26 +9,26 @@ import type { Product } from "@/lib/data/products";
 
 const gradients = [
   {
-    from: "#e8d5ae",
-    to: "#c6a15b",
+    from: "#DCCDA6",
+    to: "#C9A96E",
     text: "Worn like a memory, never a mask.",
     tag: "MD · Philosophy",
   },
   {
-    from: "#f3ecdf",
-    to: "#e0cdab",
+    from: "#E3F2F9",
+    to: "#D5C097",
     text: "One drop, an entire evening.",
     tag: "@attar.diaries",
   },
   {
-    from: "#d9c39b",
-    to: "#a67d3d",
+    from: "#C9A96E",
+    to: "#A18758",
     text: "The scent of a golden hour.",
     tag: "@scentandstory",
   },
   {
-    from: "#efe6d3",
-    to: "#cbb078",
+    from: "#DCEFF7",
+    to: "#C9A96E",
     text: "Layered, never loud.",
     tag: "@theoudlistener",
   },
@@ -53,7 +53,7 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
   ];
 
   return (
-    <section className="bg-[#f3ecdf] py-24">
+    <section className="bg-[#E3F2F9] py-24">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -67,10 +67,10 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
             <InstagramIcon size={16} className="text-gold" />
             <span className="h-px w-12 bg-gold" />
           </div>
-          <h2 className="mt-4 font-display text-5xl font-medium text-[#1c1712] sm:text-6xl">
+          <h2 className="mt-4 font-display text-5xl font-medium text-[#174A63] sm:text-6xl">
             From the Community
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-sm text-[#1c1712]/45">
+          <p className="mx-auto mt-4 max-w-md text-sm text-[#174A63]/45">
             Tag <span className="text-gold">#MDAttar</span> to be featured in
             the gallery.
           </p>
@@ -86,7 +86,7 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-40px" }}
                   transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
-                  className="relative flex flex-col justify-between overflow-hidden rounded-3xl p-6 shadow-[0_20px_50px_-24px_rgba(28,23,18,0.3)]"
+                  className="relative flex flex-col justify-between overflow-hidden rounded-3xl p-6 shadow-[0_20px_50px_-24px_rgba(23,74,99,0.3)]"
                   style={{
                     background: `linear-gradient(135deg, ${tile.from}, ${tile.to})`,
                   }}
@@ -112,13 +112,13 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-40px" }}
                 transition={{ duration: 0.5, delay: (i % 4) * 0.06 }}
-                className="group relative overflow-hidden rounded-3xl shadow-[0_20px_50px_-24px_rgba(28,23,18,0.3)]"
+                className="group relative overflow-hidden rounded-3xl shadow-[0_20px_50px_-24px_rgba(23,74,99,0.3)]"
               >
                 <Link
                   href={tile.link ? `/product/${tile.link}` : "/shop"}
                   className="block"
                 >
-                  <div className={`relative w-full ${tile.ratio} bg-gradient-to-b from-[#faf6ec] to-[#ecdfc6]`}>
+                  <div className={`relative w-full ${tile.ratio} bg-gradient-to-b from-[#F4FAFD] to-[#D9EAF3]`}>
                     {tile.src && (
                       <Image
                         src={tile.src}
@@ -130,11 +130,11 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
                     )}
 
                     {/* Hover overlay */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#1c1712]/60 opacity-0 backdrop-blur-[2px] transition-opacity duration-400 group-hover:opacity-100">
-                      <p className="font-display text-lg font-semibold text-[#f0ebe2]">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#174A63]/60 opacity-0 backdrop-blur-[2px] transition-opacity duration-400 group-hover:opacity-100">
+                      <p className="font-display text-lg font-semibold text-[#F8FCFE]">
                         {tile.name}
                       </p>
-                      <div className="flex items-center gap-5 text-xs text-[#f0ebe2]/90">
+                      <div className="flex items-center gap-5 text-xs text-[#F8FCFE]/90">
                         <span className="flex items-center gap-1.5">
                           <Heart size={13} className="fill-gold text-gold" />
                           {tile.likes}
@@ -147,7 +147,7 @@ export default function CommunityGallery({ products }: { products: Product[] }) 
                     </div>
 
                     {/* Handle */}
-                    <span className="absolute bottom-4 left-4 rounded-full bg-white/70 px-3 py-1 text-[9px] font-semibold tracking-[0.14em] text-[#1c1712]/70 uppercase backdrop-blur-md">
+                    <span className="absolute bottom-4 left-4 rounded-full bg-white/70 px-3 py-1 text-[9px] font-semibold tracking-[0.14em] text-[#174A63]/70 uppercase backdrop-blur-md">
                       {tile.handle}
                     </span>
                   </div>

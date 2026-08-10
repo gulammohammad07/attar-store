@@ -72,7 +72,7 @@ export default function Navbar({
             {/* Mobile hamburger */}
             <button
               type="button"
-              className="text-[#f0ebe2] lg:hidden"
+              className="text-[#F8FCFE] lg:hidden"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
@@ -85,7 +85,7 @@ export default function Navbar({
               className="shrink-0"
               onClick={() => setActiveMenu(null)}
             >
-              <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#f0ebe2]">
+              <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#F8FCFE]">
                 MD<span className="text-gold"> PERFUMES</span>
               </span>
             </Link>
@@ -103,7 +103,7 @@ export default function Navbar({
                     className={`relative text-[12px] font-medium tracking-[0.14em] uppercase transition-colors ${
                       activeMenu === item.label
                         ? "text-gold-light"
-                        : "text-[#f0ebe2] hover:text-gold-light"
+                        : "text-[#F8FCFE] hover:text-gold-light"
                     }`}
                   >
                     {item.label}
@@ -113,7 +113,7 @@ export default function Navbar({
             </nav>
 
             {/* Icons */}
-            <div className="flex items-center gap-4 text-[#f0ebe2] sm:gap-5">
+            <div className="flex items-center gap-4 text-[#F8FCFE] sm:gap-5">
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
@@ -196,7 +196,7 @@ export default function Navbar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute inset-x-0 top-full hidden border-t border-white/5 bg-[#0e0c0a] shadow-2xl lg:block"
+              className="absolute inset-x-0 top-full hidden border-t border-white/5 bg-[#0F2838] shadow-2xl lg:block"
               onMouseEnter={() => setActiveMenu("Collections")}
             >
               <div className="mx-auto max-w-7xl px-6 py-10">
@@ -224,14 +224,14 @@ export default function Navbar({
                               />
                             ) : (
                               <div className="flex h-full items-center justify-center bg-white/5">
-                                <span className="font-display text-4xl text-[#f0ebe2]/25">
+                                <span className="font-display text-4xl text-[#F8FCFE]/25">
                                   {category.name.charAt(0)}
                                 </span>
                               </div>
                             )}
                             <div className="absolute inset-0 bg-black/10" />
                           </div>
-                          <p className="mt-2 text-sm font-medium text-[#f0ebe2] group-hover:text-gold-light">
+                          <p className="mt-2 text-sm font-medium text-[#F8FCFE] group-hover:text-gold-light">
                             {category.name}
                           </p>
                         </Link>
@@ -251,7 +251,7 @@ export default function Navbar({
                             href={`/shop?occasion=${occasion
                               .toLowerCase()
                               .replace(/\s+/g, "-")}`}
-                            className="text-sm text-[#f0ebe2]/80 transition-colors hover:text-gold-light"
+                            className="text-sm text-[#F8FCFE]/80 transition-colors hover:text-gold-light"
                           >
                             {occasion}
                           </Link>
@@ -270,7 +270,7 @@ export default function Navbar({
                         <li key={note}>
                           <Link
                             href={`/shop?note=${note.toLowerCase()}`}
-                            className="text-sm text-[#f0ebe2]/80 transition-colors hover:text-gold-light"
+                            className="text-sm text-[#F8FCFE]/80 transition-colors hover:text-gold-light"
                           >
                             {note}
                           </Link>
@@ -303,7 +303,7 @@ export default function Navbar({
                               />
                             </div>
                             <div>
-                              <p className="font-display text-base font-medium text-[#f0ebe2]">
+                              <p className="font-display text-base font-medium text-[#F8FCFE]">
                                 {product.name}
                               </p>
                               <p className="mt-1 text-sm text-gold">
@@ -315,7 +315,7 @@ export default function Navbar({
                     </div>
 
                     {/* Promo banner */}
-                    <div className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#b08d57] to-[#8a6b3d] p-5">
+                    <div className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#C9A96E] to-[#A18758] p-5">
                       <p className="font-display text-lg font-semibold text-white">
                         Festive Edit — up to 30% off
                       </p>
@@ -324,7 +324,7 @@ export default function Navbar({
                       </p>
                       <Link
                         href="/shop"
-                        className="mt-3 inline-block rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#0e0c0a]"
+                        className="mt-3 inline-block rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#0F2838]"
                       >
                         Explore
                       </Link>
@@ -348,13 +348,13 @@ export default function Navbar({
           >
             <div className="flex h-full flex-col">
               <div className="flex h-16 items-center justify-between px-6">
-                <span className="font-display text-xl tracking-[0.18em] text-[#f0ebe2]">
+                <span className="font-display text-xl tracking-[0.18em] text-[#F8FCFE]">
                   MD PERFUMES
                 </span>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="text-[#f0ebe2]"
+                  className="text-[#F8FCFE]"
                   aria-label="Close menu"
                 >
                   <X size={24} />
@@ -368,7 +368,7 @@ export default function Navbar({
                       <Link
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className="text-2xl font-medium text-[#f0ebe2]"
+                        className="text-2xl font-medium text-[#F8FCFE]"
                       >
                         {item.label}
                       </Link>
@@ -386,7 +386,7 @@ export default function Navbar({
                         key={category.slug}
                         href={`/shop?category=${category.slug}`}
                         onClick={() => setMobileOpen(false)}
-                        className="rounded-xl bg-white/5 p-3 text-center text-sm text-[#f0ebe2]"
+                        className="rounded-xl bg-white/5 p-3 text-center text-sm text-[#F8FCFE]"
                       >
                         {category.name}
                       </Link>
@@ -394,7 +394,7 @@ export default function Navbar({
                   </div>
                 </div>
 
-                <div className="mt-10 flex flex-col gap-4 text-sm text-[#f0ebe2]/70">
+                <div className="mt-10 flex flex-col gap-4 text-sm text-[#F8FCFE]/70">
                   <Link href="/wishlist" onClick={() => setMobileOpen(false)}>
                     Wishlist
                   </Link>
@@ -422,7 +422,7 @@ export default function Navbar({
                           setMobileOpen(false);
                           void handleSignOut();
                         }}
-                        className="flex items-center gap-2 text-left text-[#f0ebe2]/70"
+                        className="flex items-center gap-2 text-left text-[#F8FCFE]/70"
                       >
                         <LogOut size={15} />
                         Sign out
