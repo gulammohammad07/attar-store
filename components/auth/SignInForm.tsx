@@ -131,7 +131,7 @@ export function SignInForm() {
       <GoogleButton next={next} label="Sign in with Google" />
 
       <p className="mt-8 text-center text-sm text-ink/50">
-        New to MD Perfumes?{" "}
+        New to Danish Perfumes?{" "}
         <Link
           href={`/sign-up${next !== "/" ? `?next=${encodeURIComponent(next)}` : ""}`}
           className="font-semibold text-gold transition-colors hover:text-gold-light hover:underline"

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { Providers } from "@/lib/store/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { InlineScript } from "@/components/layout/InlineScript";
 
 const EXTENSION_HYDRATION_FIX = `
 (function () {
@@ -93,21 +93,21 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: {
-    default: "MD Perfumes — Luxury Attars & Fragrances",
-    template: "%s | MD Perfumes",
+    default: "Danish Perfumes — Luxury Attars & Fragrances",
+    template: "%s | Danish Perfumes",
   },
   description:
-    "Hand-curated luxury attars, ouds and perfumes. Discover the art of oriental fragrance with MD Perfumes.",
+    "Hand-curated luxury attars, ouds and perfumes. Discover the art of oriental fragrance with Danish Perfumes.",
   keywords: [
     "attar",
     "oud",
     "perfume",
     "luxury fragrance",
     "musk",
-    "MD Perfumes",
+    "Danish Perfumes",
   ],
   openGraph: {
-    title: "MD Perfumes — Luxury Attars & Fragrances",
+    title: "Danish Perfumes — Luxury Attars & Fragrances",
     description:
       "Hand-curated luxury attars, ouds and perfumes. Discover the art of oriental fragrance.",
     type: "website",
@@ -129,11 +129,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Toaster richColors position="bottom-right" />
         </Providers>
-        <Script
-          id="extension-hydration-fix"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: EXTENSION_HYDRATION_FIX }}
-        />
+        <InlineScript html={EXTENSION_HYDRATION_FIX} />
       </body>
     </html>
   );

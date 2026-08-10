@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ShieldCheck, Truck, RefreshCcw, BadgeCheck } from "lucide-react";
+import { ShieldCheck, Truck, BadgeCheck } from "lucide-react";
 import {
   InstagramIcon,
   FacebookIcon,
@@ -44,7 +44,6 @@ const columns = [
 const trustBadges = [
   { icon: Truck, label: "Free Shipping", sub: "On orders over ₹1,500" },
   { icon: ShieldCheck, label: "Secure Payment", sub: "256-bit encrypted" },
-  { icon: RefreshCcw, label: "Easy Returns", sub: "14-day guarantee" },
   { icon: BadgeCheck, label: "Authentic", sub: "100% genuine attars" },
 ];
 
@@ -53,7 +52,7 @@ export default function Footer() {
     <footer className="bg-charcoal text-[#F8FCFE]">
       {/* Trust badges */}
       <div className="border-b border-white/10">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-10 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-6 py-10 sm:grid-cols-3">
           {trustBadges.map((badge) => (
             <div key={badge.label} className="flex items-center gap-4">
               <badge.icon size={26} className="shrink-0 text-gold" />
@@ -72,7 +71,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-5">
             <p className="font-display text-3xl font-semibold tracking-[0.18em]">
-              MD<span className="text-gold"> PERFUMES</span>
+              DANISH<span className="text-gold"> PERFUMES</span>
             </p>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-[#F8FCFE]/60">
               A curated house of rare ouds, attars and oriental fragrances.
@@ -129,7 +128,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 text-xs text-[#F8FCFE]/40 sm:flex-row">
-          <p>© {new Date().getFullYear()} MD Perfumes. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Danish Perfumes. All rights reserved.</p>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-gold-light">
               Privacy Policy

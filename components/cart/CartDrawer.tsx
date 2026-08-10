@@ -162,10 +162,17 @@ export default function CartDrawer() {
                   >
                     Checkout — {formatPrice(subtotal)}
                   </Link>
+                  <Link
+                    href="/cart"
+                    onClick={closeCart}
+                    className="mt-3 flex items-center justify-center gap-2 w-full rounded-full border border-[#174A63]/20 py-3 text-sm font-medium text-[#174A63]/70 transition-colors hover:border-[#174A63] hover:text-[#174A63]"
+                  >
+                    View Full Bag
+                  </Link>
                   <button
                     type="button"
                     onClick={closeCart}
-                    className="mt-3 w-full rounded-full border border-[#174A63]/20 py-3 text-sm font-medium text-[#174A63]/70"
+                    className="mt-3 w-full rounded-full border border-transparent py-3 text-sm font-medium text-[#174A63]/70"
                   >
                     Continue Shopping
                   </button>

@@ -46,7 +46,7 @@ export default function Sidebar() {
     <aside className="w-72 min-h-screen bg-zinc-950 border-r border-zinc-800 text-white">
       {/* Logo */}
       <div className="border-b border-zinc-800 p-6">
-        <h1 className="text-2xl font-bold tracking-wide">MD Perfumes</h1>
+        <h1 className="text-2xl font-bold tracking-wide">Danish Perfumes</h1>
 
         <p className="mt-1 text-sm text-zinc-400">Admin Panel</p>
       </div>

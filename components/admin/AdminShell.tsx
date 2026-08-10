@@ -77,7 +77,7 @@ export default function AdminShell({
           </div>
 
           <div>
-            <h1 className="text-xl font-bold">MD Perfumes</h1>
+            <h1 className="text-xl font-bold">Danish Perfumes</h1>
             <p className="text-xs text-zinc-400">Admin Dashboard</p>
           </div>
         </div>

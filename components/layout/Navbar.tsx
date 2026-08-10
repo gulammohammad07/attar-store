@@ -86,7 +86,7 @@ export default function Navbar({
               onClick={() => setActiveMenu(null)}
             >
               <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#F8FCFE]">
-                MD<span className="text-gold"> PERFUMES</span>
+                DANISH<span className="text-gold"> PERFUMES</span>
               </span>
             </Link>
 
@@ -349,7 +349,7 @@ export default function Navbar({
             <div className="flex h-full flex-col">
               <div className="flex h-16 items-center justify-between px-6">
                 <span className="font-display text-xl tracking-[0.18em] text-[#F8FCFE]">
-                  MD PERFUMES
+                  DANISH PERFUMES
                 </span>
                 <button
                   type="button"

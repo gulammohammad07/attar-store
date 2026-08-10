@@ -27,7 +27,7 @@ const milestones = [
   {
     year: "2018",
     title: "A Single Copper Still",
-    text: "MD Perfumes is born in the attar bazaars of the Middle East.",
+    text: "Danish Perfumes is born in the attar bazaars of the Middle East.",
   },
   {
     year: "2020",
@@ -142,7 +142,7 @@ export default function BrandStory({
               className="mt-6 text-sm leading-relaxed text-[#174A63]/60"
             >
               Born from a fascination with the attar bazaars of the Middle
-              East, MD Perfumes began with a single copper still and a belief:
+              East, Danish Perfumes began with a single copper still and a belief:
               that fragrance should be pure, concentrated and personal. No
               fillers, no shortcuts — just rare oils, aged with devotion and
               bottled by hand.

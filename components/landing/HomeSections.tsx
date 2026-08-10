@@ -103,7 +103,7 @@ export default function HomeSections({
         fallback={
           <SectionSkeleton
             eyebrow="The MD Difference"
-            title="Why Choose MD Perfumes"
+            title="Why Choose Danish Perfumes"
             description="More than fragrance — a promise of purity, patience and obsession with detail."
             className="bg-[#F8FCFE]"
             style={{ minHeight: 1100 }}
@@ -119,7 +119,7 @@ export default function HomeSections({
           <SectionSkeleton
             eyebrow="Word of Mouth"
             title="Loved by Connoisseurs"
-            description="Real reviews from clients who made MD Perfumes their signature."
+            description="Real reviews from clients who made Danish Perfumes their signature."
             className="bg-[#DCEFF7]"
             style={{ minHeight: 660 }}
           />

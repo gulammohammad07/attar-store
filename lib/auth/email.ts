@@ -42,8 +42,8 @@ async function sendMail(options: MailOptions) {
     return false;
   }
 
-  const fromName = process.env.SMTP_FROM_NAME ?? "MD Perfumes";
-  const fromAddress = process.env.SMTP_FROM_EMAIL ?? "noreply@mdperfumes.com";
+  const fromName = process.env.SMTP_FROM_NAME ?? "Danish Perfumes";
+  const fromAddress = process.env.SMTP_FROM_EMAIL ?? "noreply@danishperfumes.com";
 
   await transporter.sendMail({
     from: `"${fromName}" <${fromAddress}>`,
@@ -69,7 +69,7 @@ export async function sendPasswordResetEmail(input: {
     <div style="background:#F8FCFE;padding:32px 16px;font-family:Arial,Helvetica,sans-serif;">
       <div style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #DCEFF7;border-radius:16px;overflow:hidden;">
         <div style="background:#174A63;padding:28px 32px;text-align:center;">
-          <p style="margin:0;color:#C9A96E;font-size:18px;letter-spacing:4px;font-weight:600;">MD PERFUMES</p>
+          <p style="margin:0;color:#C9A96E;font-size:18px;letter-spacing:4px;font-weight:600;">DANISH PERFUMES</p>
         </div>
         <div style="padding:32px;">
           <h1 style="margin:0 0 12px;color:#174A63;font-size:22px;">Reset your password</h1>
@@ -89,7 +89,7 @@ export async function sendPasswordResetEmail(input: {
           </p>
         </div>
         <div style="background:#F8FCFE;padding:16px 32px;text-align:center;">
-          <p style="margin:0;color:#6B7C88;font-size:12px;">© ${new Date().getFullYear()} MD Perfumes · ${appUrl}</p>
+          <p style="margin:0;color:#6B7C88;font-size:12px;">© ${new Date().getFullYear()} Danish Perfumes · ${appUrl}</p>
         </div>
       </div>
     </div>
@@ -97,5 +97,5 @@ export async function sendPasswordResetEmail(input: {
 
   const text = `Hello ${name}, we received a request to reset the password for your account. Visit this link to reset it (valid for ${expiresInHours} hour${expiresInHours > 1 ? "s" : ""}): ${resetUrl}`;
 
-  return sendMail({ to, subject: "Reset your MD Perfumes password", html, text });
+  return sendMail({ to, subject: "Reset your Danish Perfumes password", html, text });
 }

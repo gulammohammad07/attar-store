@@ -35,7 +35,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
 
           <div>
             <span className="font-display text-2xl font-semibold tracking-[0.18em] text-[#F8FCFE]">
-              MD<span className="text-gold"> PERFUMES</span>
+              DANISH<span className="text-gold"> PERFUMES</span>
             </span>
             <h2 className="mt-10 max-w-md font-display text-5xl leading-[1.05] font-medium text-[#F8FCFE] xl:text-6xl">
               The art of <span className="gold-gradient-text">oriental fragrance</span>
@@ -87,7 +87,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
               href="/"
               className="font-display text-xl font-semibold tracking-[0.18em] text-ink"
             >
-              MD<span className="text-gold"> PERFUMES</span>
+              DANISH<span className="text-gold"> PERFUMES</span>
             </Link>
             <Link
               href="/"
@@ -119,7 +119,7 @@ export function AuthShell({ children, title, subtitle, eyebrow }: AuthShellProps
           </div>
 
           <p className="mt-6 text-center text-xs leading-relaxed text-ink/40">
-            By continuing, you agree to MD Perfumes&apos; terms of service and
+            By continuing, you agree to Danish Perfumes&apos; terms of service and
             privacy policy.
           </p>
         </motion.div>

@@ -75,7 +75,7 @@ export default function WhyChoose() {
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="The MD Difference"
-          title="Why Choose MD Perfumes"
+          title="Why Choose Danish Perfumes"
           description="More than fragrance — a promise of purity, patience and obsession with detail."
         />
 

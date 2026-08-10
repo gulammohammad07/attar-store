@@ -16,7 +16,7 @@ export default function Testimonials() {
         <SectionHeading
           eyebrow="Word of Mouth"
           title="Loved by Connoisseurs"
-          description="Real reviews from clients who made MD Perfumes their signature."
+          description="Real reviews from clients who made Danish Perfumes their signature."
         />
       </div>
 
