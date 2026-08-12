@@ -41,6 +41,7 @@ export type EditableProduct = {
   galleryPublicIds: string[];
   categoryId: string;
   brandId: string;
+  occasionIds: string[];
 };
 
 interface EditProductFormProps {
@@ -50,6 +51,10 @@ interface EditProductFormProps {
     name: string;
   }[];
   brands: {
+    id: string;
+    name: string;
+  }[];
+  occasions: {
     id: string;
     name: string;
   }[];
@@ -63,6 +68,7 @@ export default function EditProductForm({
   product,
   categories,
   brands,
+  occasions,
 }: EditProductFormProps) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
@@ -70,6 +76,9 @@ export default function EditProductForm({
     initialState,
   );
   const [notes, setNotes] = useState(product.notes.join(", "));
+  const [selectedOccasions, setSelectedOccasions] = useState<string[]>(
+    product.occasionIds,
+  );
   const [image, setImage] = useState<ImageValue>({
     url: product.imageUrl,
     publicId: product.imagePublicId,
@@ -80,6 +89,14 @@ export default function EditProductForm({
       publicId: product.galleryPublicIds[i] ?? null,
     })),
   );
+
+  const toggleOccasion = (id: string) => {
+    setSelectedOccasions((prev) =>
+      prev.includes(id)
+        ? prev.filter((occasionId) => occasionId !== id)
+        : [...prev, id],
+    );
+  };
 
   const toggleNote = (note: string) => {
     setNotes((prev) => {
@@ -309,6 +326,51 @@ export default function EditProductForm({
             );
           })}
         </div>
+      </div>
+
+      {/* Occasions */}
+      <div className="mt-6">
+        <label className="mb-2 block font-medium">
+          Occasions{" "}
+          <span className="text-sm font-normal text-gray-500">
+            (select all that apply)
+          </span>
+        </label>
+
+        {occasions.length === 0 ? (
+          <p className="text-sm text-gray-500">
+            No occasions yet. Create them in the{" "}
+            <a href="/admin/occasions" className="underline">
+              Occasions
+            </a>{" "}
+            section first.
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {occasions.map((occasion) => {
+              const active = selectedOccasions.includes(occasion.id);
+
+              return (
+                <button
+                  key={occasion.id}
+                  type="button"
+                  onClick={() => toggleOccasion(occasion.id)}
+                  className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+                    active
+                      ? "border-black bg-black text-white"
+                      : "border-gray-300 text-gray-600 hover:border-black"
+                  }`}
+                >
+                  {occasion.name}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {selectedOccasions.map((id) => (
+          <input key={id} type="hidden" name="occasionIds" value={id} />
+        ))}
       </div>
 
       {/* Description */}

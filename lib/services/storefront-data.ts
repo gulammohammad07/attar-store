@@ -22,6 +22,7 @@ function mapDbProduct(db: {
   featured: boolean;
   category: { name: string };
   brand: { name: string };
+  occasions: { name: string }[];
 }): Product {
   const noteNames =
     (db.notes ?? []).length > 0 ? db.notes : [db.category.name];
@@ -31,6 +32,8 @@ function mapDbProduct(db: {
   else if (db.newArrival) badge = "New Arrival";
   else if (db.salePrice != null) badge = "Sale";
   else badge = undefined;
+
+  const occasionNames = db.occasions.map((o) => o.name);
 
   return {
     id: db.id,
@@ -43,7 +46,7 @@ function mapDbProduct(db: {
       heart: noteNames.slice(1, 3).map(toNote),
       base: noteNames.slice(3, 5).map(toNote),
     },
-    occasions: ["Everyday"],
+    occasions: occasionNames.length > 0 ? occasionNames : ["Everyday"],
     gender: "Unisex",
     volume: db.volume,
     price: db.price,
@@ -113,6 +116,7 @@ export async function getStorefrontProducts(): Promise<Product[]> {
     include: {
       category: true,
       brand: true,
+      occasions: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -130,6 +134,7 @@ export async function getStorefrontProductBySlug(
     include: {
       category: true,
       brand: true,
+      occasions: true,
     },
   });
 

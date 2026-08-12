@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   Package,
   ShoppingCart,
+  CalendarDays,
 } from "lucide-react";
 
 const menuItems = [
@@ -26,6 +27,11 @@ const menuItems = [
     name: "Brands",
     href: "/admin/brands",
     icon: ShoppingBag,
+  },
+  {
+    name: "Occasions",
+    href: "/admin/occasions",
+    icon: CalendarDays,
   },
   {
     name: "Products",

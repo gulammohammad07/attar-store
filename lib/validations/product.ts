@@ -12,6 +12,7 @@ export const productSchema = z.object({
   volume: z.string(),
   description: z.string().optional(),
   notes: z.array(z.string()).optional(),
+  occasionIds: z.array(z.string()).optional(),
   imageUrl: z
     .string()
     .url("Please upload a valid product image.")

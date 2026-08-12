@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   m as motion,
   useMotionValue,
@@ -111,11 +112,17 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <h1
             className="mt-6 font-display text-[2.75rem] font-medium leading-[1.02] text-[#174A63] sm:text-7xl lg:text-8xl"
           >
-            Rare Attars,
-            <br />
-            <span className="gold-gradient-text animate-shine italic motion-reduce:animate-none">
-              Crafted by Hand
-            </span>
+            {banner?.title ? (
+              banner.title
+            ) : (
+              <>
+                Rare Attars,
+                <br />
+                <span className="gold-gradient-text animate-shine italic motion-reduce:animate-none">
+                  Crafted by Hand
+                </span>
+              </>
+            )}
           </h1>
 
           <motion.p
@@ -186,8 +193,8 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           </motion.div>
         </div>
 
-        {/* Right column — CSS bottle + floating labels */}
-        <div className="relative hidden h-full min-h-[420px] lg:block">
+        {/* Right column — banner image (or CSS bottle) + floating labels */}
+        <div className="relative block h-full min-h-[300px] sm:min-h-[420px]">
           <motion.div
             style={{
               y: sceneY,
@@ -197,13 +204,26 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
             }}
             className="h-full"
           >
-            <HeroVisual motionOk={motionOk} />
+            {banner?.imageUrl ? (
+              <div className="relative mx-auto h-[320px] w-full max-w-[460px] overflow-hidden rounded-[2rem] border border-white/40 shadow-[0_40px_90px_-30px_rgba(23,74,99,0.55)] sm:h-[420px]">
+                <Image
+                  src={banner.imageUrl}
+                  alt={banner.title ?? "Hero banner"}
+                  fill
+                  priority
+                  sizes="(min-width: 640px) 460px, 90vw"
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <HeroVisual motionOk={motionOk} />
+            )}
           </motion.div>
 
           <motion.span
             animate={motionOk ? { y: [0, -14, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-            className="absolute right-[6%] top-[16%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute right-[6%] top-[16%] hidden items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md sm:flex"
           >
             <Sparkles size={12} className="text-gold" /> Pure Oud
           </motion.span>
@@ -211,7 +231,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -16, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 6, repeat: Infinity, delay: 2 }}
-            className="absolute bottom-[22%] right-[0%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute bottom-[22%] right-[0%] hidden items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md sm:flex"
           >
             <Sparkles size={12} className="text-gold" /> Hand-Poured
           </motion.span>
@@ -219,7 +239,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           <motion.span
             animate={motionOk ? { y: [0, -12, 0], opacity: [0.5, 1, 0.5] } : { y: 0, opacity: 1 }}
             transition={{ duration: 5.5, repeat: Infinity, delay: 3 }}
-            className="absolute right-[30%] top-[58%] flex items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md"
+            className="absolute right-[30%] top-[58%] hidden items-center gap-2 rounded-full border border-gold/40 bg-white/75 px-5 py-2 text-[10px] font-medium tracking-[0.22em] text-[#174A63]/75 uppercase shadow-lg backdrop-blur-md sm:flex"
           >
             <Sparkles size={12} className="text-gold" /> Sun-Rested
           </motion.span>

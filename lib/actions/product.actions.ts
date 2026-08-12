@@ -39,6 +39,7 @@ function parseValues(formData: FormData) {
     imagePublicId: formData.get("imagePublicId")?.toString() ?? "",
     galleryUrls: formData.get("galleryUrls")?.toString() ?? "",
     galleryPublicIds: formData.get("galleryPublicIds")?.toString() ?? "",
+    occasionIds: formData.getAll("occasionIds").map((id) => id.toString()),
   };
 }
 
@@ -134,6 +135,9 @@ export async function createProductAction(
           id: result.data.brandId,
         },
       },
+      occasions: {
+        connect: result.data.occasionIds?.map((id) => ({ id })) ?? [],
+      },
     });
   } catch {
     for (const publicId of galleryPublicIds) {
@@ -221,6 +225,9 @@ export async function updateProductAction(
         connect: {
           id: result.data.brandId,
         },
+      },
+      occasions: {
+        set: result.data.occasionIds?.map((id) => ({ id })) ?? [],
       },
     });
 

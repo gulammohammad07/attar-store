@@ -93,6 +93,16 @@ model Banner {
   updatedAt     DateTime @updatedAt
 }
 
+model Occasion {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
+
 model Product {
   id          String   @id @default(cuid())
   name        String
@@ -118,6 +128,7 @@ model Product {
   notes       String[] @default([])
   brand       Brand    @relation(fields: [brandId], references: [id])
   category    Category @relation(fields: [categoryId], references: [id])
+  occasions   Occasion[]
 }
 
 enum OrderStatus {

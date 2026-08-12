@@ -24,14 +24,6 @@ export const metadata: Metadata = {
     "Discover hand-poured luxury attars, ouds and perfumes. Pure, luxury, timeless.",
 };
 
-const CATEGORY_ORDER = [
-  "Men's Attar",
-  "Women's Attar",
-  "Arabic Attar",
-  "Oud Collection",
-  "Floral",
-];
-
 const VALID_SORTS: SortOption[] = ["popularity", "price-asc", "price-desc", "newest"];
 
 function firstProductImage(products: Product[]): string {
@@ -66,9 +58,7 @@ export default async function ShopPage({
   const categoryByName = new Map(
     categories.map((c) => [c.name.toLowerCase(), c]),
   );
-  const orderedCategories = CATEGORY_ORDER
-    .map((name) => categoryByName.get(name.toLowerCase()))
-    .filter((c): c is NonNullable<typeof c> => Boolean(c));
+  const orderedCategories = categories;
 
   const navItems: CategoryNavItem[] = [
     {

@@ -10,12 +10,13 @@ export default async function EditProductPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [product, categories, brands] = await Promise.all([
+  const [product, categories, brands, occasions] = await Promise.all([
     prisma.product.findUnique({
       where: { id },
       include: {
         category: true,
         brand: true,
+        occasions: true,
       },
     }),
     prisma.category.findMany({
@@ -23,6 +24,10 @@ export default async function EditProductPage({
       orderBy: { name: "asc" },
     }),
     prisma.brand.findMany({
+      where: { isActive: true },
+      orderBy: { name: "asc" },
+    }),
+    prisma.occasion.findMany({
       where: { isActive: true },
       orderBy: { name: "asc" },
     }),
@@ -50,9 +55,11 @@ export default async function EditProductPage({
           galleryPublicIds: product.galleryPublicIds,
           categoryId: product.categoryId,
           brandId: product.brandId,
+          occasionIds: product.occasions.map((o) => o.id),
         }}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         brands={brands.map((b) => ({ id: b.id, name: b.name }))}
+        occasions={occasions.map((o) => ({ id: o.id, name: o.name }))}
       />
     </div>
   );
