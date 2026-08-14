@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { LogOut, LayoutDashboard, Package, ShoppingCart, FolderTree, Settings, Store, Image as ImageIcon } from "lucide-react";
+import { LogOut, LayoutDashboard, Package, ShoppingCart, FolderTree, Settings, Store, Image as ImageIcon, Gift } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { useAuth } from "@/lib/store/auth-context";
 
@@ -17,6 +17,11 @@ const menuItems = [
     title: "Categories",
     href: "/admin/categories",
     icon: FolderTree,
+  },
+  {
+    title: "Occasions",
+    href: "/admin/occasions",
+    icon: Gift,
   },
   {
     title: "Products",

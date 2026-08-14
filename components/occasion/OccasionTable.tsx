@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { deleteOccasionAction } from "@/app/admin/occasions/actions";
 
 interface Occasion {
@@ -10,6 +11,14 @@ interface Occasion {
 }
 
 export default function OccasionTable({ occasions }: { occasions: Occasion[] }) {
+  const router = useRouter();
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!window.confirm(`Delete occasion "${name}"?`)) return;
+    await deleteOccasionAction(id);
+    router.refresh();
+  };
+
   return (
     <div className="rounded-2xl border bg-white shadow-sm">
       <table className="w-full">
@@ -36,14 +45,13 @@ export default function OccasionTable({ occasions }: { occasions: Occasion[] }) 
               </td>
 
               <td className="p-4 text-right">
-                <form action={deleteOccasionAction.bind(null, occasion.id)}>
-                  <button
-                    type="submit"
-                    className="rounded bg-red-600 px-3 py-1 text-white"
-                  >
-                    Delete
-                  </button>
-                </form>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(occasion.id, occasion.name)}
+                  className="rounded bg-red-600 px-3 py-1 text-white"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}

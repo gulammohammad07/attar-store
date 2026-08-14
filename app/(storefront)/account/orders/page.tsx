@@ -70,6 +70,11 @@ export default async function AccountOrdersPage() {
                     <p className="font-display text-lg font-medium text-[#174A63]">
                       {order.orderNumber}
                     </p>
+                    {order.occasion ? (
+                      <p className="mt-0.5 text-xs font-medium text-amber-700">
+                        {order.occasion}
+                      </p>
+                    ) : null}
                     <p className="mt-0.5 text-xs text-[#174A63]/45">
                       {order.createdAt.toLocaleDateString("en-GB", {
                         day: "numeric",

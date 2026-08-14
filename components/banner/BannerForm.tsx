@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState, useTransition } from "react";
 import {
   upsertBannerAction,
   type BannerActionState,
@@ -35,18 +35,25 @@ export default function BannerForm({
   description,
   initial,
 }: BannerFormProps) {
-  const [state, formAction, pending] = useActionState(
-    upsertBannerAction.bind(null, section),
-    initialState,
-  );
+  const [state, setState] = useState<BannerActionState>(initialState);
+  const [pending, startTransition] = useTransition();
   const [image, setImage] = useState<ImageValue>({
     url: initial?.imageUrl ?? "",
     publicId: initial?.imagePublicId ?? null,
   });
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await upsertBannerAction(section, initialState, formData);
+      setState(result);
+    });
+  };
+
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
       <div className="mb-6">

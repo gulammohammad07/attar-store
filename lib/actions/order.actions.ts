@@ -5,9 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { ROLES } from "@/lib/auth/config";
-
-const FREE_SHIPPING_THRESHOLD = 1500;
-const SHIPPING_FEE = 99;
+import { getStoreSettings } from "@/lib/services/settings.service";
 
 export type OrderItemInput = {
   productId: string;
@@ -23,6 +21,7 @@ export type CreateOrderInput = {
   city: string;
   state: string;
   pincode: string;
+  occasion?: string;
   items: OrderItemInput[];
 };
 
@@ -77,6 +76,7 @@ export async function createOrder(
   const city = (input.city ?? "").trim();
   const state = (input.state ?? "").trim();
   const pincode = (input.pincode ?? "").trim();
+  const occasion = (input.occasion ?? "").trim() || null;
 
   if (
     !customerName ||
@@ -130,7 +130,8 @@ export async function createOrder(
       sum + (product.salePrice ?? product.price) * quantity,
     0,
   );
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+  const settings = await getStoreSettings();
+  const shippingFee = subtotal >= settings.freeShippingThreshold ? 0 : settings.shippingFee;
   const total = subtotal + shippingFee;
 
   try {
@@ -150,6 +151,7 @@ export async function createOrder(
           subtotal,
           shippingFee,
           total,
+          occasion,
           status: "PENDING",
           paymentStatus: "PENDING",
           paymentMethod: "pending",
@@ -213,6 +215,52 @@ export async function updateOrderStatus(
     where: { id: orderId },
     data: { status: status as "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED" },
   });
+
+  revalidatePath("/admin/orders");
+
+  return { success: true };
+}
+
+export type DeleteOrdersResult = { success: boolean; error?: string };
+
+export async function deleteOrderAction(
+  orderId: string,
+): Promise<DeleteOrdersResult> {
+  const user = await getCurrentUser();
+  if (!user || user.role !== ROLES.ADMIN) {
+    return { success: false, error: "Unauthorized." };
+  }
+
+  if (typeof orderId !== "string" || !orderId) {
+    return { success: false, error: "Invalid order id." };
+  }
+
+  await prisma.order.delete({ where: { id: orderId } });
+
+  revalidatePath("/admin/orders");
+
+  return { success: true };
+}
+
+export async function deleteOrdersAction(
+  orderIds: string[],
+): Promise<DeleteOrdersResult> {
+  const user = await getCurrentUser();
+  if (!user || user.role !== ROLES.ADMIN) {
+    return { success: false, error: "Unauthorized." };
+  }
+
+  const ids = Array.isArray(orderIds)
+    ? orderIds.filter((id): id is string => typeof id === "string" && id.length > 0)
+    : [];
+
+  if (ids.length === 0) {
+    return { success: false, error: "No orders selected." };
+  }
+
+  await prisma.$transaction(
+    ids.map((id) => prisma.order.delete({ where: { id } })),
+  );
 
   revalidatePath("/admin/orders");
 

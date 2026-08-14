@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState, useTransition } from "react";
 import {
   createOccasionAction,
   type CreateOccasionState,
@@ -11,13 +11,23 @@ const initialState: CreateOccasionState = {
 };
 
 export default function OccasionForm() {
-  const [state, formAction, pending] = useActionState(
-    createOccasionAction,
-    initialState,
-  );
+  const [state, setState] = useState<CreateOccasionState>(initialState);
+  const [pending, startTransition] = useTransition();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await createOccasionAction(initialState, formData);
+      setState(result);
+    });
+  };
 
   return (
-    <form action={formAction} className="rounded-2xl border bg-white p-6 shadow-sm">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-2xl border bg-white p-6 shadow-sm"
+    >
       <h2 className="mb-6 text-2xl font-semibold">Add Occasion</h2>
 
       <div className="grid gap-5 md:grid-cols-2">

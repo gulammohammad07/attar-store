@@ -1,17 +1,41 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion } from "framer-motion";
 import { ArrowRight, Minus, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
+import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
 import { formatPrice } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, subtotal, clearCart } =
     useCart();
+  const [settings, setSettings] = useState({
+    freeShippingThreshold: 1500,
+    shippingFee: 99,
+  });
 
-  const shipping = subtotal >= 1500 || subtotal === 0 ? 0 : 99;
+  useEffect(() => {
+    let active = true;
+    getPublicStoreSettings().then((storeSettings) => {
+      if (active) {
+        setSettings({
+          freeShippingThreshold: storeSettings.freeShippingThreshold,
+          shippingFee: storeSettings.shippingFee,
+        });
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const shipping =
+    subtotal >= settings.freeShippingThreshold || subtotal === 0
+      ? 0
+      : settings.shippingFee;
   const total = subtotal + shipping;
 
   if (items.length === 0) {
@@ -152,7 +176,9 @@ export default function CartPage() {
               </div>
               {shipping > 0 && (
                 <p className="rounded-xl bg-[#E3F2F9] px-3 py-2 text-xs text-[#174A63]/60">
-                  Add {formatPrice(1500 - subtotal)} more for free shipping.
+                  Add{" "}
+                  {formatPrice(settings.freeShippingThreshold - subtotal)} more
+                  for free shipping.
                 </p>
               )}
               <div className="border-t border-[#174A63]/10 pt-4">

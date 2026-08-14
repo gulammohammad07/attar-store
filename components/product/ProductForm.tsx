@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState, useTransition } from "react";
 import {
   createProductAction,
   type ProductActionState,
@@ -49,14 +49,21 @@ export default function ProductForm({
   brands,
   occasions,
 }: ProductFormProps) {
-  const [state, formAction, pending] = useActionState(
-    createProductAction,
-    initialState,
-  );
+  const [state, setState] = useState<ProductActionState>(initialState);
+  const [pending, startTransition] = useTransition();
   const [notes, setNotes] = useState("");
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [image, setImage] = useState<ImageValue>({ url: "", publicId: null });
   const [gallery, setGallery] = useState<ImageValue[]>([]);
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await createProductAction(initialState, formData);
+      setState(result);
+    });
+  };
 
   const toggleOccasion = (id: string) => {
     setSelectedOccasions((prev) =>
@@ -84,7 +91,7 @@ export default function ProductForm({
 
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
       <h2 className="mb-6 text-2xl font-semibold">Add Product</h2>

@@ -1,14 +1,23 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m as motion } from "framer-motion";
-import { CreditCard, Loader2, Lock } from "lucide-react";
+import { CreditCard, Gift, Loader2, Lock } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useAuth } from "@/lib/store/auth-context";
 import { createOrder } from "@/lib/actions/order.actions";
+import { getActiveOccasions } from "@/lib/actions/occasion.actions";
+import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
 import { formatPrice } from "@/lib/utils";
+
+type CheckoutOccasion = { id: string; name: string };
+type PublicStoreSettings = {
+  freeShippingThreshold: number;
+  shippingFee: number;
+  currency: string;
+};
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -18,9 +27,29 @@ export default function CheckoutPage() {
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [occasions, setOccasions] = useState<CheckoutOccasion[]>([]);
+  const [storeSettings, setStoreSettings] = useState<PublicStoreSettings>({
+    freeShippingThreshold: 1500,
+    shippingFee: 99,
+    currency: "INR",
+  });
   const idempotencyKeyRef = useRef<string | null>(null);
 
-  const shipping = subtotal >= 1500 ? 0 : 99;
+  useEffect(() => {
+    let active = true;
+    getActiveOccasions().then((list) => {
+      if (active) setOccasions(list);
+    });
+    getPublicStoreSettings().then((settings) => {
+      if (active) setStoreSettings(settings);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const shipping =
+    subtotal >= storeSettings.freeShippingThreshold ? 0 : storeSettings.shippingFee;
   const total = subtotal + shipping;
 
   const getIdempotencyKey = () => {
@@ -61,6 +90,7 @@ export default function CheckoutPage() {
       city: (form.get("city") as string) ?? "",
       state: (form.get("state") as string) ?? "",
       pincode: (form.get("pincode") as string) ?? "",
+      occasion: (form.get("occasion") as string) ?? "",
       items: items.map(({ product, quantity }) => ({
         productId: product.id,
         quantity,
@@ -249,6 +279,35 @@ export default function CheckoutPage() {
                     className="rounded-xl border border-[#174A63]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
                   />
                 </div>
+              </div>
+            </section>
+
+            {/* Occasion */}
+            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-8">
+              <h2 className="flex items-center gap-2 font-display text-xl font-medium text-[#174A63]">
+                <Gift size={18} className="text-gold" /> Occasion
+              </h2>
+              <p className="mt-1 text-xs text-[#174A63]/45">
+                Is this a gift or for a special occasion? Let us know.
+              </p>
+              <div className="mt-5">
+                <select
+                  name="occasion"
+                  className="w-full rounded-xl border border-[#174A63]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
+                  defaultValue=""
+                >
+                  <option value="">Select an occasion (optional)</option>
+                  {occasions.map((occasion) => (
+                    <option key={occasion.id} value={occasion.name}>
+                      {occasion.name}
+                    </option>
+                  ))}
+                  <option value="Birthday">Birthday</option>
+                  <option value="Anniversary">Anniversary</option>
+                  <option value="Wedding">Wedding</option>
+                  <option value="Eid">Eid</option>
+                  <option value="Festival">Festival</option>
+                </select>
               </div>
             </section>
 

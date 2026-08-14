@@ -165,6 +165,7 @@ model Order {
   subtotal       Float
   shippingFee    Float
   total          Float
+  occasion       String?
 
   status         OrderStatus   @default(PENDING)
   paymentStatus  PaymentStatus @default(PENDING)
@@ -194,4 +195,18 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+model StoreSettings {
+  id                    Int      @id @default(1)
+  storeName             String   @default("Danish Perfumes")
+  supportEmail          String   @default("support@danishperfumes.com")
+  supportPhone          String   @default("")
+  address               String   @default("")
+  freeShippingThreshold Float    @default(1500)
+  shippingFee           Float    @default(99)
+  currency              String   @default("INR")
+  updatedAt             DateTime @updatedAt
+
+  @@map("store_settings")
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   updateProductAction,
@@ -71,10 +71,8 @@ export default function EditProductForm({
   occasions,
 }: EditProductFormProps) {
   const router = useRouter();
-  const [state, formAction, pending] = useActionState(
-    updateProductAction.bind(null, product.id),
-    initialState,
-  );
+  const [state, setState] = useState<ProductActionState>(initialState);
+  const [pending, startTransition] = useTransition();
   const [notes, setNotes] = useState(product.notes.join(", "));
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>(
     product.occasionIds,
@@ -114,9 +112,22 @@ export default function EditProductForm({
     });
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await updateProductAction(
+        product.id,
+        initialState,
+        formData,
+      );
+      setState(result);
+    });
+  };
+
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
       <div className="mb-6 flex items-center justify-between">

@@ -21,7 +21,6 @@ const menuItems = [
   { label: "Collections", href: "/shop", mega: true },
   { label: "New Arrivals", href: "/shop?sort=newest" },
   { label: "Gift Sets", href: "/shop?category=gourmand" },
-  { label: "Our Story", href: "/#story" },
 ];
 
 export default function Navbar({

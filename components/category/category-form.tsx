@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState, useTransition } from "react";
 import {
   createCategory,
   type CreateCategoryState,
@@ -11,14 +11,21 @@ const initialState: CreateCategoryState = {
 };
 
 export default function CategoryForm() {
-  const [state, formAction, pending] = useActionState(
-    createCategory,
-    initialState,
-  );
+  const [state, setState] = useState<CreateCategoryState>(initialState);
+  const [pending, startTransition] = useTransition();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await createCategory(initialState, formData);
+      setState(result);
+    });
+  };
 
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="space-y-5 rounded-xl border p-6 mt-6"
     >
       <div>
