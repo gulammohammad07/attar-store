@@ -8,20 +8,19 @@ import PlpHero from "@/components/plp/PlpHero";
 import CategoryNav, {
   type CategoryNavItem,
 } from "@/components/plp/CategoryNav";
+
 import LuxuryProductGrid, {
   type SortOption,
 } from "@/components/plp/LuxuryProductGrid";
 import PromoBanner from "@/components/plp/PromoBanner";
 import TrendingNow from "@/components/plp/TrendingNow";
 import CommunityGallery from "@/components/plp/CommunityGallery";
-import NewsletterLuxury from "@/components/plp/NewsletterLuxury";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Shop — Luxury Attar Collection",
-  description:
-    "Discover hand-poured luxury attars, ouds and perfumes. Pure, luxury, timeless.",
+  title: "Shop",
+  description: "Discover our collection of premium attars and perfumes.",
 };
 
 const VALID_SORTS: SortOption[] = ["popularity", "price-asc", "price-desc", "newest"];
@@ -80,12 +79,6 @@ export default async function ShopPage({
       };
     }),
     {
-      id: "luxury",
-      label: "Luxury Collection",
-      href: "/shop",
-      image: products.find((p) => p.featured)?.image ?? firstProductImage(products),
-    },
-    {
       id: "new",
       label: "New Arrivals",
       href: "/shop?sort=newest",
@@ -133,7 +126,6 @@ export default async function ShopPage({
       <PromoBanner products={promo} />
       <TrendingNow products={trending} />
       <CommunityGallery products={products} />
-      <NewsletterLuxury />
     </>
   );
 }

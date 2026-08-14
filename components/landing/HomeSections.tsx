@@ -19,11 +19,6 @@ const BestSellers = dynamic(
   { ssr: false },
 );
 
-const LuxuryCollections = dynamic(
-  () => import("@/components/landing/LuxuryCollections"),
-  { ssr: false },
-);
-
 const WhyChoose = dynamic(() => import("@/components/landing/WhyChoose"), {
   ssr: false,
 });
@@ -80,19 +75,6 @@ export default function HomeSections({
         }
       >
         <BestSellers products={products} />
-      </LazyMount>
-
-      <LazyMount
-        fallback={
-          <SectionSkeleton
-            eyebrow="Curated Worlds"
-            title="Luxury Collections"
-            className="bg-[#E3F2F9]"
-            style={{ minHeight: "100vh" }}
-          />
-        }
-      >
-        <LuxuryCollections categories={categories} />
       </LazyMount>
 
       <LazyMount
