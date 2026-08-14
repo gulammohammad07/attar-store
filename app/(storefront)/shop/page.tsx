@@ -70,10 +70,7 @@ export default async function ShopPage({
       const rep = productForCategory(products, category.name);
       return {
         id: category.slug,
-        label:
-          category.name.toLowerCase() === "arabic attar"
-            ? "Arabic Collection"
-            : category.name,
+        label: category.name,
         href: `/shop?category=${category.slug}`,
         image: rep?.image ?? firstProductImage(products),
       };
@@ -105,9 +102,7 @@ export default async function ShopPage({
   const isNewArrivals = !activeCategory && initialSort === "newest";
   const sectionEyebrow = activeCategory ? "Curated" : isNewArrivals ? "Just Poured" : "The Collection";
   const sectionTitle = activeCategory
-    ? activeCategory.name === "Arabic Attar"
-      ? "Arabic Collection"
-      : activeCategory.name
+    ? activeCategory.name
     : isNewArrivals
       ? "New Arrivals"
       : "Signature Attars";

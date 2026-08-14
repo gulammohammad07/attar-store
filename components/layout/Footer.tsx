@@ -12,11 +12,9 @@ const columns = [
     title: "Shop",
     links: [
       { label: "All Attars", href: "/shop" },
-      { label: "Oud Collection", href: "/shop?category=oud" },
-      { label: "Musk", href: "/shop?category=musk" },
-      { label: "Rose", href: "/shop?category=rose" },
-      { label: "Amber", href: "/shop?category=amber" },
-      { label: "Gift Sets", href: "/shop?category=gourmand" },
+      { label: "Men", href: "/shop?category=men" },
+      { label: "Women", href: "/shop?category=women" },
+      { label: "Unisex", href: "/shop?category=unisex" },
     ],
   },
   {

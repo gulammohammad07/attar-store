@@ -20,7 +20,6 @@ const menuItems = [
   { label: "Shop All", href: "/shop" },
   { label: "Collections", href: "/shop", mega: true },
   { label: "New Arrivals", href: "/shop?sort=newest" },
-  { label: "Gift Sets", href: "/shop?category=gourmand" },
 ];
 
 export default function Navbar({

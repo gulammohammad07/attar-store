@@ -52,3 +52,47 @@ export async function createCategory(
     message: "Category created successfully.",
   };
 }
+
+export type ResetCategoriesState = {
+  success: boolean;
+  message?: string;
+};
+
+export async function resetCategories(): Promise<ResetCategoriesState> {
+  const defaultCategories = [
+    { name: "Men", slug: "men", description: "Masculine fragrances" },
+    { name: "Women", slug: "women", description: "Feminine fragrances" },
+    { name: "Unisex", slug: "unisex", description: "For everyone" },
+  ];
+
+  const created = await Promise.all(
+    defaultCategories.map((cat) =>
+      prisma.category.upsert({
+        where: { slug: cat.slug },
+        update: { name: cat.name, description: cat.description, isActive: true },
+        create: cat,
+      }),
+    ),
+  );
+
+  const defaultIds = created.map((c) => c.id);
+  const menCategory = created.find((c) => c.slug === "men")!;
+
+  await prisma.product.updateMany({
+    where: { categoryId: { notIn: defaultIds } },
+    data: { categoryId: menCategory.id },
+  });
+
+  await prisma.category.deleteMany({
+    where: { id: { notIn: defaultIds } },
+  });
+
+  revalidatePath("/admin/categories");
+  revalidatePath("/");
+  revalidatePath("/shop");
+
+  return {
+    success: true,
+    message: "Categories reset to Men, Women, Unisex.",
+  };
+}
