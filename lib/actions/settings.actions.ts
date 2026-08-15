@@ -1,9 +1,6 @@
 +"use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth/dal";
-import { ROLES } from "@/lib/auth/config";
 import { getStoreSettings } from "@/lib/services/settings.service";
 
 export type UpdateSettingsResult = {
@@ -16,11 +13,6 @@ export async function updateStoreSettingsAction(
   prevState: UpdateSettingsResult,
   formData: FormData,
 ): Promise<UpdateSettingsResult> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== ROLES.ADMIN) {
-    return { success: false, message: "Unauthorized." };
-  }
-
   const storeName = (formData.get("storeName") ?? "").toString().trim();
   const supportEmail = (formData.get("supportEmail") ?? "").toString().trim();
   const supportPhone = (formData.get("supportPhone") ?? "").toString().trim();
@@ -74,6 +66,7 @@ export async function updateStoreSettingsAction(
     },
   });
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/settings");
 
   return { success: true, message: "Settings saved successfully." };

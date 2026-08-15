@@ -1,7 +1,6 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
 
 export async function createBrandAction(formData: FormData) {
   const name = formData.get("name")?.toString() || "";
@@ -14,5 +13,6 @@ export async function createBrandAction(formData: FormData) {
     },
   });
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/brands");
 }

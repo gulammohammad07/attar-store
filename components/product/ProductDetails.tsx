@@ -222,19 +222,19 @@ export default function ProductDetails({
 
             {/* Meta chips */}
             <div className="mt-5 flex flex-wrap gap-2">
-              {[
-                product.volume,
-                product.gender,
-                product.category,
-                ...product.occasions,
-              ].map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-[#174A63]/15 px-3 py-1 text-xs text-[#174A63]/60"
-                >
-                  {tag}
-                </span>
-              ))}
+            {[
+              product.volume,
+              product.gender,
+              product.category,
+              ...product.occasions,
+            ].map((tag, idx) => (
+              <span
+                key={`${tag}-${idx}`}
+                className="rounded-full border border-[#174A63]/15 px-3 py-1 text-xs text-[#174A63]/60"
+              >
+                {tag}
+              </span>
+            ))}
             </div>
 
             {/* Quantity + CTA */}

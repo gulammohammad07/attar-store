@@ -12,3 +12,29 @@ export function formatPrice(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+
+export function generateSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export function generateSkuPreview(
+  brand: string,
+  productName: string,
+): string {
+  const brandPart = brand
+    .toUpperCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-");
+  const productPart = productName
+    .toUpperCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_]+/g, "-");
+  return `${brandPart}-${productPart}`;
+}

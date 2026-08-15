@@ -1,10 +1,7 @@
 "use server";
 
 import { Prisma } from "@prisma/client";
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/lib/auth/dal";
-import { ROLES } from "@/lib/auth/config";
 import { getStoreSettings } from "@/lib/services/settings.service";
 
 export type OrderItemInput = {
@@ -23,6 +20,7 @@ export type CreateOrderInput = {
   pincode: string;
   occasion?: string;
   items: OrderItemInput[];
+  userId: string;
 };
 
 export type CreateOrderResult =
@@ -38,8 +36,7 @@ function generateOrderNumber(): string {
 export async function createOrder(
   input: CreateOrderInput,
 ): Promise<CreateOrderResult> {
-  const user = await getCurrentUser();
-  if (!user) {
+  if (!input.userId) {
     return {
       success: false,
       notAuthenticated: true,
@@ -140,7 +137,7 @@ export async function createOrder(
         data: {
           orderNumber: generateOrderNumber(),
           idempotencyKey: input.idempotencyKey,
-          userId: user.id,
+          userId: input.userId,
           customerName,
           customerEmail,
           customerPhone,
@@ -170,6 +167,7 @@ export async function createOrder(
       });
     });
 
+    const { revalidatePath } = await import("next/cache");
     revalidatePath("/account/orders");
     revalidatePath("/admin/orders");
 
@@ -201,11 +199,6 @@ export async function updateOrderStatus(
   orderId: string,
   status: string,
 ): Promise<UpdateOrderStatusResult> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== ROLES.ADMIN) {
-    return { success: false, error: "Unauthorized." };
-  }
-
   const valid = ["PENDING", "CONFIRMED", "SHIPPED", "DELIVERED", "CANCELLED"];
   if (!valid.includes(status)) {
     return { success: false, error: "Invalid order status." };
@@ -216,6 +209,7 @@ export async function updateOrderStatus(
     data: { status: status as "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED" },
   });
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/orders");
 
   return { success: true };
@@ -226,17 +220,13 @@ export type DeleteOrdersResult = { success: boolean; error?: string };
 export async function deleteOrderAction(
   orderId: string,
 ): Promise<DeleteOrdersResult> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== ROLES.ADMIN) {
-    return { success: false, error: "Unauthorized." };
-  }
-
   if (typeof orderId !== "string" || !orderId) {
     return { success: false, error: "Invalid order id." };
   }
 
   await prisma.order.delete({ where: { id: orderId } });
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/orders");
 
   return { success: true };
@@ -245,11 +235,6 @@ export async function deleteOrderAction(
 export async function deleteOrdersAction(
   orderIds: string[],
 ): Promise<DeleteOrdersResult> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== ROLES.ADMIN) {
-    return { success: false, error: "Unauthorized." };
-  }
-
   const ids = Array.isArray(orderIds)
     ? orderIds.filter((id): id is string => typeof id === "string" && id.length > 0)
     : [];
@@ -262,6 +247,7 @@ export async function deleteOrdersAction(
     ids.map((id) => prisma.order.delete({ where: { id } })),
   );
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/orders");
 
   return { success: true };

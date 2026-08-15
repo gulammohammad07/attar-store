@@ -7,7 +7,7 @@ export default function NewArrivals({ products }: { products: Product[] }) {
   const arrivals = products.filter((p) => p.badge === "New Arrival");
 
   return (
-    <section className="bg-[#E3F2F9] py-24">
+    <section className="bg-[#faf9f7] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Fresh From the Atelier"
@@ -15,16 +15,16 @@ export default function NewArrivals({ products }: { products: Product[] }) {
           description="The latest blends to leave our workshop — bottled and ready."
         />
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-4">
           {arrivals.slice(0, 8).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        <div className="mt-14 text-center">
+        <div className="mt-16 text-center">
           <Link
             href="/shop?sort=newest"
-            className="inline-block rounded-full border border-[#174A63] px-8 py-3.5 text-sm font-semibold text-[#174A63] transition-all hover:bg-[#174A63] hover:text-white"
+            className="inline-flex items-center gap-3 rounded-full border border-gold/40 bg-white/80 px-10 py-4 text-xs font-semibold tracking-[0.2em] text-[#0f2838]/70 uppercase backdrop-blur-xl transition-all duration-700 hover:border-gold hover:bg-gold hover:text-[#0a1b26] hover:shadow-[0_20px_50px_-15px_rgba(201,169,110,0.5)]"
           >
             View All Attars
           </Link>

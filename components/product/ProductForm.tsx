@@ -9,6 +9,7 @@ import ImageUploader, {
   type ImageValue,
 } from "@/components/admin/ImageUploader";
 import GalleryUploader from "@/components/admin/GalleryUploader";
+import { generateSkuPreview } from "@/lib/utils";
 
 const QUICK_NOTES = [
   "Oud",
@@ -55,6 +56,7 @@ export default function ProductForm({
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [image, setImage] = useState<ImageValue>({ url: "", publicId: null });
   const [gallery, setGallery] = useState<ImageValue[]>([]);
+  const [skuPreview, setSkuPreview] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,6 +65,12 @@ export default function ProductForm({
       const result = await createProductAction(initialState, formData);
       setState(result);
     });
+  };
+
+  const updateSkuPreview = (name: string, brandId: string) => {
+    const brand = brands.find((b) => b.id === brandId);
+    const preview = generateSkuPreview(brand?.name ?? "", name);
+    setSkuPreview(preview);
   };
 
   const toggleOccasion = (id: string) => {
@@ -115,6 +123,10 @@ export default function ProductForm({
             name="name"
             className="w-full rounded-lg border p-3"
             placeholder="Oud Royal"
+            onChange={(e) => {
+              const brandId = (e.currentTarget.form?.elements.namedItem("brandId") as HTMLSelectElement)?.value;
+              updateSkuPreview(e.target.value, brandId || "");
+            }}
           />
 
           {state.errors?.name && (
@@ -122,34 +134,20 @@ export default function ProductForm({
           )}
         </div>
 
-        {/* Slug */}
-        <div>
-          <label className="mb-2 block font-medium">Slug</label>
-
-          <input
-            name="slug"
-            className="w-full rounded-lg border p-3"
-            placeholder="oud-royal"
-          />
-
-          {state.errors?.slug && (
-            <p className="mt-1 text-sm text-red-600">{state.errors.slug[0]}</p>
-          )}
-        </div>
-
         {/* SKU */}
         <div>
           <label className="mb-2 block font-medium">SKU</label>
-
           <input
-            name="sku"
-            className="w-full rounded-lg border p-3"
-            placeholder="SKU001"
+            type="text"
+            value={skuPreview}
+            readOnly
+            placeholder="Auto-generated from brand + product name"
+            className="w-full rounded-lg border border-dashed p-3 text-gray-500"
           />
-
-          {state.errors?.sku && (
-            <p className="mt-1 text-sm text-red-600">{state.errors.sku[0]}</p>
-          )}
+          <p className="mt-1 text-xs text-gray-400">
+            Auto-generated on save as BRAND-PRODUCT-01
+          </p>
+          <input type="hidden" name="sku" value={skuPreview} />
         </div>
 
         {/* Category */}
@@ -177,7 +175,14 @@ export default function ProductForm({
         <div>
           <label className="mb-2 block font-medium">Brand</label>
 
-          <select name="brandId" className="w-full rounded-lg border p-3">
+          <select
+            name="brandId"
+            className="w-full rounded-lg border p-3"
+            onChange={(e) => {
+              const name = (e.currentTarget.form?.elements.namedItem("name") as HTMLInputElement)?.value;
+              updateSkuPreview(name, e.target.value);
+            }}
+          >
             <option value="">Select Brand</option>
 
             {brands.map((brand) => (

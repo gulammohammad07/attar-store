@@ -1,6 +1,5 @@
 "use server";
 
-import { headers } from "next/headers";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -38,6 +37,7 @@ function normalizeEmail(email: string): string {
 }
 
 async function getClientKey(prefix: string): Promise<string> {
+  const { headers } = await import("next/headers");
   const headersList = await headers();
   const ip =
     headersList.get("x-forwarded-for")?.split(",")[0]?.trim() ??

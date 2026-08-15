@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
   createProduct,
   deleteProduct,
@@ -9,6 +8,8 @@ import {
 } from "@/lib/services/product.service";
 import { productSchema } from "@/lib/validations/product";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
+import { generateSlug } from "@/lib/utils";
+import { prisma } from "@/lib/prisma";
 
 export type ProductActionState = {
   success: boolean;
@@ -75,6 +76,42 @@ function buildGallery(
   };
 }
 
+async function resolveSku(
+  brandId: string,
+  productName: string,
+  providedSku?: string,
+): Promise<string> {
+  if (providedSku && providedSku.trim()) {
+    return providedSku.trim();
+  }
+
+  const brand = await prisma.brand.findUnique({
+    where: { id: brandId },
+    select: { name: true },
+  });
+
+  const brandName = brand?.name ?? "BRAND";
+  const productSlug = generateSlug(productName);
+  const brandSlug = generateSlug(brandName);
+  const prefix = `${brandSlug}-${productSlug}`.toUpperCase();
+
+  const existing = await prisma.product.findMany({
+    where: { sku: { startsWith: prefix } },
+    select: { sku: true },
+    orderBy: { sku: "desc" },
+  });
+
+  const maxNumber = existing.reduce((max, sku) => {
+    const match = sku.match(new RegExp(`^${prefix.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}-(\\d+)$`));
+    if (!match) return max;
+    const num = Number(match[1]);
+    return num > max ? num : max;
+  }, 0);
+
+  const nextNumber = String(maxNumber + 1).padStart(2, "0");
+  return `${prefix}-${nextNumber}`;
+}
+
 export async function createProductAction(
   prevState: ProductActionState,
   formData: FormData,
@@ -107,10 +144,12 @@ export async function createProductAction(
   );
 
   try {
+    const sku = await resolveSku(result.data.brandId, result.data.name, result.data.sku);
+
     await createProduct({
       name: result.data.name,
-      slug: result.data.slug,
-      sku: result.data.sku,
+      slug: result.data.slug || generateSlug(result.data.name),
+      sku,
       description: result.data.description || null,
       price: result.data.price,
       salePrice: result.data.salePrice ?? null,
@@ -149,6 +188,7 @@ export async function createProductAction(
     };
   }
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/products");
 
   return {
@@ -202,10 +242,12 @@ export async function updateProductAction(
   );
 
   try {
+    const sku = await resolveSku(result.data.brandId, result.data.name, result.data.sku);
+
     await updateProduct(productId, {
       name: result.data.name,
-      slug: result.data.slug,
-      sku: result.data.sku,
+      slug: result.data.slug || generateSlug(result.data.name),
+      sku,
       description: result.data.description || null,
       price: result.data.price,
       salePrice: result.data.salePrice ?? null,
@@ -249,6 +291,7 @@ export async function updateProductAction(
     };
   }
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${productId}`);
 
@@ -281,6 +324,7 @@ export async function deleteProductAction(productId: string) {
     };
   }
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/products");
 
   return { success: true, message: "Product deleted successfully." };

@@ -72,11 +72,11 @@ export default function AdminShell({
     : "A";
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-[#f8fcfe]">
       {/* Sidebar */}
-      <aside className="flex w-72 flex-col border-r border-zinc-800 bg-zinc-950 text-white">
+      <aside className="sticky top-0 flex h-screen w-72 flex-col border-r border-[#174a63]/10 bg-[#0f2838] text-white">
         {/* Logo */}
-        <div className="flex items-center gap-3 border-b border-zinc-800 px-6 py-6">
+        <div className="flex items-center gap-3 border-b border-white/10 px-6 py-6">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-black">
             <Store size={22} />
           </div>
@@ -88,7 +88,7 @@ export default function AdminShell({
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-2 p-4">
+        <nav className="flex-1 space-y-2 overflow-y-auto p-4">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const active = pathname === item.href;
@@ -111,7 +111,7 @@ export default function AdminShell({
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-zinc-800 p-6">
+        <div className="border-t border-white/10 p-6">
           <p className="text-xs text-zinc-400">Logged in as</p>
 
           <h3 className="font-semibold">{user?.name ?? "Admin"}</h3>
@@ -130,17 +130,17 @@ export default function AdminShell({
       {/* Main Content */}
       <div className="flex flex-1 flex-col">
         {/* Header */}
-        <header className="flex h-16 items-center justify-between border-b bg-white px-8">
-          <h2 className="text-2xl font-bold">Admin Panel</h2>
+        <header className="flex h-16 items-center justify-between border-b border-[#174a63]/10 bg-white px-8">
+          <h2 className="text-2xl font-bold text-[#174a63]">Admin Panel</h2>
 
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black font-bold text-white">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#174a63] font-bold text-white">
               {initials}
             </div>
 
             <div>
-              <p className="font-medium">{user?.name ?? "Admin"}</p>
-              <p className="text-xs text-gray-500">
+              <p className="font-medium text-[#174a63]">{user?.name ?? "Admin"}</p>
+              <p className="text-xs text-[#174a63]/55">
                 {user?.role === "ADMIN" ? "administrator" : "member"}
               </p>
             </div>

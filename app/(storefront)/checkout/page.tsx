@@ -95,6 +95,7 @@ export default function CheckoutPage() {
         productId: product.id,
         quantity,
       })),
+      userId: user.id,
     });
 
     if (!result.success) {

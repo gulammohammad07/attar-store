@@ -16,10 +16,12 @@ export default function ProductCard({
   product,
   className,
   loading = "lazy",
+  dark = false,
 }: {
   product: Product;
   className?: string;
   loading?: "lazy" | "eager";
+  dark?: boolean;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -80,8 +82,12 @@ export default function ProductCard({
         style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }}
         className={cn("group relative", className)}
       >
-        <div className="relative overflow-hidden rounded-3xl bg-white shadow-sm transition-shadow duration-500 group-hover:shadow-2xl">
-          {/* Badge */}
+        <div className={cn(
+          "relative overflow-hidden rounded-3xl shadow-sm transition-all duration-700 group-hover:shadow-2xl",
+          dark
+            ? "border border-white/[0.06] bg-[#112d3d] group-hover:border-gold/40 group-hover:shadow-[0_30px_70px_-20px_rgba(201,169,110,0.4)]"
+            : "border border-[#e0ecf2] bg-white group-hover:border-gold/40 group-hover:shadow-[0_30px_70px_-20px_rgba(201,169,110,0.3)]"
+        )}>
           {product.badge && (
             <span
               className={cn(
@@ -98,20 +104,25 @@ export default function ProductCard({
           )}
 
           {discount > 0 && product.badge !== "Sale" && (
-            <span className="absolute right-4 top-4 z-10 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold text-red-600 backdrop-blur">
+            <span className={cn(
+              "absolute right-4 top-4 z-10 rounded-full px-3 py-1 text-[10px] font-bold backdrop-blur",
+              dark ? "bg-[#0a1b26]/80 text-red-400" : "bg-white/90 text-red-600"
+            )}>
               -{discount}%
             </span>
           )}
 
-          {/* Actions */}
           <div className="absolute right-4 top-14 z-10 flex flex-col gap-2">
             <button
               type="button"
               onClick={() => toggleWishlist(product)}
               aria-label="Add to wishlist"
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow backdrop-blur transition-all hover:scale-110",
-                wished ? "text-red-500" : "text-[#174A63]/50 hover:text-red-500",
+                "flex h-9 w-9 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
+                dark
+                  ? "bg-[#0a1b26]/70 text-[#dceff7]/60 hover:text-red-400"
+                  : "bg-white/90 text-[#174A63]/50 hover:text-red-500",
+                wished && "text-red-500",
               )}
             >
               <Heart size={16} fill={wished ? "currentColor" : "none"} />
@@ -121,14 +132,21 @@ export default function ProductCard({
               type="button"
               onClick={() => setQuickViewOpen(true)}
               aria-label="Quick view"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow backdrop-blur transition-all hover:scale-110"
+              className={cn(
+                "flex h-9 w-9 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
+                dark
+                  ? "bg-[#0a1b26]/70 text-[#dceff7]/60"
+                  : "bg-white/90 text-[#174A63]/50"
+              )}
             >
-              <Eye size={16} className="text-[#174A63]/50" />
+              <Eye size={16} />
             </button>
           </div>
 
-          {/* Image */}
-          <div className="relative h-72 w-full overflow-hidden bg-[#EFF8FC]">
+          <div className={cn(
+            "relative h-72 w-full overflow-hidden",
+            dark ? "bg-gradient-to-b from-[#122d3d] to-[#0a1b26]" : "bg-[#EFF8FC]"
+          )}>
             <Link
               href={`/product/${product.slug}`}
               className="block h-full w-full"
@@ -161,7 +179,10 @@ export default function ProductCard({
                   type="button"
                   onClick={prevImage}
                   aria-label="Previous image"
-                  className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#174A63]"
+                  className={cn(
+                    "absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
+                    dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
+                  )}
                 >
                   <ChevronLeft size={16} />
                 </button>
@@ -170,7 +191,10 @@ export default function ProductCard({
                   type="button"
                   onClick={nextImage}
                   aria-label="Next image"
-                  className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md backdrop-blur transition-all hover:scale-110 hover:text-[#174A63]"
+                  className={cn(
+                    "absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
+                    dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
+                  )}
                 >
                   <ChevronRight size={16} />
                 </button>
@@ -190,7 +214,7 @@ export default function ProductCard({
                         "h-1.5 rounded-full transition-all duration-300",
                         i === imgIndex
                           ? "w-4 bg-gold"
-                          : "w-1.5 bg-white/80 hover:bg-gold/70",
+                          : dark ? "w-1.5 bg-[#dceff7]/40 hover:bg-gold/70" : "w-1.5 bg-white/80 hover:bg-gold/70",
                       )}
                     />
                   ))}
@@ -199,39 +223,41 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Info */}
-          <div className="p-5">
+          <div className={cn("p-5", dark && "border-t border-white/[0.06]")}>
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-semibold tracking-[0.18em] text-gold uppercase">
                 {product.brand}
               </p>
               <div className="flex items-center gap-1 text-xs">
                 <Star size={12} className="fill-gold text-gold" />
-                <span className="font-medium text-[#174A63]">
+                <span className={cn("font-medium", dark ? "text-[#dceff7]/80" : "text-[#174A63]")}>
                   {product.rating}
                 </span>
-                <span className="text-[#174A63]/40">
+                <span className={cn(dark ? "text-[#dceff7]/30" : "text-[#174A63]/40")}>
                   ({product.reviewCount})
                 </span>
               </div>
             </div>
 
-            <Link href={`/product/${product.slug}`} className="mt-1 block">
-              <h3 className="font-display text-xl font-semibold text-[#174A63] transition-colors group-hover:text-gold">
+            <Link href={`/product/${product.slug}`} className="mt-1.5 block">
+              <h3 className={cn(
+                "font-display text-xl font-semibold transition-colors group-hover:text-gold",
+                dark ? "text-[#f8fcfe]" : "text-[#174A63]"
+              )}>
                 {product.name}
               </h3>
             </Link>
 
-            <p className="mt-1 text-xs text-[#174A63]/45">
+            <p className={cn("mt-1 text-xs", dark ? "text-[#dceff7]/35" : "text-[#174A63]/45")}>
               {product.volume} • {product.category}
             </p>
 
             <div className="mt-3 flex items-center gap-2">
-              <span className="text-lg font-semibold text-[#174A63]">
+              <span className={cn("text-lg font-semibold", dark ? "text-[#f8fcfe]" : "text-[#174A63]")}>
                 {formatPrice(price)}
               </span>
               {product.salePrice && (
-                <span className="text-sm text-[#174A63]/35 line-through">
+                <span className={cn("text-sm line-through", dark ? "text-[#dceff7]/25" : "text-[#174A63]/35")}>
                   {formatPrice(product.price)}
                 </span>
               )}
@@ -243,7 +269,12 @@ export default function ProductCard({
                 addToCart(product);
                 toast.success(`${product.name} added to bag`);
               }}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-[#174A63] py-3 text-sm font-medium text-white transition-all hover:bg-gold"
+              className={cn(
+                "mt-4 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-medium transition-all duration-700",
+                dark
+                  ? "bg-gradient-to-r from-[#174A63] to-[#0f2838] text-[#f8fcfe] hover:from-gold hover:to-gold-light hover:text-[#0a1b26]"
+                  : "bg-[#174A63] text-white hover:bg-gold"
+              )}
             >
               <ShoppingBag size={16} />
               Add to Bag

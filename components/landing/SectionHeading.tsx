@@ -18,23 +18,26 @@ export default function SectionHeading({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 35 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "mb-14",
+        "mb-16",
         align === "center" ? "text-center" : "text-left",
       )}
     >
-      <p className="text-[11px] font-semibold tracking-[0.3em] text-gold uppercase">
-        {eyebrow}
-      </p>
+      <div className={cn("flex items-center gap-5", align === "center" && "justify-center")}>
+        <span className="h-px w-14 bg-gold/80" />
+        <p className="text-[11px] font-semibold tracking-[0.32em] text-gold uppercase">
+          {eyebrow}
+        </p>
+      </div>
 
       <h2
         className={cn(
-          "mt-4 font-display text-4xl font-medium tracking-tight sm:text-5xl",
-          dark ? "text-[#F8FCFE]" : "text-[#174A63]",
+          "mt-5 font-display text-4xl font-medium tracking-tight sm:text-5xl lg:text-[4rem]",
+          dark ? "text-[#f8fcfe]" : "text-[#0f2838]",
         )}
       >
         {title}
@@ -43,9 +46,9 @@ export default function SectionHeading({
       {description && (
         <p
           className={cn(
-            "mx-auto mt-4 max-w-xl text-sm leading-relaxed",
+            "mx-auto mt-5 max-w-xl text-[15px] leading-[1.7]",
             align === "center" && "mx-auto text-center",
-            dark ? "text-[#F8FCFE]/60" : "text-[#174A63]/55",
+            dark ? "text-[#dceff7]/50" : "text-[#0f2838]/55",
           )}
         >
           {description}

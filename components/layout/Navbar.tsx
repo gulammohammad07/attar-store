@@ -60,36 +60,33 @@ export default function Navbar({
         onMouseLeave={() => setActiveMenu(null)}
       >
         <header
-          className={`transition-all duration-500 ${
+          className={`transition-all duration-700 ${
             scrolled
-              ? "glass-dark shadow-xl"
-              : "bg-charcoal/80 backdrop-blur-md"
+              ? "glass-premium shadow-[0_4px_30px_rgba(15,40,56,0.08)]"
+              : "bg-white/80 backdrop-blur-xl"
           }`}
         >
-          <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-3 sm:gap-6 sm:px-6">
-            {/* Mobile hamburger */}
+          <div className="mx-auto flex h-20 items-center justify-between gap-3 px-4 sm:gap-8 sm:px-8 lg:max-w-7xl">
             <button
               type="button"
-              className="text-[#F8FCFE] lg:hidden"
+              className="text-[#0f2838] lg:hidden transition-colors hover:text-gold"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
-              <Menu size={22} />
+              <Menu size={24} />
             </button>
 
-            {/* Logo */}
             <Link
               href="/"
               className="shrink-0"
               onClick={() => setActiveMenu(null)}
             >
-              <span className="font-display text-lg font-semibold tracking-[0.12em] text-[#F8FCFE] sm:text-2xl sm:tracking-[0.18em]">
-                DANISH<span className="text-gold"> PERFUMES</span>
+              <span className="font-display text-lg font-semibold tracking-[0.16em] text-[#0f2838] sm:text-[1.35rem] sm:tracking-[0.22em]">
+                DANISH<span className="bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent"> PERFUMES</span>
               </span>
             </Link>
 
-            {/* Desktop nav */}
-            <nav className="hidden items-center gap-8 lg:flex">
+            <nav className="hidden items-center gap-10 lg:flex">
               {menuItems.map((item) => (
                 <div key={item.label} className="relative">
                   <Link
@@ -98,54 +95,68 @@ export default function Navbar({
                       setActiveMenu(item.mega ? item.label : null)
                     }
                     onClick={() => setActiveMenu(null)}
-                    className={`relative text-[12px] font-medium tracking-[0.14em] uppercase transition-colors ${
+                    className={`relative text-[12px] font-medium tracking-[0.16em] uppercase transition-colors duration-500 ${
                       activeMenu === item.label
-                        ? "text-gold-light"
-                        : "text-[#F8FCFE] hover:text-gold-light"
+                        ? "text-gold"
+                        : "text-[#0f2838]/75 hover:text-gold"
                     }`}
                   >
                     {item.label}
+                    {activeMenu === item.label && (
+                      <motion.span
+                        layoutId="nav-indicator"
+                        className="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-gold to-gold-light"
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      />
+                    )}
                   </Link>
                 </div>
               ))}
             </nav>
 
-            {/* Icons */}
-            <div className="flex items-center gap-3 text-[#F8FCFE] sm:gap-5">
+            <div className="flex items-center gap-2 text-[#0f2838] sm:gap-5">
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
-                className="transition-colors hover:text-gold-light"
+                className="transition-colors duration-300 hover:text-gold"
                 aria-label="Search"
               >
-                <Search size={19} />
+                <Search size={20} />
               </button>
 
               <Link
                 href="/wishlist"
                 prefetch={false}
-                className="relative hidden transition-colors hover:text-gold-light sm:block"
+                className="relative hidden transition-colors duration-300 hover:text-gold sm:block"
                 aria-label="Wishlist"
               >
-                <Heart size={19} />
+                <Heart size={20} />
                 {wishlistItems.length > 0 && (
-                  <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-white">
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-light text-[9px] font-bold text-[#0a1b26]"
+                  >
                     {wishlistItems.length}
-                  </span>
+                  </motion.span>
                 )}
               </Link>
 
               <button
                 type="button"
                 onClick={openCart}
-                className="relative transition-colors hover:text-gold-light"
+                className="relative transition-colors duration-300 hover:text-gold"
                 aria-label="Cart"
               >
-                <ShoppingBag size={19} />
+                <ShoppingBag size={20} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-white">
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-2 -right-2 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-light text-[9px] font-bold text-[#0a1b26]"
+                  >
                     {totalItems}
-                  </span>
+                  </motion.span>
                 )}
               </button>
 
@@ -153,10 +164,10 @@ export default function Navbar({
                 <Link
                   href="/admin"
                   prefetch={false}
-                  className="hidden transition-colors hover:text-gold-light sm:block"
+                  className="hidden transition-colors duration-300 hover:text-gold sm:block"
                   aria-label="Admin panel"
                 >
-                  <span className="text-[10px] font-bold tracking-widest uppercase">
+                  <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gold">
                     Admin
                   </span>
                 </Link>
@@ -166,7 +177,7 @@ export default function Navbar({
                 <Link
                   href="/account"
                   prefetch={false}
-                  className="hidden h-8 w-8 items-center justify-center rounded-full bg-gold/20 text-xs font-bold text-gold-light ring-1 ring-gold/30 transition-all hover:bg-gold/30 sm:flex"
+                  className="hidden h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-light text-xs font-bold text-[#0a1b26] ring-1 ring-gold/30 transition-all duration-500 hover:shadow-[0_0_20px_rgba(201,169,110,0.4)] sm:flex"
                   aria-label="Account"
                   title={user.name}
                 >
@@ -176,32 +187,30 @@ export default function Navbar({
                 <Link
                   href="/sign-in"
                   prefetch={false}
-                  className="hidden transition-colors hover:text-gold-light sm:block"
+                  className="hidden transition-colors duration-300 hover:text-gold sm:block"
                   aria-label="Sign in"
                 >
-                  <User size={19} />
+                  <User size={20} />
                 </Link>
               )}
             </div>
           </div>
         </header>
 
-        {/* Mega menu */}
         <AnimatePresence>
           {activeMenu && (
             <motion.div
-              initial={{ opacity: 0, y: -8 }}
+              initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="absolute inset-x-0 top-full hidden border-t border-white/5 bg-[#0F2838] shadow-2xl lg:block"
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-x-0 top-full hidden border-t border-gold/10 bg-white/95 shadow-2xl shadow-black/10 backdrop-blur-3xl lg:block"
               onMouseEnter={() => setActiveMenu("Collections")}
             >
-              <div className="mx-auto max-w-7xl px-6 py-10">
-                <div className="grid grid-cols-12 gap-10">
-                  {/* Categories */}
+              <div className="mx-auto max-w-7xl px-8 py-12">
+                <div className="grid grid-cols-12 gap-12">
                   <div className="col-span-3">
-                    <h3 className="mb-5 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
+                    <h3 className="mb-6 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
                       Shop by Category
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
@@ -211,25 +220,25 @@ export default function Navbar({
                           href={`/shop?category=${category.slug}`}
                           className="group"
                         >
-                          <div className="relative h-24 overflow-hidden rounded-xl">
+                          <div className="relative h-24 overflow-hidden rounded-xl border border-[#e0ecf2] bg-[#f8fcfe] transition-all duration-500 group-hover:border-gold/30">
                             {category.imageUrl ? (
                               <Image
                                 src={category.imageUrl}
                                 alt={category.name}
                                 fill
                                 sizes="120px"
-                                className="object-contain p-3 transition-transform duration-500 group-hover:scale-110"
+                                className="object-contain p-3 transition-transform duration-700 ease-out group-hover:scale-110"
                               />
                             ) : (
-                              <div className="flex h-full items-center justify-center bg-white/5">
-                                <span className="font-display text-4xl text-[#F8FCFE]/25">
+                              <div className="flex h-full items-center justify-center bg-[#f0f7fb]">
+                                <span className="font-display text-4xl text-[#0f2838]/20">
                                   {category.name.charAt(0)}
                                 </span>
                               </div>
                             )}
-                            <div className="absolute inset-0 bg-black/10" />
+                            <div className="absolute inset-0 bg-black/5 transition-opacity duration-500 group-hover:opacity-0" />
                           </div>
-                          <p className="mt-2 text-sm font-medium text-[#F8FCFE] group-hover:text-gold-light">
+                          <p className="mt-2.5 text-sm font-medium text-[#0f2838]/80 transition-colors duration-300 group-hover:text-gold">
                             {category.name}
                           </p>
                         </Link>
@@ -237,19 +246,18 @@ export default function Navbar({
                     </div>
                   </div>
 
-                  {/* Occasions */}
                   <div className="col-span-2">
-                    <h3 className="mb-5 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
+                    <h3 className="mb-6 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
                       Shop by Occasion
                     </h3>
-                    <ul className="space-y-3">
+                    <ul className="space-y-3.5">
                       {occasions.map((occasion) => (
                         <li key={occasion}>
                           <Link
                             href={`/shop?occasion=${occasion
                               .toLowerCase()
                               .replace(/\s+/g, "-")}`}
-                            className="text-sm text-[#F8FCFE]/80 transition-colors hover:text-gold-light"
+                            className="text-sm text-[#0f2838]/70 transition-colors duration-300 hover:text-gold"
                           >
                             {occasion}
                           </Link>
@@ -258,17 +266,16 @@ export default function Navbar({
                     </ul>
                   </div>
 
-                  {/* Notes */}
                   <div className="col-span-2">
-                    <h3 className="mb-5 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
+                    <h3 className="mb-6 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
                       Shop by Notes
                     </h3>
-                    <ul className="space-y-3">
+                    <ul className="space-y-3.5">
                       {notes.slice(0, 10).map((note) => (
                         <li key={note}>
                           <Link
                             href={`/shop?note=${note.toLowerCase()}`}
-                            className="text-sm text-[#F8FCFE]/80 transition-colors hover:text-gold-light"
+                            className="text-sm text-[#0f2838]/70 transition-colors duration-300 hover:text-gold"
                           >
                             {note}
                           </Link>
@@ -277,9 +284,8 @@ export default function Navbar({
                     </ul>
                   </div>
 
-                  {/* Featured products */}
                   <div className="col-span-5">
-                    <h3 className="mb-5 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
+                    <h3 className="mb-6 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
                       Featured
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
@@ -289,22 +295,22 @@ export default function Navbar({
                           <Link
                             key={product.id}
                             href={`/product/${product.slug}`}
-                            className="group flex items-center gap-4 rounded-2xl border border-white/5 bg-white/[0.03] p-3 transition-colors hover:bg-white/[0.06]"
+                            className="group flex items-center gap-4 rounded-2xl border border-[#e0ecf2] bg-white/80 p-3 transition-all duration-500 hover:border-gold/30 hover:bg-white"
                           >
-                            <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-white/5">
+                            <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-lg bg-[#f0f7fb]">
                               <Image
                                 src={product.image}
                                 alt={product.name}
                                 fill
                                 sizes="64px"
-                                className="object-contain p-2 transition-transform duration-500 group-hover:scale-110"
+                                className="object-contain p-2 transition-transform duration-700 ease-out group-hover:scale-110"
                               />
                             </div>
                             <div>
-                              <p className="font-display text-base font-medium text-[#F8FCFE]">
+                              <p className="font-display text-base font-medium text-[#0f2838]">
                                 {product.name}
                               </p>
-                              <p className="mt-1 text-sm text-gold">
+                              <p className="mt-1.5 text-sm text-gold">
                                 ₹{product.salePrice ?? product.price.toLocaleString("en-IN")}
                               </p>
                             </div>
@@ -312,17 +318,16 @@ export default function Navbar({
                         ))}
                     </div>
 
-                    {/* Promo banner */}
-                    <div className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-r from-[#C9A96E] to-[#A18758] p-5">
-                      <p className="font-display text-lg font-semibold text-white">
+                    <div className="relative mt-5 overflow-hidden rounded-2xl bg-gradient-to-r from-[#c9a96e] via-[#e2cc9c] to-[#a8843f] p-6 shadow-lg">
+                      <p className="font-display text-lg font-semibold text-[#0a1b26]">
                         Festive Edit — up to 30% off
                       </p>
-                      <p className="mt-1 text-sm text-white/80">
+                      <p className="mt-1.5 text-sm text-[#0a1b26]/70">
                         Limited edition ouds, now live.
                       </p>
                       <Link
                         href="/shop"
-                        className="mt-3 inline-block rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#0F2838]"
+                        className="mt-4 inline-block rounded-full bg-[#0a1b26] px-5 py-2 text-xs font-semibold text-white transition-all duration-300 hover:shadow-lg"
                       >
                         Explore
                       </Link>
@@ -335,38 +340,38 @@ export default function Navbar({
         </AnimatePresence>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-charcoal/95 backdrop-blur-md lg:hidden"
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-[60] bg-white/[0.97] backdrop-blur-2xl lg:hidden"
           >
             <div className="flex h-full flex-col">
-              <div className="flex h-16 items-center justify-between px-6">
-                <span className="font-display text-xl tracking-[0.18em] text-[#F8FCFE]">
-                  DANISH PERFUMES
+              <div className="flex h-20 items-center justify-between px-6">
+                <span className="font-display text-xl tracking-[0.2em] text-[#0f2838]">
+                  DANISH<span className="text-gold"> PERFUMES</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
-                  className="text-[#F8FCFE]"
+                  className="text-[#0f2838] transition-colors duration-300 hover:text-gold"
                   aria-label="Close menu"
                 >
-                  <X size={24} />
+                  <X size={26} />
                 </button>
               </div>
 
-              <nav className="flex-1 overflow-y-auto px-6 py-6">
-                <ul className="space-y-5">
+              <nav className="flex-1 overflow-y-auto px-6 py-10">
+                <ul className="space-y-7">
                   {menuItems.map((item) => (
                     <li key={item.label}>
                       <Link
                         href={item.href}
                         onClick={() => setMobileOpen(false)}
-                        className="text-2xl font-medium text-[#F8FCFE]"
+                        className="text-2xl font-medium text-[#0f2838] transition-colors duration-300 hover:text-gold"
                       >
                         {item.label}
                       </Link>
@@ -374,17 +379,17 @@ export default function Navbar({
                   ))}
                 </ul>
 
-                <div className="mt-10">
-                  <h4 className="mb-4 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
+                <div className="mt-12">
+                  <h4 className="mb-5 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
                     Categories
                   </h4>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     {categories.map((category) => (
                       <Link
                         key={category.slug}
                         href={`/shop?category=${category.slug}`}
                         onClick={() => setMobileOpen(false)}
-                        className="rounded-xl bg-white/5 p-3 text-center text-sm text-[#F8FCFE]"
+                        className="rounded-xl border border-[#e0ecf2] bg-white p-4 text-center text-sm text-[#0f2838]/80 transition-all duration-300 hover:border-gold/40 hover:text-gold"
                       >
                         {category.name}
                       </Link>
@@ -392,8 +397,8 @@ export default function Navbar({
                   </div>
                 </div>
 
-                <div className="mt-10 flex flex-col gap-4 text-sm text-[#F8FCFE]/70">
-                  <Link href="/wishlist" onClick={() => setMobileOpen(false)}>
+                <div className="mt-12 flex flex-col gap-5 text-[15px] text-[#5f7788]/60">
+                  <Link href="/wishlist" onClick={() => setMobileOpen(false)} className="transition-colors duration-300 hover:text-gold">
                     Wishlist
                   </Link>
 
@@ -402,6 +407,7 @@ export default function Navbar({
                       <Link
                         href="/account"
                         onClick={() => setMobileOpen(false)}
+                        className="transition-colors duration-300 hover:text-gold"
                       >
                         Account {user.name ? `(${user.name.split(" ")[0]})` : ""}
                       </Link>
@@ -409,7 +415,7 @@ export default function Navbar({
                         <Link
                           href="/admin"
                           onClick={() => setMobileOpen(false)}
-                          className="text-gold-light"
+                          className="text-gold"
                         >
                           Admin panel
                         </Link>
@@ -420,9 +426,9 @@ export default function Navbar({
                           setMobileOpen(false);
                           void handleSignOut();
                         }}
-                        className="flex items-center gap-2 text-left text-[#F8FCFE]/70"
+                        className="flex items-center gap-2.5 text-left text-[#5f7788]/60 transition-colors duration-300 hover:text-gold"
                       >
-                        <LogOut size={15} />
+                        <LogOut size={16} />
                         Sign out
                       </button>
                     </>
@@ -431,12 +437,14 @@ export default function Navbar({
                       <Link
                         href="/sign-in"
                         onClick={() => setMobileOpen(false)}
+                        className="transition-colors duration-300 hover:text-gold"
                       >
                         Sign in
                       </Link>
                       <Link
                         href="/sign-up"
                         onClick={() => setMobileOpen(false)}
+                        className="transition-colors duration-300 hover:text-gold"
                       >
                         Create account
                       </Link>
@@ -449,7 +457,6 @@ export default function Navbar({
         )}
       </AnimatePresence>
 
-      {/* Search overlay */}
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );

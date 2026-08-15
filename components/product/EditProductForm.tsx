@@ -165,27 +165,17 @@ export default function EditProductForm({
         </div>
 
         <div>
-          <label className="mb-2 block font-medium">Slug</label>
-          <input
-            name="slug"
-            defaultValue={product.slug}
-            className="w-full rounded-lg border p-3"
-          />
-          {state.errors?.slug && (
-            <p className="mt-1 text-sm text-red-600">{state.errors.slug[0]}</p>
-          )}
-        </div>
-
-        <div>
           <label className="mb-2 block font-medium">SKU</label>
           <input
-            name="sku"
+            type="text"
             defaultValue={product.sku ?? ""}
-            className="w-full rounded-lg border p-3"
+            readOnly
+            className="w-full rounded-lg border border-dashed p-3 text-gray-500"
           />
-          {state.errors?.sku && (
-            <p className="mt-1 text-sm text-red-600">{state.errors.sku[0]}</p>
-          )}
+          <p className="mt-1 text-xs text-gray-400">
+            Auto-generated from brand + product name
+          </p>
+          <input type="hidden" name="sku" defaultValue={product.sku ?? ""} />
         </div>
 
         <div>

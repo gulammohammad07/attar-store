@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { bannerSchema } from "@/lib/validations/banner";
 import { deleteImageFromCloudinary } from "@/lib/cloudinary";
-import { revalidatePath } from "next/cache";
 
 export type BannerActionState = {
   success: boolean;
@@ -82,6 +81,7 @@ export async function upsertBannerAction(
     };
   }
 
+  const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/banners");
   revalidatePath("/");
 

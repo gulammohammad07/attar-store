@@ -13,8 +13,9 @@ export default function BestSellers({ products }: { products: Product[] }) {
   const doubled = [...items, ...items];
 
   return (
-    <section className="relative overflow-hidden bg-[#F8FCFE] py-28">
+    <section className="relative overflow-hidden bg-[#f8fcfe] py-24 sm:py-32">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+      <div className="pointer-events-none absolute -right-40 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(circle,rgba(201,169,110,0.1),transparent_70%)]" />
 
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
@@ -25,12 +26,12 @@ export default function BestSellers({ products }: { products: Product[] }) {
       </div>
 
       <div className="relative">
-        <div className="group pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#F8FCFE] to-transparent sm:w-32" />
-        <div className="group pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#F8FCFE] to-transparent sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#f8fcfe] to-transparent sm:w-32" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#f8fcfe] to-transparent sm:w-32" />
 
         <div className="overflow-hidden px-6 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] sm:px-0">
           <div
-            className="group flex w-max gap-6 px-6 animate-marquee gpu group-hover:[animation-play-state:paused]"
+            className="flex w-max gap-6 px-6 animate-marquee gpu group-hover:[animation-play-state:paused]"
             style={{ animationDuration: "80s" }}
           >
             {doubled.map((product, i) => (
@@ -45,8 +46,8 @@ export default function BestSellers({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      <p className="mt-10 text-center text-[11px] tracking-[0.3em] text-[#174A63]/35 uppercase">
-        Hover to pause · Drag nothing — simply gaze
+      <p className="mt-10 text-center text-[11px] tracking-[0.3em] text-[#5f7788]/25 uppercase">
+        Hover to pause
       </p>
     </section>
   );

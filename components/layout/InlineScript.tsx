@@ -1,9 +1,17 @@
+'use client';
+
+import { useEffect } from 'react';
+
 export function InlineScript({ html }: { html: string }) {
-  return (
-    <script
-      type={typeof window === "undefined" ? "text/javascript" : "text/plain"}
-      suppressHydrationWarning
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
-  );
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.innerHTML = html;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [html]);
+
+  return null;
 }
