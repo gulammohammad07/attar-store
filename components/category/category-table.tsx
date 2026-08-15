@@ -1,9 +1,11 @@
-type Category = {
+"use client";
+
+interface Category {
   id: string;
   name: string;
   slug: string;
   isActive: boolean;
-};
+}
 
 interface Props {
   categories: Category[];
@@ -11,43 +13,93 @@ interface Props {
 
 export default function CategoryTable({ categories }: Props) {
   return (
-    <div className="rounded-xl border overflow-hidden">
-      <table className="w-full">
-        <thead className="bg-muted">
-          <tr>
-            <th className="p-4 text-left">Name</th>
-            <th className="p-4 text-left">Slug</th>
-            <th className="p-4 text-left">Status</th>
-            <th className="p-4 text-right">Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {categories.map((category) => (
-            <tr key={category.id} className="border-t">
-              <td className="p-4">{category.name}</td>
-              <td className="p-4">{category.slug}</td>
-              <td className="p-4">
-                {category.isActive ? (
-                  <span className="text-green-600 font-medium">Active</span>
-                ) : (
-                  <span className="text-red-600 font-medium">Inactive</span>
-                )}
-              </td>
-
-              <td className="p-4 text-right space-x-2">
-                <button className="rounded bg-blue-600 px-3 py-1 text-white">
-                  Edit
-                </button>
-
-                <button className="rounded bg-red-600 px-3 py-1 text-white">
-                  Delete
-                </button>
-              </td>
+    <div className="overflow-hidden rounded-2xl border border-[#174a63]/10 bg-white shadow-sm">
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-[#f8fcfe]">
+            <tr>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Name</th>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Slug</th>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Status</th>
+              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+
+          <tbody>
+            {categories.map((category) => (
+              <tr key={category.id} className="border-t border-[#174a63]/10 hover:bg-[#f8fcfe]">
+                <td className="p-4 text-sm font-medium text-[#174a63]">{category.name}</td>
+                <td className="p-4 text-sm text-[#174a63]/60">{category.slug}</td>
+                <td className="p-4">
+                  {category.isActive ? (
+                    <span className="font-medium text-green-700">Active</span>
+                  ) : (
+                    <span className="font-medium text-red-600">Inactive</span>
+                  )}
+                </td>
+
+                <td className="p-4 text-right space-x-2">
+                  <button className="inline-flex items-center gap-1.5 rounded-lg bg-[#174a63] px-3 py-2 text-sm text-white transition-colors hover:bg-gold">
+                    Edit
+                  </button>
+
+                  <button className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-700">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {categories.length === 0 && (
+              <tr>
+                <td colSpan={4} className="p-8 text-center text-[#174a63]/50">
+                  No categories found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden divide-y divide-[#174a63]/10">
+        {categories.length === 0 ? (
+          <div className="p-8 text-center text-[#174a63]/50">
+            No categories found.
+          </div>
+        ) : (
+          categories.map((category) => (
+            <div
+              key={category.id}
+              className="p-4 hover:bg-[#f8fcfe] transition-colors"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="font-medium text-[#174a63]">{category.name}</h3>
+                  <p className="mt-1 text-xs text-[#174a63]/50">{category.slug}</p>
+                  <p className="mt-2">
+                    {category.isActive ? (
+                      <span className="font-medium text-green-700 text-xs">Active</span>
+                    ) : (
+                      <span className="font-medium text-red-600 text-xs">Inactive</span>
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex flex-shrink-0 gap-2">
+                  <button className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[#174a63] text-white transition-colors hover:bg-gold" aria-label="Edit">
+                    Edit
+                  </button>
+                  <button className="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-red-600 text-white transition-colors hover:bg-red-700" aria-label="Delete">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
