@@ -58,7 +58,7 @@ export default function LuxuryProductGrid({
   };
 
   return (
-    <section id="collection" className="scroll-mt-24 bg-[#f8fcfe] py-24 sm:py-32">
+    <section className="scroll-mt-24 bg-[#f8fcfe] py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <motion.div

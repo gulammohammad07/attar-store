@@ -15,9 +15,11 @@ export type CategoryNavItem = {
 export default function CategoryNav({
   items,
   activeSlug,
+  activeItemId,
 }: {
   items: CategoryNavItem[];
   activeSlug?: string | null;
+  activeItemId?: string | null;
 }) {
   if (items.length === 0) return null;
 
@@ -37,7 +39,7 @@ export default function CategoryNav({
         <div className="mt-9 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div className="mx-auto flex w-max items-start justify-center gap-7 sm:gap-9">
             {items.map((item, i) => {
-              const active = item.id === activeSlug;
+              const active = item.id === activeSlug || item.id === activeItemId;
               return (
                 <motion.div
                   key={item.id}

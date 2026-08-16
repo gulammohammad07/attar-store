@@ -32,10 +32,6 @@ const BrandStory = dynamic(() => import("@/components/landing/BrandStory"), {
   ssr: false,
 });
 
-const Newsletter = dynamic(() => import("@/components/landing/Newsletter"), {
-  ssr: false,
-});
-
 type HomeSectionsProps = {
   products: Product[];
   categories: StorefrontCategory[];
@@ -116,20 +112,6 @@ export default function HomeSections({
         }
       >
         <BrandStory banner={storyBanner} />
-      </LazyMount>
-
-      <LazyMount
-        fallback={
-          <SectionSkeleton
-            eyebrow="Inner Circle"
-            title="Join the Inner Circle"
-            description="Early access to limited drops, private sales and fragrance notes from the atelier."
-            className="bg-[#E3F2F9]"
-            style={{ minHeight: 640 }}
-          />
-        }
-      >
-        <Newsletter />
       </LazyMount>
     </>
   );

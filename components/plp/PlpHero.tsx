@@ -163,7 +163,7 @@ export default function PlpHero() {
             className="mt-12 flex justify-center lg:justify-start"
           >
             <Link
-              href="/shop#collection"
+              href="/shop"
               className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-gold/70 bg-white/60 px-9 py-4 text-sm font-semibold tracking-wide text-[#174A63] shadow-[0_12px_40px_-14px_rgba(201,169,110,0.6)] backdrop-blur-md transition-all duration-300 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-[#C9A96E] hover:via-gold hover:to-[#E0C795] hover:text-white hover:shadow-[0_16px_50px_-10px_rgba(201,169,110,0.8)]"
             >
               <span className="relative z-10 flex items-center gap-2.5">

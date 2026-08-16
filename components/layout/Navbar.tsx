@@ -11,7 +11,7 @@ import { useCart } from "@/lib/store/cart-context";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useAuth } from "@/lib/store/auth-context";
 import { signOutAction } from "@/lib/actions/auth.actions";
-import { notes, occasions } from "@/lib/data/products";
+import { occasions } from "@/lib/data/products";
 import type { Product } from "@/lib/data/products";
 import type { StorefrontCategory } from "@/lib/services/storefront-data";
 import SearchOverlay from "@/components/layout/SearchOverlay";
@@ -260,24 +260,6 @@ export default function Navbar({
                             className="text-sm text-[#0f2838]/70 transition-colors duration-300 hover:text-gold"
                           >
                             {occasion}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="col-span-2">
-                    <h3 className="mb-6 text-[11px] font-semibold tracking-[0.22em] text-gold uppercase">
-                      Shop by Notes
-                    </h3>
-                    <ul className="space-y-3.5">
-                      {notes.slice(0, 10).map((note) => (
-                        <li key={note}>
-                          <Link
-                            href={`/shop?note=${note.toLowerCase()}`}
-                            className="text-sm text-[#0f2838]/70 transition-colors duration-300 hover:text-gold"
-                          >
-                            {note}
                           </Link>
                         </li>
                       ))}
