@@ -1,7 +1,7 @@
 import { getStoreSettings } from "@/lib/services/settings.service";
 import { getAdminUsers } from "@/lib/actions/sub-admin.actions";
 import { getCurrentUser } from "@/lib/auth/dal";
-import SettingsForm from "@/components/admin/SettingsForm";
+import SettingsFormClient from "@/components/admin/SettingsFormClient";
 import SubAdminManager from "@/components/admin/SubAdminManager";
 
 export default async function SettingsPage() {
@@ -18,7 +18,7 @@ export default async function SettingsPage() {
         </p>
       </div>
 
-      <SettingsForm settings={settings} />
+      <SettingsFormClient settings={settings} />
 
       <SubAdminManager users={adminUsers} currentUserRole={currentUser?.role} />
     </div>
