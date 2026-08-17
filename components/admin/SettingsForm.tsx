@@ -37,6 +37,7 @@ export default function SettingsForm({
     <form
       onSubmit={handleSubmit}
       className="max-w-3xl rounded-2xl border bg-white p-6 shadow-sm"
+      suppressHydrationWarning
     >
       <div className="grid gap-5 md:grid-cols-2">
         <div>

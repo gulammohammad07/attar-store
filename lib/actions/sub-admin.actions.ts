@@ -9,12 +9,35 @@ export type SubAdminActionState = {
   success: boolean;
   message?: string;
   errors?: Record<string, string | undefined>;
+  user?: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    createdAt: Date;
+  };
 };
+
+async function getCurrentAdminId(): Promise<string | null> {
+  const session = await getSession();
+  if (!session) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.id },
+    select: { id: true, role: true },
+  });
+
+  return user?.role === ROLES.ADMIN ? user.id : null;
+}
 
 export async function createSubAdminAction(
   prevState: SubAdminActionState,
   formData: FormData,
 ): Promise<SubAdminActionState> {
+  if (!(await getCurrentAdminId())) {
+    return { success: false, message: "Only admins can create sub-admins." };
+  }
+
   const name = (formData.get("name") ?? "").toString().trim();
   const email = (formData.get("email") ?? "").toString().trim();
   const password = (formData.get("password") ?? "").toString();
@@ -35,7 +58,12 @@ export async function createSubAdminAction(
   });
 
   if (existing) {
-    errors.email = "A user with this email already exists.";
+    return {
+      success: false,
+      message:
+        "This email is already registered. Find the user below and select Admin or Sub Admin from the role menu.",
+      errors: { email: "A user with this email already exists." },
+    };
   }
 
   if (Object.keys(errors).length > 0) {
@@ -44,7 +72,7 @@ export async function createSubAdminAction(
 
   const passwordHash = await hashPassword(password);
 
-  await prisma.user.create({
+  const user = await prisma.user.create({
     data: {
       name,
       email,
@@ -54,7 +82,7 @@ export async function createSubAdminAction(
     },
   });
 
-  return { success: true, message: "Sub-admin created successfully." };
+  return { success: true, message: "Sub-admin created successfully.", user };
 }
 
 export async function updateUserRoleAction(
@@ -65,8 +93,7 @@ export async function updateUserRoleAction(
     return { success: false, message: "Invalid role." };
   }
 
-  const session = await getSession();
-  if (!session || session.role !== ROLES.ADMIN) {
+  if (!(await getCurrentAdminId())) {
     return { success: false, message: "Only admins can change roles." };
   }
 
@@ -79,6 +106,10 @@ export async function updateUserRoleAction(
 }
 
 export async function deleteUserAction(userId: string): Promise<SubAdminActionState> {
+  if (!(await getCurrentAdminId())) {
+    return { success: false, message: "Only admins can remove users." };
+  }
+
   await prisma.user.delete({
     where: { id: userId },
   });
@@ -88,15 +119,21 @@ export async function deleteUserAction(userId: string): Promise<SubAdminActionSt
 
 export async function getAdminUsers() {
   const session = await getSession();
+  const currentUser = session
+    ? await prisma.user.findUnique({
+        where: { id: session.id },
+        select: { id: true, role: true },
+      })
+    : null;
 
-  const where: Record<string, unknown> = {
-    role: {
-      in: [ROLES.ADMIN, ROLES.SUBADMIN],
-    },
-  };
+  const where: Record<string, unknown> = {};
 
-  if (session?.role === ROLES.SUBADMIN) {
-    where.id = session.id;
+  if (!currentUser) {
+    return [];
+  }
+
+  if (currentUser.role !== ROLES.ADMIN) {
+    where.id = currentUser.id;
   }
 
   return prisma.user.findMany({

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createSubAdminAction, updateUserRoleAction, deleteUserAction } from "@/lib/actions/sub-admin.actions";
 import type { SubAdminActionState } from "@/lib/actions/sub-admin.actions";
@@ -24,15 +25,26 @@ const initialState: SubAdminActionState = { success: false };
 export default function SubAdminManager({ users, currentUserRole }: SubAdminManagerProps) {
   const [pending, startTransition] = useTransition();
   const [localUsers, setLocalUsers] = useState(users);
+  const router = useRouter();
   const isAdmin = currentUserRole === "ADMIN";
+  const teamMembers = localUsers.filter((user) => user.role !== "USER");
+  const registeredUsers = localUsers.filter((user) => user.role === "USER");
 
   const handleCreate = (formData: FormData) => {
     startTransition(async () => {
       const result = await createSubAdminAction(initialState, formData);
       if (result.success) {
         toast.success(result.message ?? "Sub-admin created.");
+        if (result.user) {
+          setLocalUsers((previousUsers) => [result.user!, ...previousUsers]);
+        }
+        router.refresh();
       } else {
-        toast.error(result.message ?? "Failed to create sub-admin.");
+        toast.error(
+          result.message ??
+            (Object.values(result.errors ?? {}).filter(Boolean).join(" ") ||
+              "Failed to create sub-admin."),
+        );
       }
     });
   };
@@ -64,6 +76,65 @@ export default function SubAdminManager({ users, currentUserRole }: SubAdminMana
     });
   };
 
+  const renderUsersTable = (tableUsers: AdminUser[], emptyMessage: string) => (
+    <div className="overflow-hidden rounded-xl border border-[#174a63]/10">
+      <table className="w-full">
+        <thead className="bg-[#f8fcfe]">
+          <tr>
+            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Name</th>
+            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Email</th>
+            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Role</th>
+            <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {tableUsers.length === 0 ? (
+            <tr>
+              <td colSpan={4} className="p-8 text-center text-sm text-[#174a63]/50">
+                {emptyMessage}
+              </td>
+            </tr>
+          ) : (
+            tableUsers.map((user) => (
+              <tr key={user.id} className="border-t border-[#174a63]/10 hover:bg-[#f8fcfe]">
+                <td className="p-4 text-sm font-medium text-[#174a63]">{user.name}</td>
+                <td className="p-4 text-sm text-[#174a63]/70">{user.email}</td>
+                <td className="p-4">
+                  {isAdmin ? (
+                    <select
+                      value={user.role}
+                      onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                      className="rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm text-[#174a63] focus:border-gold focus:outline-none"
+                    >
+                      <option value="ADMIN">Admin</option>
+                      <option value="SUBADMIN">Sub Admin</option>
+                      <option value="USER">User</option>
+                    </select>
+                  ) : (
+                    <span className="text-sm text-[#174a63]/70">{user.role}</span>
+                  )}
+                </td>
+                <td className="p-4 text-right">
+                  {isAdmin ? (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(user.id)}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-700"
+                    >
+                      <Trash2 size={14} />
+                      Remove
+                    </button>
+                  ) : null}
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+
   return (
     <div className="rounded-2xl border border-[#174a63]/10 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center gap-3">
@@ -71,12 +142,13 @@ export default function SubAdminManager({ users, currentUserRole }: SubAdminMana
         <div>
           <h2 className="text-2xl font-semibold text-[#174a63]">Team Access</h2>
           <p className="text-sm text-[#174a63]/60">
-            Create and manage sub-admins who can access this panel.
+            View users and assign their access level.
           </p>
         </div>
       </div>
 
-      <form action={handleCreate} className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {isAdmin && (
+        <form action={handleCreate} className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <label className="mb-2 block text-sm font-medium text-[#174a63]">Name</label>
           <input
@@ -121,62 +193,26 @@ export default function SubAdminManager({ users, currentUserRole }: SubAdminMana
           </button>
         </div>
       </form>
+      )}
 
-      <div className="overflow-hidden rounded-xl border border-[#174a63]/10">
-        <table className="w-full">
-          <thead className="bg-[#f8fcfe]">
-            <tr>
-              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Name</th>
-              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Email</th>
-              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Role</th>
-              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Actions</th>
-            </tr>
-          </thead>
+      <div className="space-y-8">
+        <section>
+          <div className="mb-3">
+            <h3 className="text-lg font-semibold text-[#174a63]">Admins &amp; Sub-admins</h3>
+            <p className="text-sm text-[#174a63]/60">Users who can access the admin panel.</p>
+          </div>
+          {renderUsersTable(teamMembers, "No admins or sub-admins found.")}
+        </section>
 
-          <tbody>
-            {localUsers.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="p-8 text-center text-sm text-[#174a63]/50">
-                  No admin users found.
-                </td>
-              </tr>
-            ) : (
-              localUsers.map((user) => (
-                <tr key={user.id} className="border-t border-[#174a63]/10 hover:bg-[#f8fcfe]">
-                  <td className="p-4 text-sm font-medium text-[#174a63]">{user.name}</td>
-                  <td className="p-4 text-sm text-[#174a63]/70">{user.email}</td>
-                  <td className="p-4">
-                    {isAdmin ? (
-                      <select
-                        value={user.role}
-                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                        className="rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm text-[#174a63] focus:border-gold focus:outline-none"
-                      >
-                        <option value="ADMIN">Admin</option>
-                        <option value="SUBADMIN">Sub Admin</option>
-                        <option value="USER">User</option>
-                      </select>
-                    ) : (
-                      <span className="text-sm text-[#174a63]/70">{user.role}</span>
-                    )}
-                  </td>
-                  <td className="p-4 text-right">
-                    {isAdmin ? (
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(user.id)}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-red-600 px-3 py-2 text-sm text-white transition-colors hover:bg-red-700"
-                      >
-                        <Trash2 size={14} />
-                        Remove
-                      </button>
-                    ) : null}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+        {isAdmin && (
+          <section>
+            <div className="mb-3">
+              <h3 className="text-lg font-semibold text-[#174a63]">Registered Users</h3>
+              <p className="text-sm text-[#174a63]/60">Change a user’s role here to grant admin access.</p>
+            </div>
+            {renderUsersTable(registeredUsers, "No registered users found.")}
+          </section>
+        )}
       </div>
     </div>
   );
