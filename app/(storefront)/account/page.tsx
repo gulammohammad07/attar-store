@@ -116,7 +116,7 @@ export default function AccountPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            {user.role === "ADMIN" ? (
+            {user.role === "ADMIN" || user.role === "SUBADMIN" ? (
               <Link
                 href="/admin"
                 className="inline-flex items-center gap-2 rounded-full border border-[#174A63]/15 px-5 py-2.5 text-sm font-medium text-[#174A63] transition-colors hover:border-gold hover:text-gold"

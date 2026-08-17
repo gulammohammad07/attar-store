@@ -15,7 +15,7 @@ export type AuthUser = {
   name: string;
   email: string;
   image: string | null;
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "SUBADMIN";
   emailVerified: string | null;
   provider: string;
   createdAt: string;
@@ -83,7 +83,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       status,
       isAuthenticated: status === "authenticated",
-      isAdmin: status === "authenticated" && user?.role === "ADMIN",
+      isAdmin:
+        status === "authenticated" &&
+        (user?.role === "ADMIN" || user?.role === "SUBADMIN"),
       refresh,
     }),
     [user, status, refresh],

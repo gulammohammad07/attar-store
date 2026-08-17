@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import type { Order, OrderItem } from "@prisma/client";
 
 export type OrderFilters = {
   search?: string;
@@ -33,21 +34,58 @@ export function buildOrderWhere(filters: OrderFilters = {}) {
   return where;
 }
 
-export async function getOrdersByUser(userId: string) {
+type OrderWithItems = Order & {
+  items: (OrderItem & {
+    productName: string;
+    productImage: string | null;
+  })[];
+  user: {
+    id: string;
+    name: string;
+    email: string;
+  };
+};
+
+export async function getOrdersByUser(userId: string): Promise<OrderWithItems[]> {
   return prisma.order.findMany({
     where: { userId },
     include: {
-      items: { orderBy: { id: "asc" } },
+      items: {
+        orderBy: { id: "asc" },
+        select: {
+          id: true,
+          orderId: true,
+          productId: true,
+          productName: true,
+          productImage: true,
+          unitPrice: true,
+          quantity: true,
+          lineTotal: true,
+        },
+      },
+      user: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: "desc" },
   });
 }
 
-export async function getAllOrders(filters: OrderFilters = {}) {
+export async function getAllOrders(filters: OrderFilters = {}): Promise<OrderWithItems[]> {
   return prisma.order.findMany({
     where: buildOrderWhere(filters),
     include: {
-      items: { orderBy: { id: "asc" } },
+      items: {
+        orderBy: { id: "asc" },
+        select: {
+          id: true,
+          orderId: true,
+          productId: true,
+          productName: true,
+          productImage: true,
+          unitPrice: true,
+          quantity: true,
+          lineTotal: true,
+        },
+      },
       user: { select: { id: true, name: true, email: true } },
     },
     orderBy: { createdAt: "desc" },

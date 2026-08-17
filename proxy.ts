@@ -50,7 +50,7 @@ export default async function proxy(request: NextRequest) {
 
   if (isAdminArea) {
     if (!session) return redirectToSignIn(request);
-    if (session.role !== ROLES.ADMIN) {
+    if (session.role !== ROLES.ADMIN && session.role !== ROLES.SUBADMIN) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
       url.search = "";

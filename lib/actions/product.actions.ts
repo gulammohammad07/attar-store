@@ -95,14 +95,15 @@ async function resolveSku(
   const brandSlug = generateSlug(brandName);
   const prefix = `${brandSlug}-${productSlug}`.toUpperCase();
 
-  const existing = await prisma.product.findMany({
+  const existing: { sku: string | null }[] = await prisma.product.findMany({
     where: { sku: { startsWith: prefix } },
     select: { sku: true },
     orderBy: { sku: "desc" },
   });
 
   const maxNumber = existing.reduce((max, sku) => {
-    const match = sku.match(new RegExp(`^${prefix.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}-(\\d+)$`));
+    if (!sku.sku) return max;
+    const match = sku.sku.match(new RegExp(`^${prefix.replace(/[.*+?^${}()|[\\]\\\\]/g, "\\\\$&")}-(\\d+)$`));
     if (!match) return max;
     const num = Number(match[1]);
     return num > max ? num : max;

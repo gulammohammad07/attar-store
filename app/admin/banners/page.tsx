@@ -1,6 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import BannerForm from "@/components/banner/BannerForm";
 
+type Banner = {
+  id: string;
+  section: string;
+  title: string | null;
+  subtitle: string | null;
+  imageUrl: string;
+  imagePublicId: string | null;
+  linkUrl: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 const sections = [
   {
     section: "hero",
@@ -16,7 +29,7 @@ const sections = [
 ] as const;
 
 export default async function BannersPage() {
-  const banners = await prisma.banner.findMany();
+  const banners: Banner[] = await prisma.banner.findMany();
 
   return (
     <div className="space-y-8">

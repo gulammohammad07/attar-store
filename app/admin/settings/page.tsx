@@ -1,8 +1,13 @@
 import { getStoreSettings } from "@/lib/services/settings.service";
+import { getAdminUsers } from "@/lib/actions/sub-admin.actions";
+import { getSession } from "@/lib/auth/session";
 import SettingsForm from "@/components/admin/SettingsForm";
+import SubAdminManager from "@/components/admin/SubAdminManager";
 
 export default async function SettingsPage() {
   const settings = await getStoreSettings();
+  const adminUsers = await getAdminUsers();
+  const session = await getSession();
 
   return (
     <div className="space-y-8">
@@ -14,6 +19,8 @@ export default async function SettingsPage() {
       </div>
 
       <SettingsForm settings={settings} />
+
+      <SubAdminManager users={adminUsers} currentUserRole={session?.role} />
     </div>
   );
 }

@@ -33,7 +33,7 @@ function toDTO(user: {
     email: user.email,
     emailVerified: user.emailVerified,
     image: user.image,
-    role: user.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER,
+    role: user.role as Role,
     provider: user.provider,
     createdAt: user.createdAt,
   };
@@ -85,7 +85,7 @@ export const requireUser = cache(async (): Promise<AuthUserDTO> => {
 
 export const requireAdmin = cache(async (): Promise<AuthUserDTO> => {
   const user = await requireUser();
-  if (user.role !== ROLES.ADMIN) {
+  if (user.role !== ROLES.ADMIN && user.role !== ROLES.SUBADMIN) {
     redirect("/");
   }
   return user;
@@ -93,5 +93,5 @@ export const requireAdmin = cache(async (): Promise<AuthUserDTO> => {
 
 export async function canEditProduct(): Promise<boolean> {
   const user = await getCurrentUser();
-  return Boolean(user && user.role === ROLES.ADMIN);
+  return Boolean(user && (user.role === ROLES.ADMIN || user.role === ROLES.SUBADMIN));
 }

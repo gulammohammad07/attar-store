@@ -112,7 +112,10 @@ export async function signUpAction(
       name: user.name,
       email: user.email,
       image: user.image,
-      role: user.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER,
+      role:
+        user.role === ROLES.ADMIN || user.role === ROLES.SUBADMIN
+          ? user.role
+          : ROLES.USER,
       provider: user.provider,
     });
   } catch {
@@ -180,7 +183,10 @@ export async function signInAction(input: SignInInput): Promise<AuthActionState>
     name: user.name,
     email: user.email,
     image: user.image,
-    role: user.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER,
+    role:
+      user.role === ROLES.ADMIN || user.role === ROLES.SUBADMIN
+        ? user.role
+        : ROLES.USER,
     provider: user.provider,
   });
 
@@ -292,7 +298,10 @@ export async function resetPasswordAction(
     name: record.user.name,
     email: record.user.email,
     image: record.user.image,
-    role: record.user.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER,
+    role:
+      record.user.role === ROLES.ADMIN || record.user.role === ROLES.SUBADMIN
+        ? record.user.role
+        : ROLES.USER,
     provider: record.user.provider,
   });
 

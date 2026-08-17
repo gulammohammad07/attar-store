@@ -4,6 +4,9 @@ import {
   getStorefrontProducts,
 } from "@/lib/services/storefront-data";
 import { getActiveOccasions } from "@/lib/actions/occasion.actions";
+import type { ActiveOccasion } from "@/lib/actions/occasion.actions";
+import type { StorefrontCategory } from "@/lib/services/storefront-data";
+import type { Product } from "@/lib/data/products";
 
 import LuxuryProductGrid, {
   type SortOption,
@@ -29,7 +32,7 @@ export default async function ShopPage({
     getStorefrontProducts(),
     getStorefrontCategories(),
     getActiveOccasions(),
-  ]);
+  ]) as [Product[], StorefrontCategory[], ActiveOccasion[]];
 
   const categoryParam =
     typeof sp.category === "string" ? sp.category.toLowerCase() : null;

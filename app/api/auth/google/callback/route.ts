@@ -143,7 +143,10 @@ export async function GET(request: NextRequest) {
       name: user.name,
       email: user.email,
       image: user.image,
-      role: user.role === ROLES.ADMIN ? ROLES.ADMIN : ROLES.USER,
+      role:
+        user.role === ROLES.ADMIN || user.role === ROLES.SUBADMIN
+          ? user.role
+          : ROLES.USER,
       provider: user.provider,
     });
 

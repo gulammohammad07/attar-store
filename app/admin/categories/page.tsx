@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import CategoryTable from "@/components/category/category-table";
-import { resetCategories } from "./actions";
+import ResetCategoriesButton from "@/components/category/ResetCategoriesButton";
 
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
@@ -18,14 +18,7 @@ export default async function CategoriesPage() {
             Manage your product categories.
           </p>
         </div>
-        <form action={resetCategories}>
-          <button
-            type="submit"
-            className="rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-white shadow-[0_0_30px_rgba(201,169,110,0.35)] transition-all hover:scale-105 hover:shadow-[0_0_50px_rgba(201,169,110,0.55)]"
-          >
-            Reset to Men, Women, Unisex
-          </button>
-        </form>
+        <ResetCategoriesButton />
       </div>
 
       <CategoryTable categories={categories} />
