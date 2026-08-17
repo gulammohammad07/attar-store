@@ -1,6 +1,16 @@
 import Hero from "@/components/landing/Hero";
 import Marquee from "@/components/landing/Marquee";
-import HomeSections from "@/components/landing/HomeSections";
+import dynamic from "next/dynamic";
+
+const HomeSections = dynamic(() => import("@/components/landing/HomeSections"), {
+  loading: () => (
+    <div className="mx-auto max-w-7xl px-6 py-24">
+      <div className="h-8 w-48 animate-pulse rounded bg-[#174A63]/10" />
+      <div className="mt-6 h-4 w-72 animate-pulse rounded bg-[#174A63]/10" />
+    </div>
+  ),
+});
+
 import {
   getStorefrontBanners,
   getStorefrontCategories,

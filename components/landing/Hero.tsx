@@ -26,6 +26,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
             alt={banner.title ?? "Hero banner"}
             fill
             priority
+            quality={75}
             className="object-cover"
             sizes="100vw"
             onError={() => setImgError(true)}

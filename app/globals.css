@@ -304,6 +304,23 @@
       animation: none;
       filter: blur(8px);
     }
+
+    .glass,
+    .glass-premium,
+    .glass-luxury {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    [class*="backdrop-blur"] {
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    .gpu {
+      transform: none;
+      will-change: auto;
+    }
   }
 
   @keyframes rays-spin {

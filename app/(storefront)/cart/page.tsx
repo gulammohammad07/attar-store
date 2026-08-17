@@ -94,6 +94,7 @@ export default function CartPage() {
                     alt={product.name}
                     fill
                     sizes="128px"
+                    quality={75}
                     className="object-contain p-4"
                   />
                 </Link>

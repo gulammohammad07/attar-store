@@ -1,6 +1,5 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import CartDrawer from "@/components/cart/CartDrawer";
 import SmoothScroll from "@/components/landing/SmoothScroll";
 import {
   getStorefrontCategories,
@@ -25,7 +24,6 @@ export default async function StorefrontLayout({
       <Navbar categories={categories} featured={featured} />
       <main className="flex-1">{children}</main>
       <Footer />
-      <CartDrawer />
     </>
   );
 }

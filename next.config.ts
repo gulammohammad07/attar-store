@@ -2,14 +2,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    formats: ["image/webp"],
-    qualities: [85],
+    formats: ["image/avif", "image/webp"],
+    qualities: [65, 75, 85],
     remotePatterns: [
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+        pathname: "/**",
       },
     ],
+    minimumCacheTTL: 14400,
   },
   serverExternalPackages: ["pg", "pg-connection-string", "pgpass"],
   turbopack: {

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, m as motion, useMotionValue, useSpring } from "framer-motion";
+import { m as motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingBag, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
@@ -27,6 +27,7 @@ export default function ProductCard({
   const { addToCart } = useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   const images = product.gallery.length ? product.gallery : [product.image];
   const hasMultiple = images.length > 1;
@@ -49,7 +50,16 @@ export default function ProductCard({
   const rotateX = useSpring(my, { stiffness: 200, damping: 18 });
   const rotateY = useSpring(mx, { stiffness: 200, damping: 18 });
 
+  useState(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  });
+
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -75,11 +85,15 @@ export default function ProductCard({
         ref={ref}
         onMouseMove={handleMove}
         onMouseLeave={reset}
-        initial={{ opacity: 0, y: 24 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        style={
+          isMobile
+            ? undefined
+            : { rotateX, rotateY, transformStyle: "preserve-3d", perspective: 800 }
+        }
         className={cn("group relative", className)}
       >
         <div className={cn(

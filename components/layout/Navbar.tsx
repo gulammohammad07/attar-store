@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -14,7 +15,19 @@ import { signOutAction } from "@/lib/actions/auth.actions";
 import { occasions } from "@/lib/data/products";
 import type { Product } from "@/lib/data/products";
 import type { StorefrontCategory } from "@/lib/services/storefront-data";
-import SearchOverlay from "@/components/layout/SearchOverlay";
+
+const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer"), {
+  ssr: false,
+  loading: () => null,
+});
+
+const SearchOverlay = dynamic(
+  () => import("@/components/layout/SearchOverlay"),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
 
 const menuItems = [
   { label: "Shop All", href: "/shop" },
@@ -33,7 +46,7 @@ export default function Navbar({
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const { totalItems, openCart } = useCart();
+  const { totalItems, isOpen: isCartOpen, openCart } = useCart();
   const { items: wishlistItems } = useWishlist();
   const { user, isAdmin, refresh } = useAuth();
   const router = useRouter();
@@ -439,7 +452,10 @@ export default function Navbar({
         )}
       </AnimatePresence>
 
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      {isCartOpen && <CartDrawer />}
+      {searchOpen && (
+        <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      )}
     </>
   );
 }

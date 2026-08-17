@@ -107,6 +107,7 @@ export default function ProductViewer({ product }: { product: Product }) {
               alt={product.name}
               fill
               priority
+              quality={75}
               sizes="(max-width: 768px) 100vw, 50vw"
               className="object-contain p-10 transition-transform duration-700"
             />
