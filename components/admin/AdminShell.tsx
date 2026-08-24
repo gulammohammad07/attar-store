@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 
@@ -15,7 +13,7 @@ export default function AdminShell({
 
   return (
     <div className="flex items-start min-h-screen bg-[#f8fcfe]">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onOpenChange={setSidebarOpen} />
 
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-[#174a63]/10 bg-white px-4 sm:px-6 lg:px-8">

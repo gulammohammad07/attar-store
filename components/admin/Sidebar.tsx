@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, Menu, X } from "lucide-react";
-import { useState } from "react";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { useAuth } from "@/lib/store/auth-context";
 import { toast } from "sonner";
@@ -46,9 +45,13 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar() {
+type SidebarProps = {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+};
+
+export default function Sidebar({ isOpen, onOpenChange }: SidebarProps) {
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, refresh } = useAuth();
 
   const initials = user?.name
@@ -69,16 +72,16 @@ export default function Sidebar() {
 
   return (
     <>
-      {sidebarOpen && (
+      {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={() => onOpenChange(false)}
         />
       )}
 
       <aside
         className={`fixed top-0 left-0 z-50 w-72 transform bg-[#0f2838] text-white transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-fit lg:self-start lg:translate-x-0 max-h-screen overflow-y-auto ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-6 py-6">
@@ -95,7 +98,7 @@ export default function Sidebar() {
 
           <button
             type="button"
-            onClick={() => setSidebarOpen(false)}
+            onClick={() => onOpenChange(false)}
             className="rounded-lg p-2 text-zinc-300 hover:bg-zinc-800 lg:hidden"
           >
             <X size={20} />
@@ -111,7 +114,7 @@ export default function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => onOpenChange(false)}
                 className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-all ${
                   active
                     ? "bg-white text-black shadow-md"
