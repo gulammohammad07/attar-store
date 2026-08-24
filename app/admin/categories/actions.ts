@@ -3,7 +3,6 @@
 import { prisma } from "@/lib/prisma";
 import { categorySchema } from "@/lib/validations/category";
 import { revalidatePath } from "next/cache";
-import type { Category } from "@prisma/client";
 
 export type CreateCategoryState = {
   success: boolean;
@@ -29,7 +28,7 @@ export async function createCategory(
     };
   }
 
-  const existing: Category | null = await prisma.category.findUnique({
+  const existing = await prisma.category.findUnique({
     where: {
       slug: result.data.slug,
     },
@@ -66,7 +65,7 @@ export async function resetCategories(): Promise<ResetCategoriesState> {
     { name: "Unisex", slug: "unisex", description: "For everyone" },
   ];
 
-  const created: Category[] = await Promise.all(
+  const created = await Promise.all(
     defaultCategories.map((cat) =>
       prisma.category.upsert({
         where: { slug: cat.slug },
