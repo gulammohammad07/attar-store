@@ -6,65 +6,207 @@ datasource db {
   provider = "postgresql"
 }
 
+model User {
+  id                  String              @id @default(cuid())
+  name                String
+  email               String              @unique
+  emailVerified       DateTime?
+  passwordHash        String?
+  image               String?
+  role                String              @default("USER")
+  provider            String              @default("credentials")
+  googleId            String?             @unique
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  accounts            Account[]
+  passwordResetTokens PasswordResetToken[]
+  orders              Order[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  tokenType         String?
+  scope             String?
+  idToken           String?
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
+}
+
 model Category {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
-  slug        String  @unique
+  slug        String    @unique
   description String?
   imageUrl    String?
-  isActive    Boolean @default(true)
-
-  products Product[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
 }
 
 model Brand {
-  id       String  @id @default(cuid())
-  name     String
-  slug     String  @unique
-  logoUrl  String?
-  isActive Boolean @default(true)
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  logoUrl   String?
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
+}
 
-  products Product[]
+model Banner {
+  id            String   @id @default(cuid())
+  section       String   @unique
+  title         String?
+  subtitle      String?
+  imageUrl      String
+  imagePublicId String?
+  linkUrl       String?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Occasion {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 }
 
 model Product {
-  id String @id @default(cuid())
-
-  name String
-  slug String @unique
-
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  price       Float
   description String?
+  imageUrl    String
+  imagePublicId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bestSeller  Boolean  @default(false)
+  brandId     String
+  categoryId  String
+  featured    Boolean  @default(false)
+  gallery     String[]
+  galleryPublicIds String[] @default([])
+  isActive    Boolean  @default(true)
+  newArrival  Boolean  @default(false)
+  salePrice   Float?
+  sku         String?  @unique
+  stock       Int      @default(0)
+  volume      String
+  notes       String[] @default([])
+  brand       Brand    @relation(fields: [brandId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+  occasions   Occasion[]
+}
 
-  sku String? @unique
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
 
-  price     Float
-  salePrice Float?
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
 
-  stock Int @default(0)
+model Order {
+  id             String        @id @default(cuid())
+  orderNumber    String        @unique
+  idempotencyKey String        @unique
+  userId         String
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  imageUrl String
-  gallery  String[]
+  customerName   String
+  customerEmail  String
+  customerPhone  String
 
-  volume String
+  street         String
+  city           String
+  state          String
+  pincode        String
 
-  featured   Boolean @default(false)
-  bestSeller Boolean @default(false)
-  newArrival Boolean @default(false)
+  subtotal       Float
+  shippingFee    Float
+  total          Float
+  occasion       String?
 
-  isActive Boolean @default(true)
+  status         OrderStatus   @default(PENDING)
+  paymentStatus  PaymentStatus @default(PENDING)
+  paymentMethod  String        @default("pending")
 
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
+  items          OrderItem[]
 
-  brandId String
-  brand   Brand  @relation(fields: [brandId], references: [id])
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  productId    String?
+  productName  String
+  productImage String?
+  unitPrice    Float
+  quantity     Int
+  lineTotal    Float
+  order        Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model StoreSettings {
+  id                    Int      @id @default(1)
+  storeName             String   @default("Danish Perfumes")
+  supportEmail          String   @default("support@danishperfumes.com")
+  supportPhone          String   @default("")
+  address               String   @default("")
+  freeShippingThreshold Float    @default(1500)
+  shippingFee           Float    @default(99)
+  currency              String   @default("INR")
+  updatedAt             DateTime @updatedAt
+
+  @@map("store_settings")
 }

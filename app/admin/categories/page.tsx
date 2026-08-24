@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import CategoryForm from "@/components/category/category-form";
 import CategoryTable from "@/components/category/category-table";
+import ResetCategoriesButton from "@/components/category/ResetCategoriesButton";
 
 export default async function CategoriesPage() {
   const categories = await prisma.category.findMany({
@@ -11,19 +11,16 @@ export default async function CategoriesPage() {
 
   return (
     <div className="space-y-8 p-6">
-      {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-
-        <p className="text-muted-foreground mt-2">
-          Manage your product categories.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage your product categories.
+          </p>
+        </div>
+        <ResetCategoriesButton />
       </div>
 
-      {/* Category Form */}
-      <CategoryForm />
-
-      {/* Category Table */}
       <CategoryTable categories={categories} />
     </div>
   );
