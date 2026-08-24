@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Package, ShoppingBag } from "lucide-react";
-import type { OrderItem } from "@prisma/client";
 import { requireUser } from "@/lib/auth/dal";
 import { getOrdersByUser } from "@/lib/services/order.service";
 import { formatPrice } from "@/lib/utils";
@@ -107,7 +106,7 @@ export default async function AccountOrdersPage() {
                 </div>
 
                 <div className="divide-y divide-[#174A63]/5">
-                  {order.items.map((item: OrderItem) => (
+                  {order.items.map((item) => (
                     <div
                       key={item.id}
                       className="flex items-center justify-between gap-4 px-6 py-4"

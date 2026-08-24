@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import type { Order, OrderItem } from "@prisma/client";
 
 export type OrderFilters = {
   search?: string;
@@ -34,11 +33,37 @@ export function buildOrderWhere(filters: OrderFilters = {}) {
   return where;
 }
 
-type OrderWithItems = Order & {
-  items: (OrderItem & {
+export type OrderWithItems = {
+  id: string;
+  orderNumber: string;
+  idempotencyKey: string;
+  userId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  street: string;
+  city: string;
+  state: string;
+  pincode: string;
+  subtotal: number;
+  shippingFee: number;
+  total: number;
+  occasion: string | null;
+  status: string;
+  paymentStatus: string;
+  paymentMethod: string;
+  createdAt: Date;
+  updatedAt: Date;
+  items: {
+    id: string;
+    orderId: string;
+    productId: string | null;
     productName: string;
     productImage: string | null;
-  })[];
+    unitPrice: number;
+    quantity: number;
+    lineTotal: number;
+  }[];
   user: {
     id: string;
     name: string;
