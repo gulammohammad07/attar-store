@@ -2,10 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   updateProductAction,
   type ProductActionState,
 } from "@/lib/actions/product.actions";
+import { createBrandAction } from "@/lib/actions/brand.actions";
+import { generateSlug } from "@/lib/utils";
 import ImageUploader, {
   type ImageValue,
 } from "@/components/admin/ImageUploader";
@@ -87,6 +90,10 @@ export default function EditProductForm({
       publicId: product.galleryPublicIds[i] ?? null,
     })),
   );
+  const [showBrandForm, setShowBrandForm] = useState(false);
+  const [newBrandName, setNewBrandName] = useState("");
+  const [newBrandSlug, setNewBrandSlug] = useState("");
+  const [brandPending, startBrandTransition] = useTransition();
 
   const toggleOccasion = (id: string) => {
     setSelectedOccasions((prev) =>
@@ -122,6 +129,25 @@ export default function EditProductForm({
         formData,
       );
       setState(result);
+    });
+  };
+
+  const handleCreateBrand = () => {
+    if (!newBrandName.trim()) return;
+    startBrandTransition(async () => {
+      const fd = new FormData();
+      fd.set("name", newBrandName.trim());
+      fd.set("slug", newBrandSlug.trim() || generateSlug(newBrandName.trim()));
+      const result = await createBrandAction(fd);
+      if (result.success) {
+        toast.success(result.message ?? "Brand created.");
+        setNewBrandName("");
+        setNewBrandSlug("");
+        setShowBrandForm(false);
+        router.refresh();
+      } else {
+        toast.error(result.message ?? "Failed to create brand.");
+      }
     });
   };
 
@@ -213,6 +239,52 @@ export default function EditProductForm({
               </option>
             ))}
           </select>
+
+          {!showBrandForm ? (
+            <button
+              type="button"
+              onClick={() => setShowBrandForm(true)}
+              className="mt-2 text-sm font-medium text-[#174a63] underline underline-offset-4 hover:text-gold"
+            >
+              + Create new brand
+            </button>
+          ) : (
+            <div className="mt-3 rounded-lg border border-dashed border-[#174a63]/20 bg-[#f8fcfe] p-3">
+              <p className="mb-2 text-xs font-medium text-[#174a63]/60">
+                Create a new brand and select it automatically.
+              </p>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <input
+                  value={newBrandName}
+                  onChange={(e) => setNewBrandName(e.target.value)}
+                  placeholder="Brand name"
+                  className="flex-1 rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm focus:border-gold focus:outline-none"
+                />
+                <input
+                  value={newBrandSlug}
+                  onChange={(e) => setNewBrandSlug(e.target.value)}
+                  placeholder="slug (optional)"
+                  className="flex-1 rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm focus:border-gold focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleCreateBrand}
+                  disabled={brandPending}
+                  className="rounded-lg bg-[#174a63] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gold disabled:opacity-50"
+                >
+                  {brandPending ? "Creating..." : "Create"}
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowBrandForm(false)}
+                className="mt-2 text-xs text-[#174a63]/50 hover:text-[#174a63]"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
+
           {state.errors?.brandId && (
             <p className="mt-1 text-sm text-red-600">
               {state.errors.brandId[0]}

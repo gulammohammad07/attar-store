@@ -80,7 +80,7 @@ export default function Sidebar({ isOpen, onOpenChange }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 w-72 transform bg-[#0f2838] text-white transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-fit lg:self-start lg:translate-x-0 max-h-screen overflow-y-auto ${
+        className={`fixed top-0 left-0 z-50 w-72 sm:w-64 transform bg-[#0f2838] text-white transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-fit lg:self-start lg:translate-x-0 max-h-screen overflow-y-auto ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

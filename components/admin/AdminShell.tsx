@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu } from "lucide-react";
 import Sidebar from "./Sidebar";
 
@@ -11,12 +11,23 @@ export default function AdminShell({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [sidebarOpen]);
+
   return (
-    <div className="flex items-start min-h-screen bg-[#f8fcfe]">
+    <div className="flex min-h-screen bg-[#f8fcfe]">
       <Sidebar isOpen={sidebarOpen} onOpenChange={setSidebarOpen} />
 
-      <div className="flex flex-1 flex-col">
-        <header className="flex h-16 items-center justify-between border-b border-[#174a63]/10 bg-white px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-1 flex-col min-w-0">
+        <header className="flex h-14 sm:h-16 items-center justify-between border-b border-[#174a63]/10 bg-white px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -26,7 +37,7 @@ export default function AdminShell({
               <Menu size={22} />
             </button>
 
-            <h2 className="text-xl font-bold text-[#174a63] sm:text-2xl">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-[#174a63]">
               Admin Panel
             </h2>
           </div>

@@ -76,27 +76,31 @@ export default function SubAdminManager({ users, currentUserRole }: SubAdminMana
     });
   };
 
-  const renderUsersTable = (tableUsers: AdminUser[], emptyMessage: string) => (
-    <div className="overflow-hidden rounded-xl border border-[#174a63]/10">
-      <table className="w-full">
-        <thead className="bg-[#f8fcfe]">
-          <tr>
-            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Name</th>
-            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Email</th>
-            <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Role</th>
-            <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Actions</th>
-          </tr>
-        </thead>
+  const renderUsersTable = (tableUsers: AdminUser[], emptyMessage: string) => {
+  if (tableUsers.length === 0) {
+    return (
+      <div className="rounded-xl border border-[#174a63]/10 bg-white p-8 text-center text-sm text-[#174a63]/50">
+        {emptyMessage}
+      </div>
+    );
+  }
 
-        <tbody>
-          {tableUsers.length === 0 ? (
+  return (
+    <div className="overflow-hidden rounded-xl border border-[#174a63]/10">
+      {/* Desktop table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full min-w-[640px]">
+          <thead className="bg-[#f8fcfe]">
             <tr>
-              <td colSpan={4} className="p-8 text-center text-sm text-[#174a63]/50">
-                {emptyMessage}
-              </td>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Name</th>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Email</th>
+              <th className="p-4 text-left text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Role</th>
+              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-[#174a63]/60">Actions</th>
             </tr>
-          ) : (
-            tableUsers.map((user) => (
+          </thead>
+
+          <tbody>
+            {tableUsers.map((user) => (
               <tr key={user.id} className="border-t border-[#174a63]/10 hover:bg-[#f8fcfe]">
                 <td className="p-4 text-sm font-medium text-[#174a63]">{user.name}</td>
                 <td className="p-4 text-sm text-[#174a63]/70">{user.email}</td>
@@ -128,12 +132,53 @@ export default function SubAdminManager({ users, currentUserRole }: SubAdminMana
                   ) : null}
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile cards */}
+      <div className="divide-y divide-[#174a63]/10 md:hidden">
+        {tableUsers.map((user) => (
+          <div key={user.id} className="p-4 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium text-[#174a63] truncate">{user.name}</p>
+                <p className="text-xs text-[#174a63]/60 truncate">{user.email}</p>
+              </div>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => handleDelete(user.id)}
+                  className="shrink-0 rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-red-700"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <div>
+              {isAdmin ? (
+                <select
+                  value={user.role}
+                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                  className="w-full rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm text-[#174a63] focus:border-gold focus:outline-none"
+                >
+                  <option value="ADMIN">Admin</option>
+                  <option value="SUBADMIN">Sub Admin</option>
+                  <option value="USER">User</option>
+                </select>
+              ) : (
+                <span className="inline-block rounded-full border border-[#174a63]/15 bg-[#f8fcfe] px-3 py-1 text-xs font-medium text-[#174a63]/70">
+                  {user.role}
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
+};
 
   return (
     <div className="rounded-2xl border border-[#174a63]/10 bg-white p-6 shadow-sm">

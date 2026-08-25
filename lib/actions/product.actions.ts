@@ -179,7 +179,8 @@ export async function createProductAction(
         connect: result.data.occasionIds?.map((id) => ({ id })) ?? [],
       },
     });
-  } catch {
+  } catch (error) {
+    console.error("Product creation failed:", error);
     for (const publicId of galleryPublicIds) {
       await deleteImageFromCloudinary(publicId);
     }
@@ -280,7 +281,8 @@ export async function updateProductAction(
     for (const publicId of removedPublicIds) {
       await deleteImageFromCloudinary(publicId);
     }
-  } catch {
+  } catch (error) {
+    console.error("Product update failed:", error);
     for (const publicId of galleryPublicIds) {
       if (!oldPublicIds.includes(publicId)) {
         await deleteImageFromCloudinary(publicId);

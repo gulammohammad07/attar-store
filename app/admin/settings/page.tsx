@@ -10,10 +10,10 @@ export default async function SettingsPage() {
   const currentUser = await getCurrentUser();
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-2">
+        <h1 className="text-2xl font-bold sm:text-3xl">Settings</h1>
+        <p className="text-muted-foreground mt-2 text-sm sm:text-base">
           Configure your store details and shipping rules.
         </p>
       </div>
