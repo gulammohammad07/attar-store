@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import {
   createProductAction,
@@ -65,6 +65,20 @@ export default function ProductForm({
   const [newBrandName, setNewBrandName] = useState("");
   const [newBrandSlug, setNewBrandSlug] = useState("");
   const [brandPending, startBrandTransition] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const resetForm = () => {
+    setState(initialState);
+    setNotes("");
+    setSelectedOccasions([]);
+    setImage({ url: "", publicId: null });
+    setGallery([]);
+    setSkuPreview("");
+    setShowBrandForm(false);
+    setNewBrandName("");
+    setNewBrandSlug("");
+    formRef.current?.reset();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,6 +86,9 @@ export default function ProductForm({
     startTransition(async () => {
       const result = await createProductAction(initialState, formData);
       setState(result);
+      if (result.success) {
+        resetForm();
+      }
     });
   };
 
@@ -126,6 +143,7 @@ export default function ProductForm({
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
