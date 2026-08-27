@@ -27,17 +27,12 @@ export default async function Home() {
   ]);
 
   const heroBanner = banners.find((b) => b.section === "hero");
-  const storyBanner = banners.find((b) => b.section === "story");
 
   return (
     <>
       <Hero banner={heroBanner} />
       <Marquee />
-      <HomeSections
-        products={products}
-        categories={categories}
-        storyBanner={storyBanner}
-      />
+      <HomeSections products={products} categories={categories} />
     </>
   );
 }

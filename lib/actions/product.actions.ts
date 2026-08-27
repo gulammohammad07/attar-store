@@ -7,7 +7,7 @@ import {
   updateProduct,
 } from "@/lib/services/product.service";
 import { productSchema } from "@/lib/validations/product";
-import { deleteImageFromCloudinary } from "@/lib/cloudinary";
+import { deleteImageFromCloudinary, deleteVideoFromCloudinary } from "@/lib/cloudinary";
 import { generateSlug } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
@@ -18,12 +18,23 @@ export type ProductActionState = {
 };
 
 function parseValues(formData: FormData) {
+  const sizesRaw = formData.get("sizes")?.toString();
+  let sizes: { size: string; price: number; stock: number }[] = [];
+  if (sizesRaw) {
+    try {
+      sizes = JSON.parse(sizesRaw);
+    } catch {
+      sizes = [];
+    }
+  }
+
   return {
     name: formData.get("name")?.toString() ?? "",
     slug: formData.get("slug")?.toString() ?? "",
     sku: formData.get("sku")?.toString() ?? "",
     categoryId: formData.get("categoryId")?.toString() ?? "",
     brandId: formData.get("brandId")?.toString() ?? "",
+    productType: formData.get("productType")?.toString() ?? "ATTAR",
     price: formData.get("price"),
     salePrice: formData.get("salePrice"),
     stock: formData.get("stock"),
@@ -38,9 +49,12 @@ function parseValues(formData: FormData) {
         .filter(Boolean) ?? [],
     imageUrl: (formData.get("imageUrl")?.toString() ?? "").trim(),
     imagePublicId: formData.get("imagePublicId")?.toString() ?? "",
+    videoUrl: (formData.get("videoUrl")?.toString() ?? "").trim(),
+    videoPublicId: formData.get("videoPublicId")?.toString() ?? "",
     galleryUrls: formData.get("galleryUrls")?.toString() ?? "",
     galleryPublicIds: formData.get("galleryPublicIds")?.toString() ?? "",
     occasionIds: formData.getAll("occasionIds").map((id) => id.toString()),
+    sizes,
   };
 }
 
@@ -159,12 +173,15 @@ export async function createProductAction(
       notes: result.data.notes ?? [],
       imageUrl,
       imagePublicId,
+      videoUrl: result.data.videoUrl || null,
+      videoPublicId: result.data.videoPublicId || null,
       gallery,
       galleryPublicIds,
       featured: false,
       bestSeller: false,
       newArrival: false,
       isActive: true,
+      productType: result.data.productType,
       category: {
         connect: {
           id: result.data.categoryId,
@@ -178,11 +195,21 @@ export async function createProductAction(
       occasions: {
         connect: result.data.occasionIds?.map((id) => ({ id })) ?? [],
       },
+      sizes: {
+        create: result.data.sizes?.map((size) => ({
+          size: size.size,
+          price: size.price,
+          stock: size.stock,
+        })) ?? [],
+      },
     });
   } catch (error) {
     console.error("Product creation failed:", error);
     for (const publicId of galleryPublicIds) {
       await deleteImageFromCloudinary(publicId);
+    }
+    if (result.data.videoPublicId) {
+      await deleteVideoFromCloudinary(result.data.videoPublicId);
     }
     return {
       success: false,
@@ -221,6 +248,8 @@ export async function updateProductAction(
 
   const newImageUrl = result.data.imageUrl || null;
   const newImagePublicId = result.data.imagePublicId || null;
+  const newVideoUrl = result.data.videoUrl || null;
+  const newVideoPublicId = result.data.videoPublicId || null;
 
   if (!newImageUrl) {
     return {
@@ -230,10 +259,12 @@ export async function updateProductAction(
   }
 
   const imageChanged = newImageUrl !== existing.imageUrl;
+  const videoChanged = newVideoUrl !== existing.videoUrl;
 
   const oldPublicIds = [
     existing.imagePublicId,
     ...existing.galleryPublicIds,
+    existing.videoPublicId,
   ].filter((id): id is string => Boolean(id));
 
   const { gallery, galleryPublicIds } = buildGallery(
@@ -258,6 +289,8 @@ export async function updateProductAction(
       notes: result.data.notes ?? [],
       imageUrl: newImageUrl,
       imagePublicId: imageChanged ? newImagePublicId : existing.imagePublicId,
+      videoUrl: newVideoUrl,
+      videoPublicId: videoChanged ? newVideoPublicId : existing.videoPublicId,
       gallery,
       galleryPublicIds,
       category: {
@@ -273,13 +306,24 @@ export async function updateProductAction(
       occasions: {
         set: result.data.occasionIds?.map((id) => ({ id })) ?? [],
       },
+      sizes: {
+        deleteMany: { productId },
+        create: result.data.sizes?.map((size) => ({
+          size: size.size,
+          price: size.price,
+          stock: size.stock,
+        })) ?? [],
+      },
     });
 
     const removedPublicIds = oldPublicIds.filter(
-      (id) => !galleryPublicIds.includes(id),
+      (id) => !galleryPublicIds.includes(id) && id !== (videoChanged ? existing.videoPublicId : ""),
     );
     for (const publicId of removedPublicIds) {
       await deleteImageFromCloudinary(publicId);
+    }
+    if (videoChanged && existing.videoPublicId && newVideoPublicId) {
+      await deleteVideoFromCloudinary(existing.videoPublicId);
     }
   } catch (error) {
     console.error("Product update failed:", error);
@@ -287,6 +331,9 @@ export async function updateProductAction(
       if (!oldPublicIds.includes(publicId)) {
         await deleteImageFromCloudinary(publicId);
       }
+    }
+    if (newVideoPublicId && existing.videoPublicId !== newVideoPublicId) {
+      await deleteVideoFromCloudinary(newVideoPublicId);
     }
     return {
       success: false,
@@ -316,9 +363,13 @@ export async function deleteProductAction(productId: string) {
     const publicIds = [
       existing.imagePublicId,
       ...existing.galleryPublicIds,
+      existing.videoPublicId,
     ].filter((id): id is string => Boolean(id));
     for (const publicId of publicIds) {
       await deleteImageFromCloudinary(publicId);
+    }
+    if (existing.videoPublicId) {
+      await deleteVideoFromCloudinary(existing.videoPublicId);
     }
   } catch {
     return {

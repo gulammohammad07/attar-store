@@ -17,6 +17,7 @@ export default async function EditProductPage({
         category: true,
         brand: true,
         occasions: true,
+        sizes: true,
       },
     }),
     prisma.category.findMany({
@@ -51,11 +52,20 @@ export default async function EditProductPage({
           description: product.description,
           imageUrl: product.imageUrl,
           imagePublicId: product.imagePublicId,
+          videoUrl: (product as any).videoUrl || null,
+          videoPublicId: (product as any).videoPublicId || null,
           gallery: product.gallery,
           galleryPublicIds: product.galleryPublicIds,
           categoryId: product.categoryId,
           brandId: product.brandId,
           occasionIds: product.occasions.map((o) => o.id),
+          productType: (product as any).productType || "ATTAR",
+          sizes: product.sizes.map((s) => ({
+            id: s.id,
+            size: s.size,
+            price: s.price,
+            stock: s.stock,
+          })),
         }}
         categories={categories.map((c) => ({ id: c.id, name: c.name }))}
         brands={brands.map((b) => ({ id: b.id, name: b.name }))}

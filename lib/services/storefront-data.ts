@@ -13,6 +13,7 @@ function mapDbProduct(db: {
   salePrice: number | null;
   description: string | null;
   imageUrl: string;
+  videoUrl: string | null;
   gallery: string[];
   stock: number;
   volume: string;
@@ -20,9 +21,11 @@ function mapDbProduct(db: {
   bestSeller: boolean;
   newArrival: boolean;
   featured: boolean;
+  productType: string;
   category: { name: string };
   brand: { name: string };
   occasions: { name: string }[];
+  sizes: { id: string; size: string; price: number; stock: number }[];
 }): Product {
   const noteNames =
     (db.notes ?? []).length > 0 ? db.notes : [db.category.name];
@@ -41,6 +44,7 @@ function mapDbProduct(db: {
     slug: db.slug,
     brand: db.brand.name,
     category: db.category.name,
+    productType: (db.productType as "ATTAR" | "PERFUME") || "ATTAR",
     notes: {
       top: noteNames.slice(0, 1).map(toNote),
       heart: noteNames.slice(1, 3).map(toNote),
@@ -52,6 +56,7 @@ function mapDbProduct(db: {
     price: db.price,
     salePrice: db.salePrice ?? undefined,
     image: db.imageUrl,
+    video: db.videoUrl ?? undefined,
     gallery: db.gallery.length > 0 ? db.gallery : [db.imageUrl],
     description: db.description ?? "",
     stock: db.stock,
@@ -59,6 +64,7 @@ function mapDbProduct(db: {
     reviewCount: 0,
     badge,
     featured: db.featured,
+    sizes: db.sizes,
   };
 }
 
@@ -75,7 +81,9 @@ export type StorefrontBanner = {
   section: string;
   title: string | null;
   subtitle: string | null;
-  imageUrl: string;
+  desktopImageUrl: string;
+  tabletImageUrl: string | null;
+  mobileImageUrl: string | null;
   linkUrl: string | null;
 };
 
@@ -105,7 +113,9 @@ export async function getStorefrontBanners(): Promise<StorefrontBanner[]> {
     section: banner.section,
     title: banner.title,
     subtitle: banner.subtitle,
-    imageUrl: banner.imageUrl,
+    desktopImageUrl: banner.desktopImageUrl,
+    tabletImageUrl: banner.tabletImageUrl,
+    mobileImageUrl: banner.mobileImageUrl,
     linkUrl: banner.linkUrl,
   }));
 }
@@ -117,6 +127,7 @@ export async function getStorefrontProducts(): Promise<Product[]> {
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -135,6 +146,7 @@ export async function getStorefrontProductBySlug(
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
   });
 

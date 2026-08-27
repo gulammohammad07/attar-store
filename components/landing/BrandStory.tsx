@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { m as motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Sparkles, Droplets, Clock, ChevronRight } from "lucide-react";
+import type { StorefrontBanner } from "@/lib/services/storefront-data";
 
 const pillars = [
   {
@@ -49,7 +50,7 @@ const milestones = [
 export default function BrandStory({
   banner,
 }: {
-  banner?: { title: string | null; imageUrl: string };
+  banner?: StorefrontBanner | null;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -58,18 +59,31 @@ export default function BrandStory({
   });
   const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
+  const getImageSrc = () => {
+    if (!banner) return null;
+    if (typeof window === "undefined") return banner.desktopImageUrl;
+    const width = window.innerWidth;
+    if (width < 768 && banner.mobileImageUrl) return banner.mobileImageUrl;
+    if (width < 1024 && banner.tabletImageUrl) return banner.tabletImageUrl;
+    return banner.desktopImageUrl;
+  };
+
+  const [imgError, setImgError] = useState(false);
+  const imageSrc = getImageSrc();
+  const showImage = !!imageSrc && !imgError;
+
   return (
     <section id="story" className="overflow-hidden bg-[#F8FCFE] py-28 text-[#174A63]">
       <div className="mx-auto max-w-7xl px-6">
         <div
           className={`grid items-center gap-16 ${
-            banner?.imageUrl
+            showImage
               ? "lg:grid-cols-2"
               : "lg:grid-cols-1 lg:mx-auto lg:max-w-3xl"
           }`}
         >
           {/* Visual */}
-          {banner?.imageUrl && (
+          {showImage && (
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -82,11 +96,12 @@ export default function BrandStory({
                 className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-gold/25 shadow-[0_40px_80px_-40px_rgba(23,74,99,0.45)]"
               >
                 <Image
-                  src={banner.imageUrl}
-                  alt={banner.title ?? "The art of attar making"}
+                  src={imageSrc}
+                  alt={banner?.title ?? "The art of attar making"}
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 hover:scale-105"
+                  onError={() => setImgError(true)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#F8FCFE]/35 to-transparent" />
               </motion.div>

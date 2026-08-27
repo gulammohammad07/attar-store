@@ -39,13 +39,26 @@ export default function ProductDetails({
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string>(
+    product.sizes?.[0]?.size || product.volume || "",
+  );
   const [activeTab, setActiveTab] = useState<(typeof tabs)[number]>(
     "Description",
   );
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
 
   const wished = isWishlisted(product.id);
-  const price = product.salePrice ?? product.price;
+  const price = useMemo(() => {
+    if (selectedSize && product.sizes) {
+      const sizeItem = product.sizes.find((s) => s.size === selectedSize);
+      if (sizeItem) return sizeItem.price;
+    }
+    return product.salePrice ?? product.price;
+  }, [selectedSize, product.sizes, product.salePrice, product.price]);
+
+  const displayPrice = selectedSize
+    ? price
+    : product.salePrice ?? product.price;
   const discount = product.salePrice
     ? Math.round(((product.price - product.salePrice) / product.price) * 100)
     : 0;
@@ -81,7 +94,8 @@ export default function ProductDetails({
   };
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    const size = selectedSize || product.volume;
+    addToCart(product, quantity, size);
     toast.success(`${product.name} added to bag`);
   };
 
@@ -237,6 +251,35 @@ export default function ProductDetails({
             ))}
             </div>
 
+            {/* Size selector */}
+            {product.sizes && product.sizes.length > 0 && (
+              <div className="mt-6">
+                <label className="mb-2 block font-medium">Select Size</label>
+                <div className="flex flex-wrap gap-2">
+                  {product.sizes.map((sizeItem) => (
+                    <button
+                      key={sizeItem.id}
+                      type="button"
+                      onClick={() => setSelectedSize(sizeItem.size)}
+                      className={`rounded-full border px-4 py-2 text-sm transition-colors ${
+                        selectedSize === sizeItem.size
+                          ? "border-[#0f2838] bg-[#0f2838] text-white"
+                          : "border-[#174A63]/20 bg-white text-[#174A63] hover:border-gold"
+                      }`}
+                    >
+                      {sizeItem.size}
+                      <span className="ml-2 text-xs opacity-70">
+                        {formatPrice(sizeItem.price)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+                {!selectedSize && (
+                  <p className="mt-2 text-xs text-[#174A63]/50">Please select a size</p>
+                )}
+              </div>
+            )}
+
             {/* Quantity + CTA */}
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <div className="flex items-center justify-between rounded-full border border-[#174A63]/20 px-5 sm:w-36">
@@ -265,7 +308,7 @@ export default function ProductDetails({
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#174A63] py-4 text-sm font-semibold text-white transition-colors hover:bg-gold"
               >
                 <ShoppingBag size={18} />
-                Add to Bag — {formatPrice(price * quantity)}
+                Add to Bag — {formatPrice(displayPrice * quantity)}
               </button>
             </div>
 

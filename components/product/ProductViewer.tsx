@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 export default function ProductViewer({ product }: { product: Product }) {
   const [active, setActive] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const mx = useMotionValue(50);
@@ -18,8 +19,10 @@ export default function ProductViewer({ product }: { product: Product }) {
   const rotateY = useSpring(mx, { stiffness: 150, damping: 20 });
 
   const images = product.gallery.length ? product.gallery : [product.image];
+  const hasVideo = !!product.video;
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (showVideo) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -48,10 +51,13 @@ export default function ProductViewer({ product }: { product: Product }) {
           <button
             key={index}
             type="button"
-            onClick={() => setActive(index)}
+            onClick={() => {
+              setActive(index);
+              setShowVideo(false);
+            }}
             className={cn(
               "relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition-all",
-              active === index
+              active === index && !showVideo
                 ? "border-gold shadow-md"
                 : "border-transparent opacity-60 hover:opacity-100",
             )}
@@ -66,6 +72,34 @@ export default function ProductViewer({ product }: { product: Product }) {
             />
           </button>
         ))}
+        {hasVideo && (
+          <button
+            type="button"
+            onClick={() => setShowVideo(true)}
+            className={cn(
+              "relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition-all",
+              showVideo
+                ? "border-gold shadow-md"
+                : "border-transparent opacity-60 hover:opacity-100",
+            )}
+            aria-label="Play video"
+          >
+            <div className="flex h-full w-full items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-6 w-6 text-[#174A63]"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </button>
+        )}
       </div>
 
       {/* Main viewer */}
@@ -76,7 +110,10 @@ export default function ProductViewer({ product }: { product: Product }) {
           reset();
           setZoomed(false);
         }}
-        onClick={() => setZoomed((z) => !z)}
+        onClick={() => {
+          if (hasVideo && showVideo) return;
+          setZoomed((z) => !z);
+        }}
         className="group relative order-1 cursor-zoom-in overflow-hidden rounded-3xl bg-[#EFF8FC] md:order-2"
         style={{ perspective: 1000 }}
       >
@@ -88,33 +125,43 @@ export default function ProductViewer({ product }: { product: Product }) {
           }}
           className="relative aspect-square w-full"
         >
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className={cn("absolute inset-0", zoomed && "scale-125")}
-            style={
-              zoomed
-                ? {
-                    transformOrigin: `${mx.get()}% ${my.get()}%`,
-                  }
-                : undefined
-            }
-          >
-            <Image
-              src={images[active]}
-              alt={product.name}
-              fill
-              priority
-              quality={75}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain p-10 transition-transform duration-700"
+          {showVideo && hasVideo ? (
+            <video
+              key={product.video}
+              src={product.video}
+              controls
+              autoPlay
+              className="absolute inset-0 h-full w-full object-contain"
             />
-          </motion.div>
+          ) : (
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className={cn("absolute inset-0", zoomed && "scale-125")}
+              style={
+                zoomed
+                  ? {
+                      transformOrigin: `${mx.get()}% ${my.get()}%`,
+                    }
+                  : undefined
+              }
+            >
+              <Image
+                src={images[active]}
+                alt={product.name}
+                fill
+                priority
+                quality={75}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain p-10 transition-transform duration-700"
+              />
+            </motion.div>
+          )}
         </motion.div>
 
-        {images.length > 1 && (
+        {!showVideo && images.length > 1 && (
           <>
             <button
               type="button"
@@ -143,12 +190,16 @@ export default function ProductViewer({ product }: { product: Product }) {
         )}
 
         {/* Zoom hint */}
-        <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-[#174A63]/60 opacity-0 shadow backdrop-blur transition-opacity group-hover:opacity-100">
-          <ZoomIn size={18} />
-        </div>
+        {!showVideo && (
+          <div className="pointer-events-none absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-[#174A63]/60 opacity-0 shadow backdrop-blur transition-opacity group-hover:opacity-100">
+            <ZoomIn size={18} />
+          </div>
+        )}
 
         {/* Floating shine */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        {!showVideo && (
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        )}
       </div>
     </div>
   );

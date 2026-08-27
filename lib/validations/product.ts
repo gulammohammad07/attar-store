@@ -6,6 +6,7 @@ export const productSchema = z.object({
   sku: z.string().min(2).optional().or(z.literal("")),
   categoryId: z.string().min(1, "Please select a category."),
   brandId: z.string().min(1, "Please select or create a brand."),
+  productType: z.enum(["ATTAR", "PERFUME"]).default("ATTAR"),
   price: z.coerce.number(),
   salePrice: z.coerce.number().optional(),
   stock: z.coerce.number(),
@@ -13,12 +14,27 @@ export const productSchema = z.object({
   description: z.string().optional(),
   notes: z.array(z.string()).optional(),
   occasionIds: z.array(z.string()).optional(),
+  sizes: z
+    .array(
+      z.object({
+        size: z.string().min(1),
+        price: z.coerce.number(),
+        stock: z.coerce.number(),
+      }),
+    )
+    .optional(),
   imageUrl: z
     .string()
     .url("Please upload a valid product image.")
     .optional()
     .or(z.literal("")),
   imagePublicId: z.string().optional(),
+  videoUrl: z
+    .string()
+    .url("Please upload a valid product video.")
+    .optional()
+    .or(z.literal("")),
+  videoPublicId: z.string().optional(),
   galleryUrls: z.string().optional(),
   galleryPublicIds: z.string().optional(),
 });

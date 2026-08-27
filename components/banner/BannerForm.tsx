@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import {
   upsertBannerAction,
   type BannerActionState,
@@ -16,8 +16,12 @@ const initialState: BannerActionState = {
 export type BannerFormInitial = {
   title: string | null;
   subtitle: string | null;
-  imageUrl: string;
-  imagePublicId: string | null;
+  desktopImageUrl: string;
+  desktopImagePublicId: string | null;
+  tabletImageUrl: string | null;
+  tabletImagePublicId: string | null;
+  mobileImageUrl: string | null;
+  mobileImagePublicId: string | null;
   linkUrl: string | null;
   isActive: boolean;
 };
@@ -37,10 +41,27 @@ export default function BannerForm({
 }: BannerFormProps) {
   const [state, setState] = useState<BannerActionState>(initialState);
   const [pending, startTransition] = useTransition();
-  const [image, setImage] = useState<ImageValue>({
-    url: initial?.imageUrl ?? "",
-    publicId: initial?.imagePublicId ?? null,
+  const [desktopImage, setDesktopImage] = useState<ImageValue>({
+    url: initial?.desktopImageUrl ?? "",
+    publicId: initial?.desktopImagePublicId ?? null,
   });
+  const [tabletImage, setTabletImage] = useState<ImageValue>({
+    url: initial?.tabletImageUrl ?? "",
+    publicId: initial?.tabletImagePublicId ?? null,
+  });
+  const [mobileImage, setMobileImage] = useState<ImageValue>({
+    url: initial?.mobileImageUrl ?? "",
+    publicId: initial?.mobileImagePublicId ?? null,
+  });
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const resetForm = () => {
+    setState(initialState);
+    setDesktopImage({ url: initial?.desktopImageUrl ?? "", publicId: initial?.desktopImagePublicId ?? null });
+    setTabletImage({ url: initial?.tabletImageUrl ?? "", publicId: initial?.tabletImagePublicId ?? null });
+    setMobileImage({ url: initial?.mobileImageUrl ?? "", publicId: initial?.mobileImagePublicId ?? null });
+    formRef.current?.reset();
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,11 +69,15 @@ export default function BannerForm({
     startTransition(async () => {
       const result = await upsertBannerAction(section, initialState, formData);
       setState(result);
+      if (result.success) {
+        resetForm();
+      }
     });
   };
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       className="rounded-2xl border bg-white p-6 shadow-sm"
     >
@@ -104,19 +129,54 @@ export default function BannerForm({
         </div>
       </div>
 
-      <div className="mt-6">
-        <ImageUploader
-          value={image}
-          onChange={setImage}
-          label="Banner Image (uploaded to Cloudinary)"
-        />
-        <input type="hidden" name="imageUrl" value={image.url} />
-        <input type="hidden" name="imagePublicId" value={image.publicId ?? ""} />
-        {state.errors?.imageUrl && (
-          <p className="mt-1 text-sm text-red-600">
-            {state.errors.imageUrl[0]}
-          </p>
-        )}
+      <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <div>
+          <label className="mb-2 block font-medium">Desktop Banner</label>
+          <ImageUploader
+            value={desktopImage}
+            onChange={setDesktopImage}
+            label="Desktop image"
+          />
+          <input type="hidden" name="desktopImageUrl" value={desktopImage.url} />
+          <input type="hidden" name="desktopImagePublicId" value={desktopImage.publicId ?? ""} />
+          {state.errors?.desktopImageUrl && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.desktopImageUrl[0]}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="mb-2 block font-medium">Tablet Banner</label>
+          <ImageUploader
+            value={tabletImage}
+            onChange={setTabletImage}
+            label="Tablet image"
+          />
+          <input type="hidden" name="tabletImageUrl" value={tabletImage.url} />
+          <input type="hidden" name="tabletImagePublicId" value={tabletImage.publicId ?? ""} />
+          {state.errors?.tabletImageUrl && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.tabletImageUrl[0]}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="mb-2 block font-medium">Mobile Banner</label>
+          <ImageUploader
+            value={mobileImage}
+            onChange={setMobileImage}
+            label="Mobile image"
+          />
+          <input type="hidden" name="mobileImageUrl" value={mobileImage.url} />
+          <input type="hidden" name="mobileImagePublicId" value={mobileImage.publicId ?? ""} />
+          {state.errors?.mobileImageUrl && (
+            <p className="mt-1 text-sm text-red-600">
+              {state.errors.mobileImageUrl[0]}
+            </p>
+          )}
+        </div>
       </div>
 
       <label className="mt-6 flex items-center gap-2 text-sm font-medium">

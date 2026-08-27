@@ -77,9 +77,9 @@ export default function CartPage() {
         <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
           {/* Items */}
           <div className="space-y-6">
-            {items.map(({ product, quantity }, index) => (
+            {items.map(({ product, quantity, size }, index) => (
               <motion.div
-                key={product.id}
+                key={`${product.id}-${size ?? "default"}`}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.06 }}
@@ -111,12 +111,12 @@ export default function CartPage() {
                       {product.name}
                     </Link>
                     <p className="mt-1 text-xs text-[#174A63]/45">
-                      {product.volume} • {product.category}
+                      {product.volume} • {product.category} {size ? `• ${size}` : ""}
                     </p>
 
                     <button
                       type="button"
-                      onClick={() => removeFromCart(product.id)}
+                      onClick={() => removeFromCart(product.id, size)}
                       className="mt-3 flex items-center gap-1.5 text-xs text-[#174A63]/45 hover:text-red-600"
                     >
                       <Trash2 size={14} />
@@ -128,7 +128,7 @@ export default function CartPage() {
                     <div className="flex items-center gap-3 rounded-full border border-[#174A63]/15 px-4 py-2">
                       <button
                         type="button"
-                        onClick={() => updateQuantity(product.id, quantity - 1)}
+                        onClick={() => updateQuantity(product.id, quantity - 1, size)}
                         className="text-[#174A63]/60"
                         aria-label="Decrease"
                       >
@@ -139,7 +139,7 @@ export default function CartPage() {
                       </span>
                       <button
                         type="button"
-                        onClick={() => updateQuantity(product.id, quantity + 1)}
+                        onClick={() => updateQuantity(product.id, quantity + 1, size)}
                         className="text-[#174A63]/60"
                         aria-label="Increase"
                       >

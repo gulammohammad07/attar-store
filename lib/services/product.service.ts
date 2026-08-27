@@ -8,6 +8,7 @@ export async function createProduct(data: Prisma.ProductCreateInput) {
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
   });
 }
@@ -18,6 +19,7 @@ export async function getProducts() {
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -32,6 +34,7 @@ export async function getProductById(id: string) {
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
   });
 }
@@ -47,6 +50,7 @@ export async function updateProduct(
       category: true,
       brand: true,
       occasions: true,
+      sizes: true,
     },
   });
 }

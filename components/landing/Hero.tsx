@@ -9,20 +9,31 @@ import { useState } from "react";
 type HeroBanner = {
   title: string | null;
   subtitle: string | null;
-  imageUrl: string;
+  desktopImageUrl: string;
+  tabletImageUrl: string | null;
+  mobileImageUrl: string | null;
 };
 
 export default function Hero({ banner }: { banner?: HeroBanner }) {
   const [imgError, setImgError] = useState(false);
 
-  const showImage = banner?.imageUrl && !imgError;
+  const getImageSrc = () => {
+    if (typeof window === "undefined") return banner?.desktopImageUrl;
+    const width = window.innerWidth;
+    if (width < 768 && banner?.mobileImageUrl) return banner.mobileImageUrl;
+    if (width < 1024 && banner?.tabletImageUrl) return banner.tabletImageUrl;
+    return banner?.desktopImageUrl;
+  };
+
+  const showImage = banner?.desktopImageUrl && !imgError;
+  const imageSrc = getImageSrc();
 
   return (
     <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#faf9f7]">
-      {showImage ? (
+      {showImage && imageSrc ? (
         <div className="absolute inset-0">
           <Image
-            src={banner.imageUrl}
+            src={imageSrc}
             alt={banner.title ?? "Hero banner"}
             fill
             priority

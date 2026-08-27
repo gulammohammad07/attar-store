@@ -18,8 +18,12 @@ export async function upsertBannerAction(
   const values = {
     title: formData.get("title")?.toString() ?? "",
     subtitle: formData.get("subtitle")?.toString() ?? "",
-    imageUrl: (formData.get("imageUrl")?.toString() ?? "").trim(),
-    imagePublicId: formData.get("imagePublicId")?.toString() ?? "",
+    desktopImageUrl: (formData.get("desktopImageUrl")?.toString() ?? "").trim(),
+    desktopImagePublicId: formData.get("desktopImagePublicId")?.toString() ?? "",
+    tabletImageUrl: (formData.get("tabletImageUrl")?.toString() ?? "").trim(),
+    tabletImagePublicId: formData.get("tabletImagePublicId")?.toString() ?? "",
+    mobileImageUrl: (formData.get("mobileImageUrl")?.toString() ?? "").trim(),
+    mobileImagePublicId: formData.get("mobileImagePublicId")?.toString() ?? "",
     linkUrl: formData.get("linkUrl")?.toString() ?? "",
     isActive: formData.get("isActive") === "on",
   };
@@ -33,10 +37,10 @@ export async function upsertBannerAction(
     };
   }
 
-  if (!result.data.imageUrl) {
+  if (!result.data.desktopImageUrl) {
     return {
       success: false,
-      errors: { imageUrl: ["Please upload a banner image."] },
+      errors: { desktopImageUrl: ["Please upload a desktop banner image."] },
     };
   }
 
@@ -44,13 +48,19 @@ export async function upsertBannerAction(
     where: { section },
   });
 
-  const newImagePublicId = result.data.imagePublicId || null;
+  const newDesktopPublicId = result.data.desktopImagePublicId || null;
+  const newTabletPublicId = result.data.tabletImagePublicId || null;
+  const newMobilePublicId = result.data.mobileImagePublicId || null;
 
   const data = {
     title: result.data.title || null,
     subtitle: result.data.subtitle || null,
-    imageUrl: result.data.imageUrl,
-    imagePublicId: newImagePublicId,
+    desktopImageUrl: result.data.desktopImageUrl,
+    desktopImagePublicId: newDesktopPublicId,
+    tabletImageUrl: result.data.tabletImageUrl || null,
+    tabletImagePublicId: newTabletPublicId,
+    mobileImageUrl: result.data.mobileImageUrl || null,
+    mobileImagePublicId: newMobilePublicId,
     linkUrl: result.data.linkUrl || null,
     isActive: result.data.isActive ?? true,
   };
@@ -65,15 +75,24 @@ export async function upsertBannerAction(
       },
     });
 
-    if (
-      existing?.imagePublicId &&
-      existing.imagePublicId !== newImagePublicId
-    ) {
-      await deleteImageFromCloudinary(existing.imagePublicId);
+    if (existing?.desktopImagePublicId && existing.desktopImagePublicId !== newDesktopPublicId) {
+      await deleteImageFromCloudinary(existing.desktopImagePublicId);
+    }
+    if (existing?.tabletImagePublicId && existing.tabletImagePublicId !== newTabletPublicId) {
+      await deleteImageFromCloudinary(existing.tabletImagePublicId);
+    }
+    if (existing?.mobileImagePublicId && existing.mobileImagePublicId !== newMobilePublicId) {
+      await deleteImageFromCloudinary(existing.mobileImagePublicId);
     }
   } catch {
-    if (newImagePublicId && existing?.imagePublicId !== newImagePublicId) {
-      await deleteImageFromCloudinary(newImagePublicId);
+    if (newDesktopPublicId && existing?.desktopImagePublicId !== newDesktopPublicId) {
+      await deleteImageFromCloudinary(newDesktopPublicId);
+    }
+    if (newTabletPublicId && existing?.tabletImagePublicId !== newTabletPublicId) {
+      await deleteImageFromCloudinary(newTabletPublicId);
+    }
+    if (newMobilePublicId && existing?.mobileImagePublicId !== newMobilePublicId) {
+      await deleteImageFromCloudinary(newMobilePublicId);
     }
     return {
       success: false,

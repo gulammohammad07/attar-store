@@ -81,16 +81,20 @@ model Brand {
 }
 
 model Banner {
-  id            String   @id @default(cuid())
-  section       String   @unique
-  title         String?
-  subtitle      String?
-  imageUrl      String
-  imagePublicId String?
-  linkUrl       String?
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  section             String    @unique
+  title               String?
+  subtitle            String?
+  desktopImageUrl     String
+  desktopImagePublicId String?
+  tabletImageUrl      String?
+  tabletImagePublicId String?
+  mobileImageUrl      String?
+  mobileImagePublicId String?
+  linkUrl             String?
+  isActive            Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
 
 model Occasion {
@@ -104,31 +108,50 @@ model Occasion {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique
-  price       Float
-  description String?
-  imageUrl    String
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  price         Float
+  description   String?
+  imageUrl      String
   imagePublicId String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  bestSeller  Boolean  @default(false)
-  brandId     String
-  categoryId  String
-  featured    Boolean  @default(false)
-  gallery     String[]
+  videoUrl      String?
+  videoPublicId String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bestSeller    Boolean   @default(false)
+  brandId       String
+  categoryId    String
+  featured      Boolean   @default(false)
+  gallery       String[]
   galleryPublicIds String[] @default([])
-  isActive    Boolean  @default(true)
-  newArrival  Boolean  @default(false)
-  salePrice   Float?
-  sku         String?  @unique
-  stock       Int      @default(0)
-  volume      String
-  notes       String[] @default([])
-  brand       Brand    @relation(fields: [brandId], references: [id])
-  category    Category @relation(fields: [categoryId], references: [id])
-  occasions   Occasion[]
+  isActive      Boolean   @default(true)
+  newArrival    Boolean   @default(false)
+  salePrice     Float?
+  sku           String?   @unique
+  stock         Int       @default(0)
+  volume        String
+  notes         String[]  @default([])
+  productType   String    @default("ATTAR")
+  brand         Brand     @relation(fields: [brandId], references: [id])
+  category      Category  @relation(fields: [categoryId], references: [id])
+  occasions     Occasion[]
+  sizes         ProductSize[]
+}
+
+model ProductSize {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size       String
+  price      Float
+  stock      Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([productId])
+  @@map("product_sizes")
 }
 
 enum OrderStatus {

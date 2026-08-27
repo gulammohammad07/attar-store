@@ -9,6 +9,7 @@ export type Product = {
   slug: string;
   brand: string;
   category: string;
+  productType: "ATTAR" | "PERFUME";
   notes: {
     top: FragranceNote[];
     heart: FragranceNote[];
@@ -20,6 +21,7 @@ export type Product = {
   price: number;
   salePrice?: number;
   image: string;
+  video?: string;
   gallery: string[];
   description: string;
   stock: number;
@@ -27,6 +29,7 @@ export type Product = {
   reviewCount: number;
   badge?: "Bestseller" | "New Arrival" | "Limited Edition" | "Sale";
   featured?: boolean;
+  sizes?: { id: string; size: string; price: number; stock: number }[];
 };
 
 export const notes = [

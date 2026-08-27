@@ -14,6 +14,7 @@ import type { Product } from "@/lib/data/products";
 export type CartItem = {
   product: Product;
   quantity: number;
+  size?: string;
 };
 
 type CartContextValue = {
@@ -21,9 +22,9 @@ type CartContextValue = {
   isOpen: boolean;
   totalItems: number;
   subtotal: number;
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, quantity?: number, size?: string) => void;
+  removeFromCart: (productId: string, size?: string) => void;
+  updateQuantity: (productId: string, quantity: number, size?: string) => void;
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
@@ -58,31 +59,35 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated]);
 
-  const addToCart = useCallback((product: Product, quantity = 1) => {
+  const addToCart = useCallback((product: Product, quantity = 1, size?: string) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+      const existing = prev.find(
+        (item) => item.product.id === product.id && item.size === size,
+      );
       if (existing) {
         return prev.map((item) =>
-          item.product.id === product.id
+          item.product.id === product.id && item.size === size
             ? { ...item, quantity: item.quantity + quantity }
             : item,
         );
       }
-      return [...prev, { product, quantity }];
+      return [...prev, { product, quantity, size }];
     });
     setIsOpen(true);
   }, []);
 
-  const removeFromCart = useCallback((productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
+  const removeFromCart = useCallback((productId: string, size?: string) => {
+    setItems((prev) => prev.filter((item) => !(item.product.id === productId && item.size === size)));
   }, []);
 
-  const updateQuantity = useCallback((productId: string, quantity: number) => {
+  const updateQuantity = useCallback((productId: string, quantity: number, size?: string) => {
     setItems((prev) =>
       quantity <= 0
-        ? prev.filter((item) => item.product.id !== productId)
+        ? prev.filter((item) => !(item.product.id === productId && item.size === size))
         : prev.map((item) =>
-            item.product.id === productId ? { ...item, quantity } : item,
+            item.product.id === productId && item.size === size
+              ? { ...item, quantity }
+              : item,
           ),
     );
   }, []);

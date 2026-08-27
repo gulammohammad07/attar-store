@@ -2,10 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { Product } from "@/lib/data/products";
-import type {
-  StorefrontBanner,
-  StorefrontCategory,
-} from "@/lib/services/storefront-data";
+import type { StorefrontCategory } from "@/lib/services/storefront-data";
 import LazyMount from "@/components/landing/LazyMount";
 import SectionSkeleton from "@/components/landing/SectionSkeleton";
 
@@ -19,29 +16,27 @@ const BestSellers = dynamic(
   { ssr: false },
 );
 
-const WhyChoose = dynamic(() => import("@/components/landing/WhyChoose"), {
-  ssr: false,
-});
+// const WhyChoose = dynamic(() => import("@/components/landing/WhyChoose"), {
+//   ssr: false,
+// });
 
-const Testimonials = dynamic(
-  () => import("@/components/landing/Testimonials"),
-  { ssr: false },
-);
+// const Testimonials = dynamic(
+//   () => import("@/components/landing/Testimonials"),
+//   { ssr: false },
+// );
 
-const BrandStory = dynamic(() => import("@/components/landing/BrandStory"), {
-  ssr: false,
-});
+// const BrandStory = dynamic(() => import("@/components/landing/BrandStory"), {
+//   ssr: false,
+// });
 
 type HomeSectionsProps = {
   products: Product[];
   categories: StorefrontCategory[];
-  storyBanner?: StorefrontBanner;
 };
 
 export default function HomeSections({
   products,
   categories,
-  storyBanner,
 }: HomeSectionsProps) {
   return (
     <>
@@ -73,7 +68,7 @@ export default function HomeSections({
         <BestSellers products={products} />
       </LazyMount>
 
-      <LazyMount
+      {/* <LazyMount
         fallback={
           <SectionSkeleton
             eyebrow="The MD Difference"
@@ -85,9 +80,9 @@ export default function HomeSections({
         }
       >
         <WhyChoose />
-      </LazyMount>
+      </LazyMount> */}
 
-      <LazyMount
+      {/* <LazyMount
         fallback={
           <SectionSkeleton
             eyebrow="Word of Mouth"
@@ -99,9 +94,9 @@ export default function HomeSections({
         }
       >
         <Testimonials />
-      </LazyMount>
+      </LazyMount> */}
 
-      <LazyMount
+      {/* <LazyMount
         fallback={
           <SectionSkeleton
             eyebrow="Our Story"
@@ -112,7 +107,7 @@ export default function HomeSections({
         }
       >
         <BrandStory banner={storyBanner} />
-      </LazyMount>
+      </LazyMount> */}
     </>
   );
 }

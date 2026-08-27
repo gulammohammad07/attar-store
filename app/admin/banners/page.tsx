@@ -6,8 +6,12 @@ type Banner = {
   section: string;
   title: string | null;
   subtitle: string | null;
-  imageUrl: string;
-  imagePublicId: string | null;
+  desktopImageUrl: string;
+  desktopImagePublicId: string | null;
+  tabletImageUrl: string | null;
+  tabletImagePublicId: string | null;
+  mobileImageUrl: string | null;
+  mobileImagePublicId: string | null;
   linkUrl: string | null;
   isActive: boolean;
   createdAt: Date;

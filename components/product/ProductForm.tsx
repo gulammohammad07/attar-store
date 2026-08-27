@@ -12,6 +12,9 @@ import ImageUploader, {
   type ImageValue,
 } from "@/components/admin/ImageUploader";
 import GalleryUploader from "@/components/admin/GalleryUploader";
+import VideoUploader, {
+  type VideoValue,
+} from "@/components/admin/VideoUploader";
 import { generateSkuPreview, generateSlug } from "@/lib/utils";
 
 const QUICK_NOTES = [
@@ -59,6 +62,7 @@ export default function ProductForm({
   const [notes, setNotes] = useState("");
   const [selectedOccasions, setSelectedOccasions] = useState<string[]>([]);
   const [image, setImage] = useState<ImageValue>({ url: "", publicId: null });
+  const [video, setVideo] = useState<VideoValue>({ url: "", publicId: null });
   const [gallery, setGallery] = useState<ImageValue[]>([]);
   const [skuPreview, setSkuPreview] = useState("");
   const [showBrandForm, setShowBrandForm] = useState(false);
@@ -66,17 +70,22 @@ export default function ProductForm({
   const [newBrandSlug, setNewBrandSlug] = useState("");
   const [brandPending, startBrandTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
+  const [productType, setProductType] = useState<"ATTAR" | "PERFUME">("ATTAR");
+  const [sizes, setSizes] = useState<{ size: string; price: string; stock: string }[]>([]);
 
   const resetForm = () => {
     setState(initialState);
     setNotes("");
     setSelectedOccasions([]);
     setImage({ url: "", publicId: null });
+    setVideo({ url: "", publicId: null });
     setGallery([]);
     setSkuPreview("");
     setShowBrandForm(false);
     setNewBrandName("");
     setNewBrandSlug("");
+    setProductType("ATTAR");
+    setSizes([]);
     formRef.current?.reset();
   };
 
@@ -139,6 +148,18 @@ export default function ProductForm({
         : [...current, note];
       return next.join(", ");
     });
+  };
+
+  const addSize = () => {
+    setSizes((prev) => [...prev, { size: "", price: "", stock: "" }]);
+  };
+
+  const removeSize = (index: number) => {
+    setSizes((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateSize = (index: number, field: "size" | "price" | "stock", value: string) => {
+    setSizes((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
   };
 
   return (
@@ -358,6 +379,96 @@ export default function ProductForm({
             </p>
           )}
         </div>
+
+        {/* Product Type */}
+        <div>
+          <label className="mb-2 block font-medium">Product Type</label>
+          <select
+            name="productType"
+            value={productType}
+            onChange={(e) => setProductType(e.target.value as "ATTAR" | "PERFUME")}
+            className="w-full rounded-lg border p-3"
+          >
+            <option value="ATTAR">Attar</option>
+            <option value="PERFUME">Perfume</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Sizes */}
+      <div className="mt-6">
+        <div className="mb-2 flex items-center justify-between">
+          <label className="block font-medium">Sizes / Variants</label>
+          <button
+            type="button"
+            onClick={addSize}
+            className="text-sm font-medium text-[#174a63] underline underline-offset-4 hover:text-gold"
+          >
+            + Add Size
+          </button>
+        </div>
+        <p className="mb-3 text-xs text-gray-500">
+          Define custom sizes for this product. Each size can have its own price and stock.
+        </p>
+
+        {sizes.length === 0 ? (
+          <p className="text-sm text-gray-500">No sizes added yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {sizes.map((sizeItem, index) => (
+              <div key={index} className="grid grid-cols-12 gap-3">
+                <div className="col-span-4">
+                  <input
+                    type="text"
+                    value={sizeItem.size}
+                    onChange={(e) => updateSize(index, "size", e.target.value)}
+                    placeholder="Size (e.g. 10ml)"
+                    className="w-full rounded-lg border p-2.5 text-sm"
+                  />
+                </div>
+                <div className="col-span-3">
+                  <input
+                    type="number"
+                    value={sizeItem.price}
+                    onChange={(e) => updateSize(index, "price", e.target.value)}
+                    placeholder="Price"
+                    step="0.01"
+                    className="w-full rounded-lg border p-2.5 text-sm"
+                  />
+                </div>
+                <div className="col-span-3">
+                  <input
+                    type="number"
+                    value={sizeItem.stock}
+                    onChange={(e) => updateSize(index, "stock", e.target.value)}
+                    placeholder="Stock"
+                    className="w-full rounded-lg border p-2.5 text-sm"
+                  />
+                </div>
+                <div className="col-span-2 flex items-center justify-end">
+                  <button
+                    type="button"
+                    onClick={() => removeSize(index)}
+                    className="text-sm text-red-600 hover:text-red-700"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <input
+          type="hidden"
+          name="sizes"
+          value={JSON.stringify(
+            sizes.map((s) => ({
+              size: s.size,
+              price: s.price === "" ? 0 : Number(s.price),
+              stock: s.stock === "" ? 0 : Number(s.stock),
+            })),
+          )}
+        />
       </div>
 
       {/* Notes */}
@@ -490,6 +601,17 @@ export default function ProductForm({
           name="galleryPublicIds"
           value={gallery.map((g) => g.publicId ?? "").join(",")}
         />
+      </div>
+
+      {/* Product Video */}
+      <div className="mt-6">
+        <VideoUploader
+          value={video}
+          onChange={setVideo}
+          label="Product Video (optional)"
+        />
+        <input type="hidden" name="videoUrl" value={video.url} />
+        <input type="hidden" name="videoPublicId" value={video.publicId ?? ""} />
       </div>
 
       {/* Save Button */}
