@@ -361,10 +361,10 @@ export default function ProductDetails({
               <div className="rounded-2xl border border-[#174A63]/10 bg-white p-4">
                 <RefreshCcw size={18} className="text-gold" />
                 <p className="mt-2 text-xs font-semibold text-[#174A63]">
-                  Easy Returns
+                  NO Returns
                 </p>
                 <p className="mt-0.5 text-[11px] text-[#174A63]/45">
-                  14-day return window
+                  {/* 14-day return window */}
                 </p>
               </div>
 
