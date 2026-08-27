@@ -81,6 +81,7 @@ export type StorefrontBanner = {
   section: string;
   title: string | null;
   subtitle: string | null;
+  description: string | null;
   desktopImageUrl: string;
   tabletImageUrl: string | null;
   mobileImageUrl: string | null;
@@ -113,6 +114,7 @@ export async function getStorefrontBanners(): Promise<StorefrontBanner[]> {
     section: banner.section,
     title: banner.title,
     subtitle: banner.subtitle,
+    description: banner.description,
     desktopImageUrl: banner.desktopImageUrl,
     tabletImageUrl: banner.tabletImageUrl,
     mobileImageUrl: banner.mobileImageUrl,

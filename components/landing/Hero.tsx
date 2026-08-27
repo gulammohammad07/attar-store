@@ -9,6 +9,7 @@ import { useState } from "react";
 type HeroBanner = {
   title: string | null;
   subtitle: string | null;
+  description: string | null;
   desktopImageUrl: string;
   tabletImageUrl: string | null;
   mobileImageUrl: string | null;
@@ -17,31 +18,36 @@ type HeroBanner = {
 export default function Hero({ banner }: { banner?: HeroBanner }) {
   const [imgError, setImgError] = useState(false);
 
-  const getImageSrc = () => {
-    if (typeof window === "undefined") return banner?.desktopImageUrl;
-    const width = window.innerWidth;
-    if (width < 768 && banner?.mobileImageUrl) return banner.mobileImageUrl;
-    if (width < 1024 && banner?.tabletImageUrl) return banner.tabletImageUrl;
-    return banner?.desktopImageUrl;
-  };
+  const fallbackImage =
+    banner?.desktopImageUrl ??
+    banner?.tabletImageUrl ??
+    banner?.mobileImageUrl ??
+    "";
 
-  const showImage = banner?.desktopImageUrl && !imgError;
-  const imageSrc = getImageSrc();
+  const showImage = fallbackImage && !imgError;
 
   return (
     <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#faf9f7]">
-      {showImage && imageSrc ? (
+      {showImage ? (
         <div className="absolute inset-0">
-          <Image
-            src={imageSrc}
-            alt={banner.title ?? "Hero banner"}
-            fill
-            priority
-            quality={75}
-            className="object-cover"
-            sizes="100vw"
-            onError={() => setImgError(true)}
-          />
+          <picture>
+            {banner?.mobileImageUrl && (
+              <source srcSet={banner.mobileImageUrl} media="(max-width: 767px)" />
+            )}
+            {banner?.tabletImageUrl && (
+              <source srcSet={banner.tabletImageUrl} media="(max-width: 1023px)" />
+            )}
+            <Image
+              src={fallbackImage}
+              alt={banner?.title ?? "Hero banner"}
+              fill
+              priority
+              quality={75}
+              className="object-cover"
+              sizes="100vw"
+              onError={() => setImgError(true)}
+            />
+          </picture>
         </div>
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-[#faf9f7] via-[#f8fcfe] to-[#f0f7fb]" />
@@ -70,9 +76,9 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
             </h1>
           )}
 
-          {banner?.title && (
+          {banner?.description && (
             <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-[#5f7788] sm:text-lg">
-              A curated collection of rare ouds and oriental fragrances, hand-poured in small batches.
+              {banner.description}
             </p>
           )}
 

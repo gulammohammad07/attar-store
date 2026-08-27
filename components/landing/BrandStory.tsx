@@ -59,18 +59,14 @@ export default function BrandStory({
   });
   const imageY = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
-  const getImageSrc = () => {
-    if (!banner) return null;
-    if (typeof window === "undefined") return banner.desktopImageUrl;
-    const width = window.innerWidth;
-    if (width < 768 && banner.mobileImageUrl) return banner.mobileImageUrl;
-    if (width < 1024 && banner.tabletImageUrl) return banner.tabletImageUrl;
-    return banner.desktopImageUrl;
-  };
+  const fallbackImage =
+    banner?.desktopImageUrl ??
+    banner?.tabletImageUrl ??
+    banner?.mobileImageUrl ??
+    null;
 
   const [imgError, setImgError] = useState(false);
-  const imageSrc = getImageSrc();
-  const showImage = !!imageSrc && !imgError;
+  const showImage = !!fallbackImage && !imgError;
 
   return (
     <section id="story" className="overflow-hidden bg-[#F8FCFE] py-28 text-[#174A63]">
@@ -95,14 +91,28 @@ export default function BrandStory({
                 style={{ y: imageY }}
                 className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-gold/25 shadow-[0_40px_80px_-40px_rgba(23,74,99,0.45)]"
               >
-                <Image
-                  src={imageSrc}
-                  alt={banner?.title ?? "The art of attar making"}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                  onError={() => setImgError(true)}
-                />
+                <picture>
+                  {banner?.mobileImageUrl && (
+                    <source
+                      srcSet={banner.mobileImageUrl}
+                      media="(max-width: 767px)"
+                    />
+                  )}
+                  {banner?.tabletImageUrl && (
+                    <source
+                      srcSet={banner.tabletImageUrl}
+                      media="(max-width: 1023px)"
+                    />
+                  )}
+                  <Image
+                    src={fallbackImage}
+                    alt={banner?.title ?? "The art of attar making"}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 hover:scale-105"
+                    onError={() => setImgError(true)}
+                  />
+                </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#F8FCFE]/35 to-transparent" />
               </motion.div>
 

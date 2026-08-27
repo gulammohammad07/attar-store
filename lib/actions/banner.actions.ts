@@ -18,6 +18,7 @@ export async function upsertBannerAction(
   const values = {
     title: formData.get("title")?.toString() ?? "",
     subtitle: formData.get("subtitle")?.toString() ?? "",
+    description: formData.get("description")?.toString() ?? "",
     desktopImageUrl: (formData.get("desktopImageUrl")?.toString() ?? "").trim(),
     desktopImagePublicId: formData.get("desktopImagePublicId")?.toString() ?? "",
     tabletImageUrl: (formData.get("tabletImageUrl")?.toString() ?? "").trim(),
@@ -55,6 +56,7 @@ export async function upsertBannerAction(
   const data = {
     title: result.data.title || null,
     subtitle: result.data.subtitle || null,
+    description: result.data.description || null,
     desktopImageUrl: result.data.desktopImageUrl,
     desktopImagePublicId: newDesktopPublicId,
     tabletImageUrl: result.data.tabletImageUrl || null,

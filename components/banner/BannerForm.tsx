@@ -16,6 +16,7 @@ const initialState: BannerActionState = {
 export type BannerFormInitial = {
   title: string | null;
   subtitle: string | null;
+  description: string | null;
   desktopImageUrl: string;
   desktopImagePublicId: string | null;
   tabletImageUrl: string | null;
@@ -114,6 +115,17 @@ export default function BannerForm({
             defaultValue={initial?.subtitle ?? ""}
             className="w-full rounded-lg border p-3"
             placeholder="The Art of Oriental Fragrance"
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="mb-2 block font-medium">Description</label>
+          <textarea
+            name="description"
+            defaultValue={initial?.description ?? ""}
+            className="w-full rounded-lg border p-3"
+            rows={3}
+            placeholder="A curated collection of rare ouds and oriental fragrances..."
           />
         </div>
 

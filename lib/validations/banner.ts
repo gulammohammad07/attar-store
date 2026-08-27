@@ -3,6 +3,7 @@ import { z } from "zod";
 export const bannerSchema = z.object({
   title: z.string().optional(),
   subtitle: z.string().optional(),
+  description: z.string().optional(),
   desktopImageUrl: z
     .string()
     .url("Please upload a valid desktop banner image.")

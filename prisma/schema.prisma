@@ -85,6 +85,7 @@ model Banner {
   section             String    @unique
   title               String?
   subtitle            String?
+  description         String?
   desktopImageUrl     String
   desktopImagePublicId String?
   tabletImageUrl      String?

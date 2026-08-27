@@ -6,6 +6,7 @@ type Banner = {
   section: string;
   title: string | null;
   subtitle: string | null;
+  description: string | null;
   desktopImageUrl: string;
   desktopImagePublicId: string | null;
   tabletImageUrl: string | null;
