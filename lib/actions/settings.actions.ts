@@ -18,6 +18,8 @@ export async function updateStoreSettingsAction(
   const supportPhone = (formData.get("supportPhone") ?? "").toString().trim();
   const address = (formData.get("address") ?? "").toString().trim();
   const currency = (formData.get("currency") ?? "INR").toString().trim();
+  const navbarTitle = (formData.get("navbarTitle") ?? "").toString().trim();
+  const navbarLogoUrl = (formData.get("navbarLogoUrl") ?? "").toString().trim() || null;
   const freeShippingThreshold = Number(
     (formData.get("freeShippingThreshold") ?? "").toString(),
   );
@@ -38,6 +40,7 @@ export async function updateStoreSettingsAction(
     errors.shippingFee = "Enter a valid non-negative number.";
   }
   if (!currency) errors.currency = "Currency is required.";
+  if (!navbarTitle) errors.navbarTitle = "Navbar title is required.";
 
   if (Object.keys(errors).length > 0) {
     return { success: false, errors };
@@ -51,6 +54,8 @@ export async function updateStoreSettingsAction(
       supportPhone,
       address,
       currency,
+      navbarTitle,
+      navbarLogoUrl,
       freeShippingThreshold,
       shippingFee,
     },
@@ -61,6 +66,8 @@ export async function updateStoreSettingsAction(
       supportPhone,
       address,
       currency,
+      navbarTitle,
+      navbarLogoUrl,
       freeShippingThreshold,
       shippingFee,
     },
@@ -68,6 +75,7 @@ export async function updateStoreSettingsAction(
 
   const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/settings");
+  revalidatePath("/", "layout");
 
   return { success: true, message: "Settings saved successfully." };
 }

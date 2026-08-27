@@ -2,7 +2,7 @@ import { getStoreSettings } from "@/lib/services/settings.service";
 import { getAdminUsers } from "@/lib/actions/sub-admin.actions";
 import { getCurrentUser } from "@/lib/auth/dal";
 import SettingsFormClient from "@/components/admin/SettingsFormClient";
-import SubAdminManager from "@/components/admin/SubAdminManager";
+import SubAdminManagerClient from "@/components/admin/SubAdminManagerClient";
 
 export default async function SettingsPage() {
   const settings = await getStoreSettings();
@@ -20,7 +20,7 @@ export default async function SettingsPage() {
 
       <SettingsFormClient settings={settings} />
 
-      <SubAdminManager users={adminUsers} currentUserRole={currentUser?.role} />
+      <SubAdminManagerClient users={adminUsers} currentUserRole={currentUser?.role} />
     </div>
   );
 }

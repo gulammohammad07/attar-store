@@ -19,7 +19,7 @@ export type ProductActionState = {
 
 function parseValues(formData: FormData) {
   const sizesRaw = formData.get("sizes")?.toString();
-  let sizes: { size: string; price: number; stock: number }[] = [];
+  let sizes: { size: string; price: number; salePrice?: number | null; stock: number }[] = [];
   if (sizesRaw) {
     try {
       sizes = JSON.parse(sizesRaw);
@@ -199,6 +199,7 @@ export async function createProductAction(
         create: result.data.sizes?.map((size) => ({
           size: size.size,
           price: size.price,
+          salePrice: size.salePrice ?? null,
           stock: size.stock,
         })) ?? [],
       },
@@ -311,6 +312,7 @@ export async function updateProductAction(
         create: result.data.sizes?.map((size) => ({
           size: size.size,
           price: size.price,
+          salePrice: size.salePrice ?? null,
           stock: size.stock,
         })) ?? [],
       },

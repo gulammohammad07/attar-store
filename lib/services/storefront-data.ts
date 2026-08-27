@@ -25,7 +25,7 @@ function mapDbProduct(db: {
   category: { name: string };
   brand: { name: string };
   occasions: { name: string }[];
-  sizes: { id: string; size: string; price: number; stock: number }[];
+  sizes: { id: string; size: string; price: number; salePrice: number | null; stock: number }[];
 }): Product {
   const noteNames =
     (db.notes ?? []).length > 0 ? db.notes : [db.category.name];

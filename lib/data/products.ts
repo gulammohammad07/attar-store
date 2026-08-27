@@ -29,7 +29,7 @@ export type Product = {
   reviewCount: number;
   badge?: "Bestseller" | "New Arrival" | "Limited Edition" | "Sale";
   featured?: boolean;
-  sizes?: { id: string; size: string; price: number; stock: number }[];
+  sizes?: { id: string; size: string; price: number; salePrice?: number | null; stock: number }[];
 };
 
 export const notes = [

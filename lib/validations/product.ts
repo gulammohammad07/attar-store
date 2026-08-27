@@ -19,6 +19,7 @@ export const productSchema = z.object({
       z.object({
         size: z.string().min(1),
         price: z.coerce.number(),
+        salePrice: z.coerce.number().nullable().optional(),
         stock: z.coerce.number(),
       }),
     )

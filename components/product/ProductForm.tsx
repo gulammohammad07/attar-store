@@ -71,7 +71,7 @@ export default function ProductForm({
   const [brandPending, startBrandTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
   const [productType, setProductType] = useState<"ATTAR" | "PERFUME">("ATTAR");
-  const [sizes, setSizes] = useState<{ size: string; price: string; stock: string }[]>([]);
+  const [sizes, setSizes] = useState<{ size: string; price: string; salePrice: string; stock: string }[]>([]);
 
   const resetForm = () => {
     setState(initialState);
@@ -151,14 +151,14 @@ export default function ProductForm({
   };
 
   const addSize = () => {
-    setSizes((prev) => [...prev, { size: "", price: "", stock: "" }]);
+    setSizes((prev) => [...prev, { size: "", price: "", salePrice: "", stock: "" }]);
   };
 
   const removeSize = (index: number) => {
     setSizes((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const updateSize = (index: number, field: "size" | "price" | "stock", value: string) => {
+  const updateSize = (index: number, field: "size" | "price" | "salePrice" | "stock", value: string) => {
     setSizes((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
   };
 
@@ -408,7 +408,7 @@ export default function ProductForm({
           </button>
         </div>
         <p className="mb-3 text-xs text-gray-500">
-          Define custom sizes for this product. Each size can have its own price and stock.
+          Define custom sizes with their own regular price, sale price and stock.
         </p>
 
         {sizes.length === 0 ? (
@@ -416,8 +416,8 @@ export default function ProductForm({
         ) : (
           <div className="space-y-3">
             {sizes.map((sizeItem, index) => (
-              <div key={index} className="grid grid-cols-12 gap-3">
-                <div className="col-span-4">
+              <div key={index} className="grid gap-3 rounded-xl border border-[#174a63]/10 bg-[#f8fcfe] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
+                <div>
                   <input
                     type="text"
                     value={sizeItem.size}
@@ -426,7 +426,7 @@ export default function ProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-3">
+                <div>
                   <input
                     type="number"
                     value={sizeItem.price}
@@ -436,7 +436,17 @@ export default function ProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-3">
+                <div>
+                  <input
+                    type="number"
+                    value={sizeItem.salePrice}
+                    onChange={(e) => updateSize(index, "salePrice", e.target.value)}
+                    placeholder="Sale price (optional)"
+                    step="0.01"
+                    className="w-full rounded-lg border p-2.5 text-sm"
+                  />
+                </div>
+                <div>
                   <input
                     type="number"
                     value={sizeItem.stock}
@@ -445,7 +455,7 @@ export default function ProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-2 flex items-center justify-end">
+                <div className="flex items-center justify-end">
                   <button
                     type="button"
                     onClick={() => removeSize(index)}
@@ -465,6 +475,7 @@ export default function ProductForm({
             sizes.map((s) => ({
               size: s.size,
               price: s.price === "" ? 0 : Number(s.price),
+              salePrice: s.salePrice === "" ? null : Number(s.salePrice),
               stock: s.stock === "" ? 0 : Number(s.stock),
             })),
           )}

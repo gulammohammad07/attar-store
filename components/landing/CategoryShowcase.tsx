@@ -98,7 +98,7 @@ const TiltCard = memo(function TiltCard({
                 alt={category.name}
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-contain p-10 transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-translate-y-2"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-translate-y-2"
               />
             ) : (
               <div className="flex h-full items-center justify-center">

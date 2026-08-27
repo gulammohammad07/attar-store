@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
@@ -27,7 +27,9 @@ export default function ProductCard({
   const { addToCart } = useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches,
+  );
 
   const images = product.gallery.length ? product.gallery : [product.image];
   const hasMultiple = images.length > 1;
@@ -50,13 +52,12 @@ export default function ProductCard({
   const rotateX = useSpring(my, { stiffness: 200, damping: 18 });
   const rotateY = useSpring(mx, { stiffness: 200, damping: 18 });
 
-  useState(() => {
+  useEffect(() => {
     const mq = window.matchMedia("(pointer: coarse)");
-    setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
-  });
+  }, []);
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isMobile) return;
@@ -158,7 +159,7 @@ export default function ProductCard({
           </div>
 
           <div className={cn(
-            "relative h-72 w-full overflow-hidden",
+            "relative aspect-[4/4.5] w-full overflow-hidden sm:aspect-[4/4.2]",
             dark ? "bg-gradient-to-b from-[#122d3d] to-[#0a1b26]" : "bg-[#EFF8FC]"
           )}>
             <Link
@@ -180,8 +181,8 @@ export default function ProductCard({
                     alt={product.name}
                     fill
                     loading={loading}
-                    sizes="(max-width: 768px) 100vw, 300px"
-                    className="object-contain p-8 transition-transform duration-700 ease-out group-hover:scale-110"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
                 </motion.div>
               </AnimatePresence>
@@ -237,7 +238,7 @@ export default function ProductCard({
             )}
           </div>
 
-          <div className={cn("p-5", dark && "border-t border-white/[0.06]")}>
+          <div className={cn("p-4 sm:p-5", dark && "border-t border-white/[0.06]")}>
             <div className="flex items-center justify-between">
               <p className="text-[10px] font-semibold tracking-[0.18em] text-gold uppercase">
                 {product.brand}
@@ -255,7 +256,7 @@ export default function ProductCard({
 
             <Link href={`/product/${product.slug}`} className="mt-1.5 block">
               <h3 className={cn(
-                "font-display text-xl font-semibold transition-colors group-hover:text-gold",
+                "font-display text-lg font-semibold transition-colors group-hover:text-gold sm:text-xl",
                 dark ? "text-[#f8fcfe]" : "text-[#174A63]"
               )}>
                 {product.name}

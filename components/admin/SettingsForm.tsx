@@ -7,6 +7,7 @@ import {
   type UpdateSettingsResult,
 } from "@/lib/actions/settings.actions";
 import type { StoreSettingsDTO } from "@/lib/services/settings.service";
+import ImageUploader, { type ImageValue } from "@/components/admin/ImageUploader";
 
 const initialState: UpdateSettingsResult = { success: false };
 
@@ -20,6 +21,7 @@ export default function SettingsForm({
 }) {
   const [state, setState] = useState<UpdateSettingsResult>(initialState);
   const [pending, startTransition] = useTransition();
+  const [navbarLogo, setNavbarLogo] = useState<ImageValue>({ url: settings.navbarLogoUrl ?? "", publicId: null });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,6 +42,13 @@ export default function SettingsForm({
       suppressHydrationWarning
     >
       <div className="grid gap-5 md:grid-cols-2">
+        <div>
+          <label htmlFor="navbarTitle" className="mb-2 block font-medium">
+            Navbar Title <span className="text-red-500">*</span>
+          </label>
+          <input id="navbarTitle" name="navbarTitle" required defaultValue={settings.navbarTitle} className={inputClass} placeholder="Danish Perfumes" />
+          {state.errors?.navbarTitle && <p className="mt-1 text-sm text-red-600">{state.errors.navbarTitle}</p>}
+        </div>
         <div>
           <label htmlFor="storeName" className="mb-2 block font-medium">
             Store Name <span className="text-red-500">*</span>
@@ -164,6 +173,12 @@ export default function SettingsForm({
             <p className="mt-1 text-sm text-red-600">{state.errors.shippingFee}</p>
           )}
         </div>
+      </div>
+
+      <div className="mt-5">
+        <ImageUploader value={navbarLogo} onChange={setNavbarLogo} label="Navbar Logo (optional)" />
+        <input type="hidden" name="navbarLogoUrl" value={navbarLogo.url} />
+        <p className="mt-2 text-xs text-gray-500">Upload a logo, or leave empty to show the navbar title as text.</p>
       </div>
 
       {state.message && (

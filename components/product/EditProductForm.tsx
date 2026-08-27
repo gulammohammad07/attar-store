@@ -51,7 +51,7 @@ export type EditableProduct = {
   brandId: string;
   occasionIds: string[];
   productType: "ATTAR" | "PERFUME";
-  sizes: { id: string; size: string; price: number; stock: number }[];
+  sizes: { id: string; size: string; price: number; salePrice: number | null; stock: number }[];
 };
 
 interface EditProductFormProps {
@@ -106,8 +106,8 @@ export default function EditProductForm({
   const [newBrandSlug, setNewBrandSlug] = useState("");
   const [brandPending, startBrandTransition] = useTransition();
   const [productType, setProductType] = useState<"ATTAR" | "PERFUME">(product.productType);
-  const [sizes, setSizes] = useState<{ id?: string; size: string; price: string; stock: string }[]>(
-    product.sizes.map((s) => ({ ...s, price: String(s.price), stock: String(s.stock) })),
+  const [sizes, setSizes] = useState<{ id?: string; size: string; price: string; salePrice: string; stock: string }[]>(
+    product.sizes.map((s) => ({ ...s, price: String(s.price), salePrice: s.salePrice == null ? "" : String(s.salePrice), stock: String(s.stock) })),
   );
 
   const toggleOccasion = (id: string) => {
@@ -167,14 +167,14 @@ export default function EditProductForm({
   };
 
   const addSize = () => {
-    setSizes((prev) => [...prev, { size: "", price: "", stock: "" }]);
+    setSizes((prev) => [...prev, { size: "", price: "", salePrice: "", stock: "" }]);
   };
 
   const removeSize = (index: number) => {
     setSizes((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const updateSize = (index: number, field: "size" | "price" | "stock", value: string) => {
+  const updateSize = (index: number, field: "size" | "price" | "salePrice" | "stock", value: string) => {
     setSizes((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
   };
 
@@ -413,7 +413,7 @@ export default function EditProductForm({
           </button>
         </div>
         <p className="mb-3 text-xs text-gray-500">
-          Define custom sizes for this product. Each size can have its own price and stock.
+          Define custom sizes with their own regular price, sale price and stock.
         </p>
 
         {sizes.length === 0 ? (
@@ -421,8 +421,8 @@ export default function EditProductForm({
         ) : (
           <div className="space-y-3">
             {sizes.map((sizeItem, index) => (
-              <div key={sizeItem.id ?? index} className="grid grid-cols-12 gap-3">
-                <div className="col-span-4">
+              <div key={sizeItem.id ?? index} className="grid gap-3 rounded-xl border border-[#174a63]/10 bg-[#f8fcfe] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
+                <div>
                   <input
                     type="text"
                     value={sizeItem.size}
@@ -431,7 +431,7 @@ export default function EditProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-3">
+                <div>
                   <input
                     type="number"
                     value={sizeItem.price}
@@ -441,7 +441,17 @@ export default function EditProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-3">
+                <div>
+                  <input
+                    type="number"
+                    value={sizeItem.salePrice}
+                    onChange={(e) => updateSize(index, "salePrice", e.target.value)}
+                    placeholder="Sale price (optional)"
+                    step="0.01"
+                    className="w-full rounded-lg border p-2.5 text-sm"
+                  />
+                </div>
+                <div>
                   <input
                     type="number"
                     value={sizeItem.stock}
@@ -450,7 +460,7 @@ export default function EditProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="col-span-2 flex items-center justify-end">
+                <div className="flex items-center justify-end">
                   <button
                     type="button"
                     onClick={() => removeSize(index)}
@@ -471,6 +481,7 @@ export default function EditProductForm({
               id: s.id,
               size: s.size,
               price: s.price === "" ? 0 : Number(s.price),
+              salePrice: s.salePrice === "" ? null : Number(s.salePrice),
               stock: s.stock === "" ? 0 : Number(s.stock),
             })),
           )}

@@ -38,9 +38,11 @@ const menuItems = [
 export default function Navbar({
   categories,
   featured,
+  branding,
 }: {
   categories: StorefrontCategory[];
   featured: Product[];
+  branding: { title: string; logoUrl: string | null };
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -94,9 +96,7 @@ export default function Navbar({
               className="shrink-0"
               onClick={() => setActiveMenu(null)}
             >
-              <span className="font-display text-lg font-semibold tracking-[0.16em] text-[#0f2838] sm:text-[1.35rem] sm:tracking-[0.22em]">
-                DANISH<span className="bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent"> PERFUMES</span>
-              </span>
+              {branding.logoUrl ? <Image src={branding.logoUrl} alt={branding.title} width={180} height={48} className="h-10 w-auto object-contain" priority /> : null}
             </Link>
 
             <nav className="hidden items-center gap-10 lg:flex">
@@ -346,9 +346,7 @@ export default function Navbar({
           >
             <div className="flex h-full flex-col">
               <div className="flex h-20 items-center justify-between px-6">
-                <span className="font-display text-xl tracking-[0.2em] text-[#0f2838]">
-                  DANISH<span className="text-gold"> PERFUMES</span>
-                </span>
+                {branding.logoUrl ? <Image src={branding.logoUrl} alt={branding.title} width={160} height={48} className="h-10 w-auto object-contain" /> : null}
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}

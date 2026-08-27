@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/lib/store/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { getStoreSettings } from "@/lib/services/settings.service";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -17,7 +18,7 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+const metadataDefaults: Metadata = {
   title: {
     default: "Danish Perfumes — Luxury Attars & Fragrances",
     template: "%s | Danish Perfumes",
@@ -39,6 +40,20 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getStoreSettings();
+  const title = settings.navbarTitle || settings.storeName;
+
+  return {
+    ...metadataDefaults,
+    title: { default: title, template: `%s | ${title}` },
+    openGraph: { ...metadataDefaults.openGraph, title },
+    icons: settings.navbarLogoUrl
+      ? { icon: [{ url: settings.navbarLogoUrl }], apple: [{ url: settings.navbarLogoUrl }] }
+      : { icon: [] },
+  };
+}
 
 export default function RootLayout({
   children,

@@ -10,6 +10,8 @@ export type StoreSettingsDTO = {
   freeShippingThreshold: number;
   shippingFee: number;
   currency: string;
+  navbarTitle: string;
+  navbarLogoUrl: string | null;
 };
 
 const DEFAULTS: StoreSettingsDTO = {
@@ -20,6 +22,8 @@ const DEFAULTS: StoreSettingsDTO = {
   freeShippingThreshold: 1500,
   shippingFee: 99,
   currency: "INR",
+  navbarTitle: "Danish Perfumes",
+  navbarLogoUrl: null,
 };
 
 export async function getStoreSettings(): Promise<StoreSettingsDTO> {
@@ -42,5 +46,7 @@ export async function getStoreSettings(): Promise<StoreSettingsDTO> {
     freeShippingThreshold: settings.freeShippingThreshold,
     shippingFee: settings.shippingFee,
     currency: settings.currency,
+    navbarTitle: settings.navbarTitle,
+    navbarLogoUrl: settings.navbarLogoUrl,
   };
 }

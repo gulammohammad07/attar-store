@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, Menu, X } from "lucide-react";
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, X, Tags, Users } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { useAuth } from "@/lib/store/auth-context";
 import { toast } from "sonner";
@@ -17,6 +17,11 @@ const menuItems = [
     title: "Categories",
     href: "/admin/categories",
     icon: FolderTree,
+  },
+  {
+    title: "Brands",
+    href: "/admin/brands",
+    icon: Tags,
   },
   {
     title: "Occasions",
@@ -39,6 +44,11 @@ const menuItems = [
     icon: ShoppingCart,
   },
   {
+    title: "Users",
+    href: "/admin/users",
+    icon: Users,
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     icon: Settings,
@@ -53,15 +63,6 @@ type SidebarProps = {
 export default function Sidebar({ isOpen, onOpenChange }: SidebarProps) {
   const pathname = usePathname();
   const { user, refresh } = useAuth();
-
-  const initials = user?.name
-    ? user.name
-        .split(" ")
-        .map((part) => part[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "A";
 
   const handleSignOut = async () => {
     const result = await signOutAction();
