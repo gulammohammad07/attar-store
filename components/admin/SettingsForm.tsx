@@ -44,9 +44,9 @@ export default function SettingsForm({
       <div className="grid gap-5 md:grid-cols-2">
         <div>
           <label htmlFor="navbarTitle" className="mb-2 block font-medium">
-            Navbar Title <span className="text-red-500">*</span>
+            Navbar Title <span className="text-sm font-normal text-gray-500">(optional)</span>
           </label>
-          <input id="navbarTitle" name="navbarTitle" required defaultValue={settings.navbarTitle} className={inputClass} placeholder="Danish Perfumes" />
+          <input id="navbarTitle" name="navbarTitle" defaultValue={settings.navbarTitle} className={inputClass} placeholder="Danish Perfumes" />
           {state.errors?.navbarTitle && <p className="mt-1 text-sm text-red-600">{state.errors.navbarTitle}</p>}
         </div>
         <div>

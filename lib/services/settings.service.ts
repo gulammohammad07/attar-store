@@ -11,7 +11,9 @@ export type StoreSettingsDTO = {
   shippingFee: number;
   currency: string;
   navbarTitle: string;
+  navbarTitleColor: string;
   navbarLogoUrl: string | null;
+  navbarDisplayMode: "TEXT" | "IMAGE";
 };
 
 const DEFAULTS: StoreSettingsDTO = {
@@ -23,7 +25,9 @@ const DEFAULTS: StoreSettingsDTO = {
   shippingFee: 99,
   currency: "INR",
   navbarTitle: "Danish Perfumes",
+  navbarTitleColor: "#0f2838",
   navbarLogoUrl: null,
+  navbarDisplayMode: "TEXT",
 };
 
 export async function getStoreSettings(): Promise<StoreSettingsDTO> {
@@ -47,6 +51,8 @@ export async function getStoreSettings(): Promise<StoreSettingsDTO> {
     shippingFee: settings.shippingFee,
     currency: settings.currency,
     navbarTitle: settings.navbarTitle,
+    navbarTitleColor: settings.navbarTitleColor,
     navbarLogoUrl: settings.navbarLogoUrl,
+    navbarDisplayMode: settings.navbarDisplayMode === "IMAGE" ? "IMAGE" : "TEXT",
   };
 }

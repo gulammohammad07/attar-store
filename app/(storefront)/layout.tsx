@@ -23,7 +23,16 @@ export default async function StorefrontLayout({
   return (
     <>
       <SmoothScroll />
-      <Navbar categories={categories} featured={featured} branding={{ title: settings.navbarTitle, logoUrl: settings.navbarLogoUrl }} />
+      <Navbar
+        categories={categories}
+        featured={featured}
+        branding={{
+          title: settings.navbarTitle,
+          titleColor: settings.navbarTitleColor,
+          logoUrl: settings.navbarLogoUrl,
+          displayMode: settings.navbarDisplayMode,
+        }}
+      />
       <main className="flex-1">{children}</main>
       <Footer />
     </>

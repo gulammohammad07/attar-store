@@ -40,7 +40,6 @@ export async function updateStoreSettingsAction(
     errors.shippingFee = "Enter a valid non-negative number.";
   }
   if (!currency) errors.currency = "Currency is required.";
-  if (!navbarTitle) errors.navbarTitle = "Navbar title is required.";
 
   if (Object.keys(errors).length > 0) {
     return { success: false, errors };

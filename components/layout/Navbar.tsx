@@ -42,7 +42,12 @@ export default function Navbar({
 }: {
   categories: StorefrontCategory[];
   featured: Product[];
-  branding: { title: string; logoUrl: string | null };
+  branding: {
+    title: string;
+    titleColor: string;
+    logoUrl: string | null;
+    displayMode: "TEXT" | "IMAGE";
+  };
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -52,6 +57,8 @@ export default function Navbar({
   const { items: wishlistItems } = useWishlist();
   const { user, isAdmin, refresh } = useAuth();
   const router = useRouter();
+  const showLogo = branding.displayMode === "IMAGE" && Boolean(branding.logoUrl);
+  const showTitle = branding.displayMode === "TEXT" && Boolean(branding.title);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -96,7 +103,13 @@ export default function Navbar({
               className="shrink-0"
               onClick={() => setActiveMenu(null)}
             >
-              {branding.logoUrl ? <Image src={branding.logoUrl} alt={branding.title} width={180} height={48} className="h-10 w-auto object-contain" priority /> : null}
+              {showLogo ? (
+                <Image src={branding.logoUrl!} alt={branding.title || "Store logo"} width={180} height={48} className="h-10 w-auto object-contain" priority />
+              ) : showTitle ? (
+                <span className="font-display text-2xl font-semibold" style={{ color: branding.titleColor }}>
+                  {branding.title}
+                </span>
+              ) : null}
             </Link>
 
             <nav className="hidden items-center gap-10 lg:flex">
@@ -346,7 +359,13 @@ export default function Navbar({
           >
             <div className="flex h-full flex-col">
               <div className="flex h-20 items-center justify-between px-6">
-                {branding.logoUrl ? <Image src={branding.logoUrl} alt={branding.title} width={160} height={48} className="h-10 w-auto object-contain" /> : null}
+                {showLogo ? (
+                  <Image src={branding.logoUrl!} alt={branding.title || "Store logo"} width={160} height={48} className="h-10 w-auto object-contain" />
+                ) : showTitle ? (
+                  <span className="font-display text-2xl font-semibold" style={{ color: branding.titleColor }}>
+                    {branding.title}
+                  </span>
+                ) : null}
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
