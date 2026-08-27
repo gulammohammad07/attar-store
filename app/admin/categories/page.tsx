@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import CategoryForm from "@/components/category/category-form";
 import CategoryTable from "@/components/category/category-table";
 import ResetCategoriesButton from "@/components/category/ResetCategoriesButton";
 
@@ -20,6 +21,8 @@ export default async function CategoriesPage() {
         </div>
         <ResetCategoriesButton />
       </div>
+
+      <CategoryForm />
 
       <CategoryTable categories={categories} />
     </div>

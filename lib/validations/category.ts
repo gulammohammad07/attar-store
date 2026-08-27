@@ -13,6 +13,16 @@ export const categorySchema = z.object({
       /^[a-z0-9-]+$/,
       "Slug must contain only lowercase letters, numbers and hyphens",
     ),
+
+  description: z.string().optional(),
+
+  imageUrl: z
+    .string()
+    .url("Please upload a valid category image.")
+    .optional()
+    .or(z.literal("")),
+
+  imagePublicId: z.string().optional(),
 });
 
 export type CategoryFormValues = z.infer<typeof categorySchema>;
