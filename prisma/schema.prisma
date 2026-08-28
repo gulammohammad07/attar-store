@@ -191,11 +191,16 @@ model Order {
   subtotal       Float
   shippingFee    Float
   total          Float
+  couponCode     String?
+  discountAmount Float         @default(0)
   occasion       String?
 
   status         OrderStatus   @default(PENDING)
   paymentStatus  PaymentStatus @default(PENDING)
   paymentMethod  String        @default("pending")
+  razorpayOrderId String?      @unique
+  razorpayPaymentId String?    @unique
+  razorpaySignature String?
 
   items          OrderItem[]
 
@@ -206,6 +211,27 @@ model Order {
   @@index([status])
   @@index([createdAt])
   @@map("orders")
+}
+
+enum CouponDiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+model Coupon {
+  id                  String             @id @default(cuid())
+  code                String             @unique
+  discountType        CouponDiscountType
+  discountValue       Float
+  minOrderValue       Float?
+  maxDiscountAmount   Float?
+  expiresAt           DateTime?
+  isActive            Boolean            @default(true)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+
+  @@index([isActive, expiresAt])
+  @@map("coupons")
 }
 
 model OrderItem {

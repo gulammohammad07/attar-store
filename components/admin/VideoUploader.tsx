@@ -51,13 +51,23 @@ export default function VideoUploader({
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/api/upload");
-    const token = process.env.NEXT_PUBLIC_UPLOAD_TOKEN;
-    if (token) xhr.setRequestHeader("x-upload-token", token);
+    setUploading(true);
+    setProgress(0);
+    fetch("/api/upload/signature", { method: "POST" })
+      .then(async (response) => {
+        const signed = await response.json();
+        if (!response.ok) throw new Error(signed.error ?? "Unable to prepare video upload.");
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("api_key", signed.apiKey);
+        formData.append("timestamp", String(signed.timestamp));
+        formData.append("signature", signed.signature);
+        formData.append("folder", signed.folder);
+        xhr.open("POST", `https://api.cloudinary.com/v1_1/${signed.cloudName}/video/upload`);
+        xhr.send(formData);
+      })
+      .catch((uploadError) => { setUploading(false); setProgress(0); toast.error(uploadError instanceof Error ? uploadError.message : "Upload failed. Please try again."); });
 
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
@@ -69,7 +79,7 @@ export default function VideoUploader({
       setUploading(false);
       setProgress(0);
 
-      let data: { success: boolean; secure_url?: string; public_id?: string; error?: string };
+      let data: { success?: boolean; secure_url?: string; public_id?: string; error?: { message?: string } | string };
       try {
         data = JSON.parse(xhr.responseText);
       } catch {
@@ -77,11 +87,11 @@ export default function VideoUploader({
         return;
       }
 
-      if (xhr.status === 200 && data.success && data.secure_url) {
+      if (xhr.status >= 200 && xhr.status < 300 && data.secure_url) {
         onChange({ url: data.secure_url, publicId: data.public_id ?? null });
         toast.success("Video uploaded successfully.");
       } else {
-        toast.error(data.error ?? "Upload failed. Please try again.");
+        toast.error(typeof data.error === "string" ? data.error : data.error?.message ?? "Upload failed. Please try again.");
       }
     };
 
@@ -91,9 +101,6 @@ export default function VideoUploader({
       toast.error("Upload failed. Check your connection and try again.");
     };
 
-    setUploading(true);
-    setProgress(0);
-    xhr.send(formData);
   };
 
   const handleDrop = (event: React.DragEvent) => {

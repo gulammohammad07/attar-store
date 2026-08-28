@@ -8,10 +8,16 @@ import {
   deleteImageFromCloudinary,
   deleteVideoFromCloudinary,
 } from "@/lib/cloudinary";
+import { getCurrentUser } from "@/lib/auth/dal";
+import { ROLES } from "@/lib/auth/config";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user || (user.role !== ROLES.ADMIN && user.role !== ROLES.SUBADMIN)) {
+    return Response.json({ success: false, error: "Admin access is required." }, { status: 401 });
+  }
   const token = process.env.UPLOAD_API_TOKEN;
   if (token && request.headers.get("x-upload-token") !== token) {
     return Response.json({ success: false, error: "Unauthorized." }, { status: 401 });
@@ -68,6 +74,10 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user || (user.role !== ROLES.ADMIN && user.role !== ROLES.SUBADMIN)) {
+    return Response.json({ success: false, error: "Admin access is required." }, { status: 401 });
+  }
   const token = process.env.UPLOAD_API_TOKEN;
   if (token && request.headers.get("x-upload-token") !== token) {
     return Response.json({ success: false, error: "Unauthorized." }, { status: 401 });

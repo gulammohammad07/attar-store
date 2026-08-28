@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, X, Tags, Users } from "lucide-react";
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, X, Tags, Users, Ticket } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { useAuth } from "@/lib/store/auth-context";
 import { toast } from "sonner";
@@ -43,6 +43,7 @@ const menuItems = [
     href: "/admin/orders",
     icon: ShoppingCart,
   },
+  { title: "Coupons", href: "/admin/coupons", icon: Ticket },
   {
     title: "Users",
     href: "/admin/users",

@@ -10,6 +10,7 @@ import { productSchema } from "@/lib/validations/product";
 import { deleteImageFromCloudinary, deleteVideoFromCloudinary } from "@/lib/cloudinary";
 import { generateSlug } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth/dal";
 
 export type ProductActionState = {
   success: boolean;
@@ -131,6 +132,7 @@ export async function createProductAction(
   prevState: ProductActionState,
   formData: FormData,
 ): Promise<ProductActionState> {
+  await requireAdmin();
   const values = parseValues(formData);
   const result = productSchema.safeParse(values);
 
@@ -232,6 +234,7 @@ export async function updateProductAction(
   prevState: ProductActionState,
   formData: FormData,
 ): Promise<ProductActionState> {
+  await requireAdmin();
   const values = parseValues(formData);
   const result = productSchema.safeParse(values);
 
@@ -262,10 +265,9 @@ export async function updateProductAction(
   const imageChanged = newImageUrl !== existing.imageUrl;
   const videoChanged = newVideoUrl !== existing.videoUrl;
 
-  const oldPublicIds = [
+  const oldImagePublicIds = [
     existing.imagePublicId,
     ...existing.galleryPublicIds,
-    existing.videoPublicId,
   ].filter((id): id is string => Boolean(id));
 
   const { gallery, galleryPublicIds } = buildGallery(
@@ -318,19 +320,17 @@ export async function updateProductAction(
       },
     });
 
-    const removedPublicIds = oldPublicIds.filter(
-      (id) => !galleryPublicIds.includes(id) && id !== (videoChanged ? existing.videoPublicId : ""),
-    );
+    const removedPublicIds = oldImagePublicIds.filter((id) => !galleryPublicIds.includes(id));
     for (const publicId of removedPublicIds) {
       await deleteImageFromCloudinary(publicId);
     }
-    if (videoChanged && existing.videoPublicId && newVideoPublicId) {
+    if (videoChanged && existing.videoPublicId) {
       await deleteVideoFromCloudinary(existing.videoPublicId);
     }
   } catch (error) {
     console.error("Product update failed:", error);
     for (const publicId of galleryPublicIds) {
-      if (!oldPublicIds.includes(publicId)) {
+      if (!oldImagePublicIds.includes(publicId)) {
         await deleteImageFromCloudinary(publicId);
       }
     }
@@ -354,6 +354,7 @@ export async function updateProductAction(
 }
 
 export async function deleteProductAction(productId: string) {
+  await requireAdmin();
   const existing = await getProductById(productId);
   if (!existing) {
     return { success: false, message: "Product not found." };
@@ -362,12 +363,11 @@ export async function deleteProductAction(productId: string) {
   try {
     await deleteProduct(productId);
 
-    const publicIds = [
+    const imagePublicIds = [
       existing.imagePublicId,
       ...existing.galleryPublicIds,
-      existing.videoPublicId,
     ].filter((id): id is string => Boolean(id));
-    for (const publicId of publicIds) {
+    for (const publicId of imagePublicIds) {
       await deleteImageFromCloudinary(publicId);
     }
     if (existing.videoPublicId) {

@@ -3,6 +3,8 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getStoreSettings } from "@/lib/services/settings.service";
+import { getCurrentUser } from "@/lib/auth/dal";
+import { quoteCoupon } from "@/lib/services/coupon.service";
 
 export type OrderItemInput = {
   productId: string;
@@ -19,8 +21,9 @@ export type CreateOrderInput = {
   state: string;
   pincode: string;
   occasion?: string;
+  paymentMethod?: "COD" | "RAZORPAY";
+  couponCode?: string;
   items: OrderItemInput[];
-  userId: string;
 };
 
 export type CreateOrderResult =
@@ -36,7 +39,8 @@ function generateOrderNumber(): string {
 export async function createOrder(
   input: CreateOrderInput,
 ): Promise<CreateOrderResult> {
-  if (!input.userId) {
+  const user = await getCurrentUser();
+  if (!user) {
     return {
       success: false,
       notAuthenticated: true,
@@ -129,7 +133,10 @@ export async function createOrder(
   );
   const settings = await getStoreSettings();
   const shippingFee = subtotal >= settings.freeShippingThreshold ? 0 : settings.shippingFee;
-  const total = subtotal + shippingFee;
+  const coupon = await quoteCoupon(input.couponCode, subtotal);
+  if (!coupon.valid) return { success: false, error: coupon.error };
+  const total = Math.max(0, subtotal + shippingFee - coupon.discount);
+  const paymentMethod = input.paymentMethod === "RAZORPAY" ? "RAZORPAY" : "COD";
 
   try {
     const order = await prisma.$transaction(async (tx) => {
@@ -137,7 +144,7 @@ export async function createOrder(
         data: {
           orderNumber: generateOrderNumber(),
           idempotencyKey: input.idempotencyKey,
-          userId: input.userId,
+          userId: user.id,
           customerName,
           customerEmail,
           customerPhone,
@@ -148,10 +155,12 @@ export async function createOrder(
           subtotal,
           shippingFee,
           total,
+          couponCode: coupon.code || null,
+          discountAmount: coupon.discount,
           occasion,
           status: "PENDING",
           paymentStatus: "PENDING",
-          paymentMethod: "pending",
+          paymentMethod,
           items: {
             create: resolvedItems.map(({ product, quantity }) => ({
               productId: product.id,

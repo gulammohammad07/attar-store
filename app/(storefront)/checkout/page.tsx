@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m as motion } from "framer-motion";
-import { CreditCard, Gift, Loader2, Lock } from "lucide-react";
+import { CreditCard, Gift, Loader2, Lock, Ticket, X } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useAuth } from "@/lib/store/auth-context";
 import { createOrder } from "@/lib/actions/order.actions";
+import { getCheckoutCouponsAction, validateCouponAction } from "@/lib/actions/coupon.actions";
 import { getActiveOccasions } from "@/lib/actions/occasion.actions";
 import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
 import { formatPrice } from "@/lib/utils";
@@ -18,6 +19,7 @@ type PublicStoreSettings = {
   shippingFee: number;
   currency: string;
 };
+type CheckoutCoupon = { id: string; code: string; discountType: "PERCENTAGE" | "FIXED"; discountValue: number; minOrderValue: number | null; maxDiscountAmount: number | null };
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -28,6 +30,12 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [occasions, setOccasions] = useState<CheckoutOccasion[]>([]);
+  const [paymentMethod, setPaymentMethod] = useState<"COD" | "RAZORPAY">("COD");
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [couponDrawerOpen, setCouponDrawerOpen] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState<CheckoutCoupon[]>([]);
   const [storeSettings, setStoreSettings] = useState<PublicStoreSettings>({
     freeShippingThreshold: 1500,
     shippingFee: 99,
@@ -43,6 +51,9 @@ export default function CheckoutPage() {
     getPublicStoreSettings().then((settings) => {
       if (active) setStoreSettings(settings);
     });
+    getCheckoutCouponsAction().then((coupons) => {
+      if (active) setAvailableCoupons(coupons);
+    });
     return () => {
       active = false;
     };
@@ -50,7 +61,7 @@ export default function CheckoutPage() {
 
   const shipping =
     subtotal >= storeSettings.freeShippingThreshold ? 0 : storeSettings.shippingFee;
-  const total = subtotal + shipping;
+  const total = Math.max(0, subtotal + shipping - (appliedCoupon?.discount ?? 0));
 
   const getIdempotencyKey = () => {
     if (!idempotencyKeyRef.current) {
@@ -79,9 +90,8 @@ export default function CheckoutPage() {
       return;
     }
 
-    setSubmitting(true);
     const form = new FormData(e.currentTarget);
-    const result = await createOrder({
+    const orderInput = {
       idempotencyKey: getIdempotencyKey(),
       customerName: `${form.get("firstName") ?? ""} ${form.get("lastName") ?? ""}`.trim(),
       customerEmail: (form.get("email") as string) ?? "",
@@ -95,8 +105,29 @@ export default function CheckoutPage() {
         productId: product.id,
         quantity,
       })),
-      userId: user.id,
-    });
+      couponCode: appliedCoupon?.code ?? "",
+    };
+    setSubmitting(true);
+    if (paymentMethod === "RAZORPAY") {
+      try {
+        const response = await fetch("/api/payments/create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(orderInput) });
+        const payment = await response.json();
+        if (!response.ok || !payment.success) throw new Error(payment.error ?? "Unable to start payment.");
+        await new Promise<void>((resolve, reject) => {
+          if ((window as typeof window & { Razorpay?: unknown }).Razorpay) return resolve();
+          const script = document.createElement("script"); script.src = "https://checkout.razorpay.com/v1/checkout.js"; script.onload = () => resolve(); script.onerror = () => reject(new Error("Unable to load secure payment checkout.")); document.body.appendChild(script);
+        });
+        const Razorpay = (window as typeof window & { Razorpay: new (options: Record<string, unknown>) => { open: () => void } }).Razorpay;
+        new Razorpay({ key: payment.keyId, amount: payment.amount, currency: payment.currency, name: "Danish Perfumes", description: `Order ${payment.orderNumber}`, order_id: payment.razorpayOrderId, prefill: { name: `${form.get("firstName")} ${form.get("lastName")}`, email: form.get("email"), contact: form.get("phone") }, handler: async (response: Record<string, string>) => {
+          const verified = await fetch("/api/payments/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: payment.orderId, ...response }) });
+          const result = await verified.json();
+          if (!verified.ok || !result.success) { setError(result.error ?? "Payment could not be verified. Please try again from your orders."); setSubmitting(false); return; }
+          clearCart(); setOrderNumber(result.orderNumber); setPlaced(true); setSubmitting(false); window.scrollTo({ top: 0, behavior: "smooth" });
+        }, modal: { ondismiss: () => { fetch("/api/payments/failure", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: payment.orderId }) }); setError("Payment was cancelled. You can try again."); setSubmitting(false); } } }).open();
+      } catch (paymentError) { setError(paymentError instanceof Error ? paymentError.message : "Unable to start payment."); setSubmitting(false); }
+      return;
+    }
+    const result = await createOrder({ ...orderInput, paymentMethod: "COD" });
 
     if (!result.success) {
       if (result.notAuthenticated) {
@@ -113,6 +144,29 @@ export default function CheckoutPage() {
     setPlaced(true);
     setSubmitting(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const applyCoupon = async () => {
+    setCouponMessage(null);
+    const result = await validateCouponAction(couponCode, subtotal);
+    if (!result.valid) { setAppliedCoupon(null); setCouponMessage(result.error); return; }
+    setAppliedCoupon(result.code ? { code: result.code, discount: result.discount } : null);
+    setCouponMessage(result.code ? "Coupon applied." : "Enter a coupon code.");
+  };
+
+  const selectCoupon = async (code: string) => {
+    setCouponCode(code);
+    setCouponDrawerOpen(false);
+    const result = await validateCouponAction(code, subtotal);
+    if (!result.valid) { setAppliedCoupon(null); setCouponMessage(result.error); return; }
+    setAppliedCoupon({ code: result.code, discount: result.discount });
+    setCouponMessage("Coupon applied.");
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponMessage("Coupon removed.");
   };
 
   if (placed) {
@@ -317,15 +371,10 @@ export default function CheckoutPage() {
               <h2 className="flex items-center gap-2 font-display text-xl font-medium text-[#174A63]">
                 <CreditCard size={18} className="text-gold" /> Payment
               </h2>
-              <div className="mt-5 rounded-xl border-2 border-dashed border-[#174A63]/15 p-6 text-center">
-                <Lock size={20} className="mx-auto text-gold" />
-                <p className="mt-2 text-sm font-medium text-[#174A63]">
-                  Cash on Delivery / Pay on delivery
-                </p>
-                <p className="mt-1 text-xs text-[#174A63]/45">
-                  Your order will be confirmed and payment collected on delivery.
-                </p>
+              <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                {[{ value: "COD", title: "Cash on Delivery", text: "Pay when your order arrives." }, { value: "RAZORPAY", title: "Online Payment", text: "Secure card, UPI, wallet, or netbanking." }].map((option) => <label key={option.value} className={`cursor-pointer rounded-xl border p-4 ${paymentMethod === option.value ? "border-gold bg-gold/5" : "border-[#174A63]/15"}`}><input className="sr-only" type="radio" checked={paymentMethod === option.value} onChange={() => setPaymentMethod(option.value as "COD" | "RAZORPAY")} /><Lock size={18} className="text-gold" /><p className="mt-2 text-sm font-medium text-[#174A63]">{option.title}</p><p className="mt-1 text-xs text-[#174A63]/45">{option.text}</p></label>)}
               </div>
+              <button type="button" onClick={() => setCouponDrawerOpen(true)} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#174A63] hover:text-gold"><Ticket size={17} className="text-gold" /> View available coupons</button>
             </section>
 
             {error ? (
@@ -348,7 +397,7 @@ export default function CheckoutPage() {
                   Placing order…
                 </>
               ) : (
-                `Place Order — ${formatPrice(total)}`
+                `${paymentMethod === "RAZORPAY" ? "Pay securely" : "Place Order"} — ${formatPrice(total)}`
               )}
             </button>
           </form>
@@ -375,11 +424,25 @@ export default function CheckoutPage() {
               ))}
             </ul>
 
+            <div className="mt-6 border-t border-[#174A63]/10 pt-4">
+              <label className="text-sm font-medium text-[#174A63]">Coupon Code</label>
+              <div className="mt-2 flex gap-2">
+                <input value={couponCode} onChange={(event) => setCouponCode(event.target.value.toUpperCase())} placeholder="Enter code" className="min-w-0 flex-1 rounded-xl border border-[#174A63]/15 px-3 py-2 text-sm" />
+                <button type="button" onClick={applyCoupon} className="rounded-xl bg-[#174A63] px-4 py-2 text-xs font-semibold text-white">Apply</button>
+              </div>
+              {couponMessage && <p className={`mt-2 text-xs ${appliedCoupon ? "text-green-600" : "text-red-600"}`}>{couponMessage}</p>}
+              {availableCoupons.length > 0 && <div className="mt-4"><p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#174A63]/50">Available coupons</p><div className="max-h-36 space-y-2 overflow-y-auto pr-1">{availableCoupons.map((coupon) => {
+                const selected = appliedCoupon?.code === coupon.code;
+                return <div key={coupon.id} className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left transition-colors ${selected ? "border-gold bg-gold/5" : "border-[#174A63]/10"}`}><span><span className="block text-xs font-bold text-[#174A63]">{coupon.code}</span><span className="block text-[11px] text-[#174A63]/55">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? ` up to ₹${coupon.maxDiscountAmount}` : ""}` : `₹${coupon.discountValue} off`}{coupon.minOrderValue ? ` · Minimum Order ₹${coupon.minOrderValue}` : ""}</span></span><button type="button" onClick={() => selected ? removeCoupon() : selectCoupon(coupon.code)} className={`text-[11px] font-semibold ${selected ? "text-red-600" : "text-gold"}`}>{selected ? "Remove" : "Apply"}</button></div>;
+              })}</div></div>}
+            </div>
+
             <div className="mt-6 space-y-2 border-t border-[#174A63]/10 pt-4 text-sm">
               <div className="flex justify-between text-[#174A63]/60">
                 <span>Subtotal</span>
                 <span className="text-[#174A63]">{formatPrice(subtotal)}</span>
               </div>
+              {appliedCoupon && <div className="flex justify-between text-green-700"><span>Discount ({appliedCoupon.code})</span><span>−{formatPrice(appliedCoupon.discount)}</span></div>}
               <div className="flex justify-between text-[#174A63]/60">
                 <span>Shipping</span>
                 <span className="text-[#174A63]">
@@ -394,6 +457,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+      {couponDrawerOpen && <div className="fixed inset-0 z-50"><button type="button" aria-label="Close coupons" className="absolute inset-0 bg-black/40" onClick={() => setCouponDrawerOpen(false)} /><aside role="dialog" aria-modal="true" aria-label="Available coupons" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div className="flex items-center justify-between border-b border-[#174A63]/10 p-6"><div><h2 className="font-display text-2xl text-[#174A63]">Available Coupons</h2><p className="mt-1 text-xs text-[#174A63]/50">Select a coupon to apply it.</p></div><button type="button" onClick={() => setCouponDrawerOpen(false)} className="rounded-full p-2 text-[#174A63] hover:bg-[#174A63]/10" aria-label="Close"><X size={20} /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-5">{availableCoupons.length ? availableCoupons.map((coupon) => <div key={coupon.id} className="rounded-2xl border border-[#174A63]/10 p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-[#174A63]">{coupon.code}</p><p className="mt-1 text-sm text-[#174A63]/65">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? `, up to ₹${coupon.maxDiscountAmount}` : ""}` : `₹${coupon.discountValue} off`}</p>{coupon.minOrderValue && <p className="mt-1 text-xs text-[#174A63]/45">Min. order ₹{coupon.minOrderValue}</p>}</div><button type="button" onClick={() => selectCoupon(coupon.code)} className="shrink-0 rounded-lg bg-[#174A63] px-3 py-2 text-xs font-semibold text-white hover:bg-gold">Apply</button></div></div>) : <p className="py-12 text-center text-sm text-[#174A63]/55">No coupons are available right now.</p>}</div></aside></div>}
     </div>
   );
 }
