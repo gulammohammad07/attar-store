@@ -155,7 +155,7 @@ export default function ProductViewer({ product }: { product: Product }) {
                 priority
                 quality={75}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain p-10 transition-transform duration-700"
+                className="object-cover p-10 transition-transform duration-700"
               />
             </motion.div>
           )}

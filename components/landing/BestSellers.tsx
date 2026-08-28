@@ -32,7 +32,7 @@ export default function BestSellers({ products }: { products: Product[] }) {
         <div className="overflow-hidden px-6 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] sm:px-0">
           <div
             className="flex w-max gap-6 px-6 animate-marquee gpu group-hover:[animation-play-state:paused]"
-            style={{ animationDuration: "80s" }}
+            style={{ animationDuration: "10s" }}
           >
             {doubled.map((product, i) => (
               <div

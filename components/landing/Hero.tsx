@@ -71,7 +71,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           )}
 
           {banner?.title && (
-            <h1 className="mt-8 font-display text-[3.2rem] font-medium leading-[0.98] tracking-tight text-[#0f2838] sm:text-7xl lg:text-[7.5rem]">
+            <h1 className="mt-8 font-display text-[3.2rem] font-medium leading-[0.98] tracking-tight text-[#fff] sm:text-7xl lg:text-[7.5rem]">
               {banner.title}
             </h1>
           )}
