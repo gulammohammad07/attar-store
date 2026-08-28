@@ -123,11 +123,11 @@ const TiltCard = memo(function TiltCard({
               className="absolute inset-x-0 bottom-0 p-7"
               style={{ transform: "translateZ(40px)" }}
             >
-              <h3 className="font-display text-[1.7rem] font-medium tracking-tight text-[#0f2838]">
+              <h3 className="font-display text-[1.7rem] font-medium tracking-tight text-[#fff]">
                 {category.name}
               </h3>
               {category.tagline && (
-                <p className="mt-2 text-sm tracking-wide text-[#5f7788]/70">
+                <p className="mt-2 text-sm tracking-wide text-[#5f7788]/70 bg-[#fff]">
                   {category.tagline}
                 </p>
               )}

@@ -99,7 +99,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
 
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-[#5f7788] uppercase transition-colors duration-500 hover:text-gold"
+              className="inline-flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-[#5f7788] uppercase transition-colors duration-500 hover:text-gold bg-[#fff] px-6 py-3 rounded-full border border-[#5f7788]/20 hover:border-gold/50"
             >
               View All Fragrances
             </Link>

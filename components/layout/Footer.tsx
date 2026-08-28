@@ -43,7 +43,7 @@ const columns = [
 ];
 
 const trustBadges = [
-  { icon: Truck, label: "Free Shipping", sub: "On orders over ₹1,500" },
+  { icon: Truck, label: "Free Shipping", sub: "On orders over ₹499" },
   { icon: ShieldCheck, label: "Secure Payment", sub: "256-bit encrypted" },
   { icon: BadgeCheck, label: "Authentic", sub: "100% genuine attars" },
 ];

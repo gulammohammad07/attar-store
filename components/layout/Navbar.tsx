@@ -88,7 +88,7 @@ export default function Navbar({
               : "bg-white/80 backdrop-blur-xl"
           }`}
         >
-          <div className="mx-auto flex h-20 items-center justify-start gap-3 px-4 sm:gap-8 sm:px-8 lg:max-w-7xl lg:justify-between">
+          <div className="mx-auto flex h-20 items-center justify-start gap-3 px-4 sm:gap-8 sm:px-8 lg:4 lg:justify-between">
             <button
               type="button"
               className="text-[#0f2838] lg:hidden transition-colors hover:text-gold"
@@ -109,7 +109,7 @@ export default function Navbar({
                   alt={branding.title || "Store logo"}
                   width={180}
                   height={48}
-                  className="h-8 w-auto max-w-[24vw] object-contain sm:h-10 sm:max-w-[180px]"
+                  className="h-12 w-auto max-w-[24vw] object-contain sm:h-10 sm:max-w-[180px]"
                   priority
                 />
               )}
