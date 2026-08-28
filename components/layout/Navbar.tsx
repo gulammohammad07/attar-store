@@ -57,8 +57,8 @@ export default function Navbar({
   const { items: wishlistItems } = useWishlist();
   const { user, isAdmin, refresh } = useAuth();
   const router = useRouter();
-  const showLogo = branding.displayMode === "IMAGE" && Boolean(branding.logoUrl);
-  const showTitle = branding.displayMode === "TEXT" && Boolean(branding.title);
+  const showLogo = Boolean(branding.logoUrl);
+  const showTitle = Boolean(branding.title);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -88,7 +88,7 @@ export default function Navbar({
               : "bg-white/80 backdrop-blur-xl"
           }`}
         >
-          <div className="mx-auto flex h-20 items-center justify-between gap-3 px-4 sm:gap-8 sm:px-8 lg:max-w-7xl">
+          <div className="mx-auto flex h-20 items-center justify-start gap-3 px-4 sm:gap-8 sm:px-8 lg:max-w-7xl lg:justify-between">
             <button
               type="button"
               className="text-[#0f2838] lg:hidden transition-colors hover:text-gold"
@@ -100,16 +100,27 @@ export default function Navbar({
 
             <Link
               href="/"
-              className="shrink-0"
+              className="-ml-2 flex min-w-0 flex-1 shrink items-center gap-2 sm:-ml-4 sm:gap-3 lg:flex-none lg:-ml-6"
               onClick={() => setActiveMenu(null)}
             >
-              {showLogo ? (
-                <Image src={branding.logoUrl!} alt={branding.title || "Store logo"} width={180} height={48} className="h-10 w-auto object-contain" priority />
-              ) : showTitle ? (
-                <span className="font-display text-2xl font-semibold" style={{ color: branding.titleColor }}>
+              {showLogo && (
+                <Image
+                  src={branding.logoUrl!}
+                  alt={branding.title || "Store logo"}
+                  width={180}
+                  height={48}
+                  className="h-8 w-auto max-w-[24vw] object-contain sm:h-10 sm:max-w-[180px]"
+                  priority
+                />
+              )}
+              {showTitle && (
+                <span
+                  className="min-w-0 max-w-[32vw] truncate font-display text-lg font-semibold sm:max-w-[220px] sm:text-2xl"
+                  style={{ color: branding.titleColor }}
+                >
                   {branding.title}
                 </span>
-              ) : null}
+              )}
             </Link>
 
             <nav className="hidden items-center gap-10 lg:flex">
@@ -140,7 +151,7 @@ export default function Navbar({
               ))}
             </nav>
 
-            <div className="flex items-center gap-2 text-[#0f2838] sm:gap-5">
+            <div className="ml-auto flex items-center gap-2 text-[#0f2838] sm:gap-5 lg:ml-0">
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
@@ -359,13 +370,25 @@ export default function Navbar({
           >
             <div className="flex h-full flex-col">
               <div className="flex h-20 items-center justify-between px-6">
-                {showLogo ? (
-                  <Image src={branding.logoUrl!} alt={branding.title || "Store logo"} width={160} height={48} className="h-10 w-auto object-contain" />
-                ) : showTitle ? (
-                  <span className="font-display text-2xl font-semibold" style={{ color: branding.titleColor }}>
-                    {branding.title}
-                  </span>
-                ) : null}
+                <Link href="/" className="-ml-2 flex min-w-0 items-center gap-2 sm:-ml-4" onClick={() => setMobileOpen(false)}>
+                  {showLogo && (
+                    <Image
+                      src={branding.logoUrl!}
+                      alt={branding.title || "Store logo"}
+                      width={160}
+                      height={48}
+                      className="h-8 w-auto max-w-[30vw] object-contain"
+                    />
+                  )}
+                  {showTitle && (
+                    <span
+                      className="min-w-0 max-w-[38vw] truncate font-display text-lg font-semibold"
+                      style={{ color: branding.titleColor }}
+                    >
+                      {branding.title}
+                    </span>
+                  )}
+                </Link>
                 <button
                   type="button"
                   onClick={() => setMobileOpen(false)}
