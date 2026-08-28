@@ -1,0 +1,3 @@
+ALTER TABLE "store_settings"
+ADD COLUMN "navbarTitleColor" TEXT NOT NULL DEFAULT '#0f2838',
+ADD COLUMN "navbarDisplayMode" TEXT NOT NULL DEFAULT 'TEXT';

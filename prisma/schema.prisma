@@ -233,7 +233,9 @@ model StoreSettings {
   shippingFee           Float    @default(99)
   currency              String   @default("INR")
   navbarTitle           String   @default("Danish Perfumes")
+  navbarTitleColor      String   @default("#0f2838")
   navbarLogoUrl         String?
+  navbarDisplayMode     String   @default("TEXT")
   updatedAt             DateTime @updatedAt
 
   @@map("store_settings")
