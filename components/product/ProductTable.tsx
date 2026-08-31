@@ -7,7 +7,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { ImageOff } from "lucide-react";
 import { deleteProductAction } from "@/lib/actions/product.actions";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -139,7 +139,7 @@ export default function ProductTable({ products }: ProductTableProps) {
                       : "—"}
                   </td>
 
-                  <td className="p-4 text-sm font-medium text-[#174a63]">₹{product.price.toLocaleString("en-IN")}</td>
+                  <td className="p-4 text-sm font-medium text-[#174a63]">{formatPrice(product.price)}</td>
 
                   <td className="p-4">
                     <span
@@ -229,7 +229,7 @@ export default function ProductTable({ products }: ProductTableProps) {
 
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
                     <span className="font-medium text-[#174a63]">
-                      ₹{product.price.toLocaleString("en-IN")}
+                      {formatPrice(product.price)}
                     </span>
 
                     <span

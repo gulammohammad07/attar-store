@@ -1,17 +1,26 @@
 "use client";
 
 import { m as motion } from "framer-motion";
+import { formatPrice } from "@/lib/utils";
+import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
 
-const items = [
-  "Hand-Poured Attars",
-  "Small Batch Craft",
-  "Rare Oud",
-  "Certified Authentic",
-  "Free Shipping Over ₹1,500",
-  "Est. 2018",
-];
+function buildItems(freeShippingThreshold: number) {
+  return [
+    "Hand-Poured Attars",
+    "Small Batch Craft",
+    "Long-Lasting Sillage",
+    "Certified Authentic",
+    `Free Shipping Over ${formatPrice(freeShippingThreshold)}`,
+    "Est. 2025",
+  ];
+}
 
-export default function Marquee() {
+export default function Marquee({
+  freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
+}: {
+  freeShippingThreshold?: number;
+}) {
+  const items = buildItems(freeShippingThreshold);
   const row = [...items, ...items];
 
   return (

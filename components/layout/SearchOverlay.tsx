@@ -6,6 +6,7 @@ import Image from "next/image";
 import { m as motion, AnimatePresence } from "framer-motion";
 import { Mic, Search, TrendingUp, X } from "lucide-react";
 import type { Product } from "@/lib/data/products";
+import { formatPrice } from "@/lib/utils";
 
 const popularSearches = ["Oud", "Musk", "Rose", "Amber", "Vanilla", "Gift"];
 
@@ -189,10 +190,7 @@ export default function SearchOverlay({
                           </p>
                         </div>
                         <p className="text-sm text-gold">
-                          ₹
-                          {(product.salePrice ?? product.price).toLocaleString(
-                            "en-IN",
-                          )}
+                          {formatPrice(product.salePrice ?? product.price)}
                         </p>
                       </Link>
                     </li>

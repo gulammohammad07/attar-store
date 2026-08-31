@@ -9,6 +9,8 @@ import {
   YoutubeIcon,
 } from "@/components/layout/SocialIcons";
 import { m as motion } from "framer-motion";
+import { formatPrice } from "@/lib/utils";
+import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
 
 const columns = [
   {
@@ -42,13 +44,25 @@ const columns = [
   },
 ];
 
-const trustBadges = [
-  { icon: Truck, label: "Free Shipping", sub: "On orders over ₹499" },
-  { icon: ShieldCheck, label: "Secure Payment", sub: "256-bit encrypted" },
-  { icon: BadgeCheck, label: "Authentic", sub: "100% genuine attars" },
-];
+function buildTrustBadges(freeShippingThreshold: number) {
+  return [
+    {
+      icon: Truck,
+      label: "Free Shipping",
+      sub: `On orders over ${formatPrice(freeShippingThreshold)}`,
+    },
+    { icon: ShieldCheck, label: "Secure Payment", sub: "256-bit encrypted" },
+    { icon: BadgeCheck, label: "Authentic", sub: "100% genuine attars" },
+  ];
+}
 
-export default function Footer() {
+export default function Footer({
+  freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
+}: {
+  freeShippingThreshold?: number;
+}) {
+  const trustBadges = buildTrustBadges(freeShippingThreshold);
+
   return (
     <footer className="relative overflow-hidden bg-[#0f2838]">
       <div className="pointer-events-none absolute inset-0">

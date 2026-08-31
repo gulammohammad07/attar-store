@@ -2,22 +2,39 @@
 
 import { m as motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
+import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
+import { formatPrice } from "@/lib/utils";
 
-const messages = [
-  "Complimentary shipping on orders above ₹1,500",
-  "Hand-poured attars • Small batch craft",
-  "Use code OUD10 for 10% off your first order",
-];
+function buildMessages(freeShippingThreshold: number) {
+  return [
+    `Complimentary shipping on orders above ${formatPrice(freeShippingThreshold)}`,
+    "Hand-poured attars • Small batch craft",
+    "Use code OUD10 for 10% off your first order",
+    "Long-lasting sillage • Est. 2025",
+  ];
+}
 
 export default function AnnouncementBar() {
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(
+    DEFAULT_FREE_SHIPPING_THRESHOLD,
+  );
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    getPublicStoreSettings().then((settings) => {
+      setFreeShippingThreshold(settings.freeShippingThreshold);
+    });
+  }, []);
+
+  const messages = buildMessages(freeShippingThreshold);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % messages.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [messages.length]);
 
   return (
     <div className="bg-charcoal text-[#E3F2F9]">

@@ -13,6 +13,7 @@ import { useWishlist } from "@/lib/store/wishlist-context";
 import { useAuth } from "@/lib/store/auth-context";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { occasions } from "@/lib/data/products";
+import { formatPrice } from "@/lib/utils";
 import type { Product } from "@/lib/data/products";
 import type { StorefrontCategory } from "@/lib/services/storefront-data";
 
@@ -330,7 +331,7 @@ export default function Navbar({
                                 {product.name}
                               </p>
                               <p className="mt-1.5 text-sm text-gold">
-                                ₹{product.salePrice ?? product.price.toLocaleString("en-IN")}
+                                {formatPrice(product.salePrice ?? product.price)}
                               </p>
                             </div>
                           </Link>

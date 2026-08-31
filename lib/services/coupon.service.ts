@@ -1,6 +1,7 @@
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
+import { formatPrice } from "@/lib/utils";
 
 export type CouponQuote =
   | { valid: true; code: string; discount: number }
@@ -14,7 +15,7 @@ export async function quoteCoupon(code: string | undefined, subtotal: number): P
     return { valid: false, error: "This coupon is invalid or has expired.", discount: 0 };
   }
   if (coupon.minOrderValue && subtotal < coupon.minOrderValue) {
-    return { valid: false, error: `This coupon requires an order of ₹${coupon.minOrderValue.toFixed(0)} or more.`, discount: 0 };
+    return { valid: false, error: `This coupon requires an order of ${formatPrice(coupon.minOrderValue)} or more.`, discount: 0 };
   }
   let discount = coupon.discountType === "PERCENTAGE"
     ? subtotal * (coupon.discountValue / 100)
