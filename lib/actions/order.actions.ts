@@ -226,6 +226,12 @@ export async function updateOrderStatus(
 
 export type DeleteOrdersResult = { success: boolean; error?: string };
 
+/**
+ * Removes an order from the admin panel only.
+ *
+ * This is a soft hide, not a row delete: the customer must keep seeing the
+ * order in their own history at /account/orders, and the totals still count it.
+ */
 export async function deleteOrderAction(
   orderId: string,
 ): Promise<DeleteOrdersResult> {
@@ -233,7 +239,10 @@ export async function deleteOrderAction(
     return { success: false, error: "Invalid order id." };
   }
 
-  await prisma.order.delete({ where: { id: orderId } });
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { hiddenFromAdmin: true },
+  });
 
   const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/orders");
@@ -252,9 +261,51 @@ export async function deleteOrdersAction(
     return { success: false, error: "No orders selected." };
   }
 
-  await prisma.$transaction(
-    ids.map((id) => prisma.order.delete({ where: { id } })),
-  );
+  await prisma.order.updateMany({
+    where: { id: { in: ids } },
+    data: { hiddenFromAdmin: true },
+  });
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/admin/orders");
+
+  return { success: true };
+}
+
+/** Puts an admin-hidden order back into the admin list. */
+export async function restoreOrderAction(
+  orderId: string,
+): Promise<DeleteOrdersResult> {
+  if (typeof orderId !== "string" || !orderId) {
+    return { success: false, error: "Invalid order id." };
+  }
+
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { hiddenFromAdmin: false },
+  });
+
+  const { revalidatePath } = await import("next/cache");
+  revalidatePath("/admin/orders");
+
+  return { success: true };
+}
+
+export async function restoreOrdersAction(
+  orderIds: string[],
+): Promise<DeleteOrdersResult> {
+  const ids = Array.isArray(orderIds)
+    ? orderIds.filter((id): id is string => typeof id === "string" && id.length > 0)
+    : [];
+
+  if (ids.length === 0) {
+    return { success: false, error: "No orders selected." };
+  }
+
+  await prisma.order.updateMany({
+    where: { id: { in: ids } },
+    data: { hiddenFromAdmin: false },
+  });
 
   const { revalidatePath } = await import("next/cache");
   revalidatePath("/admin/orders");

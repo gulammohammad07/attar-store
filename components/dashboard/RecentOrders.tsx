@@ -19,6 +19,7 @@ function formatDate(date: Date) {
 
 export default async function RecentOrders() {
   const orders = await prisma.order.findMany({
+    where: { hiddenFromAdmin: false },
     include: {
       items: { select: { productName: true }, take: 1 },
     },
