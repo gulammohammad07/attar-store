@@ -7,14 +7,18 @@ import { m as motion } from "framer-motion";
 import { ArrowRight, Minus, Plus, ShieldCheck, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
+import {
+  DEFAULT_FREE_SHIPPING_THRESHOLD,
+  DEFAULT_SHIPPING_FEE,
+} from "@/lib/constants/shipping";
 import { formatPrice } from "@/lib/utils";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, subtotal, clearCart } =
     useCart();
   const [settings, setSettings] = useState({
-    freeShippingThreshold: 1500,
-    shippingFee: 99,
+    freeShippingThreshold: DEFAULT_FREE_SHIPPING_THRESHOLD,
+    shippingFee: DEFAULT_SHIPPING_FEE,
   });
 
   useEffect(() => {

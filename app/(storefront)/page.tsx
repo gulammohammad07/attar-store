@@ -16,14 +16,16 @@ import {
   getStorefrontCategories,
   getStorefrontProducts,
 } from "@/lib/services/storefront-data";
+import { getStoreSettings } from "@/lib/services/settings.service";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  const [products, categories, banners] = await Promise.all([
+  const [products, categories, banners, settings] = await Promise.all([
     getStorefrontProducts(),
     getStorefrontCategories(),
     getStorefrontBanners(),
+    getStoreSettings(),
   ]);
 
   const heroBanner = banners.find((b) => b.section === "hero");
@@ -31,7 +33,7 @@ export default async function Home() {
   return (
     <>
       <Hero banner={heroBanner} />
-      <Marquee />
+      <Marquee freeShippingThreshold={settings.freeShippingThreshold} />
       <HomeSections products={products} categories={categories} />
     </>
   );

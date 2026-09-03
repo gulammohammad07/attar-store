@@ -11,6 +11,10 @@ import { createOrder } from "@/lib/actions/order.actions";
 import { getCheckoutCouponsAction, validateCouponAction } from "@/lib/actions/coupon.actions";
 import { getActiveOccasions } from "@/lib/actions/occasion.actions";
 import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
+import {
+  DEFAULT_FREE_SHIPPING_THRESHOLD,
+  DEFAULT_SHIPPING_FEE,
+} from "@/lib/constants/shipping";
 import { formatPrice } from "@/lib/utils";
 
 type CheckoutOccasion = { id: string; name: string };
@@ -37,8 +41,8 @@ export default function CheckoutPage() {
   const [couponDrawerOpen, setCouponDrawerOpen] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState<CheckoutCoupon[]>([]);
   const [storeSettings, setStoreSettings] = useState<PublicStoreSettings>({
-    freeShippingThreshold: 1500,
-    shippingFee: 99,
+    freeShippingThreshold: DEFAULT_FREE_SHIPPING_THRESHOLD,
+    shippingFee: DEFAULT_SHIPPING_FEE,
     currency: "INR",
   });
   const idempotencyKeyRef = useRef<string | null>(null);
@@ -433,7 +437,7 @@ export default function CheckoutPage() {
               {couponMessage && <p className={`mt-2 text-xs ${appliedCoupon ? "text-green-600" : "text-red-600"}`}>{couponMessage}</p>}
               {availableCoupons.length > 0 && <div className="mt-4"><p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#174A63]/50">Available coupons</p><div className="max-h-36 space-y-2 overflow-y-auto pr-1">{availableCoupons.map((coupon) => {
                 const selected = appliedCoupon?.code === coupon.code;
-                return <div key={coupon.id} className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left transition-colors ${selected ? "border-gold bg-gold/5" : "border-[#174A63]/10"}`}><span><span className="block text-xs font-bold text-[#174A63]">{coupon.code}</span><span className="block text-[11px] text-[#174A63]/55">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? ` up to ₹${coupon.maxDiscountAmount}` : ""}` : `₹${coupon.discountValue} off`}{coupon.minOrderValue ? ` · Minimum Order ₹${coupon.minOrderValue}` : ""}</span></span><button type="button" onClick={() => selected ? removeCoupon() : selectCoupon(coupon.code)} className={`text-[11px] font-semibold ${selected ? "text-red-600" : "text-gold"}`}>{selected ? "Remove" : "Apply"}</button></div>;
+                return <div key={coupon.id} className={`flex w-full items-center justify-between rounded-xl border px-3 py-2 text-left transition-colors ${selected ? "border-gold bg-gold/5" : "border-[#174A63]/10"}`}><span><span className="block text-xs font-bold text-[#174A63]">{coupon.code}</span><span className="block text-[11px] text-[#174A63]/55">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? ` up to ${formatPrice(coupon.maxDiscountAmount)}` : ""}` : `${formatPrice(coupon.discountValue)} off`}{coupon.minOrderValue ? ` · Minimum Order ${formatPrice(coupon.minOrderValue)}` : ""}</span></span><button type="button" onClick={() => selected ? removeCoupon() : selectCoupon(coupon.code)} className={`text-[11px] font-semibold ${selected ? "text-red-600" : "text-gold"}`}>{selected ? "Remove" : "Apply"}</button></div>;
               })}</div></div>}
             </div>
 
@@ -457,7 +461,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-      {couponDrawerOpen && <div className="fixed inset-0 z-50"><button type="button" aria-label="Close coupons" className="absolute inset-0 bg-black/40" onClick={() => setCouponDrawerOpen(false)} /><aside role="dialog" aria-modal="true" aria-label="Available coupons" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div className="flex items-center justify-between border-b border-[#174A63]/10 p-6"><div><h2 className="font-display text-2xl text-[#174A63]">Available Coupons</h2><p className="mt-1 text-xs text-[#174A63]/50">Select a coupon to apply it.</p></div><button type="button" onClick={() => setCouponDrawerOpen(false)} className="rounded-full p-2 text-[#174A63] hover:bg-[#174A63]/10" aria-label="Close"><X size={20} /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-5">{availableCoupons.length ? availableCoupons.map((coupon) => <div key={coupon.id} className="rounded-2xl border border-[#174A63]/10 p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-[#174A63]">{coupon.code}</p><p className="mt-1 text-sm text-[#174A63]/65">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? `, up to ₹${coupon.maxDiscountAmount}` : ""}` : `₹${coupon.discountValue} off`}</p>{coupon.minOrderValue && <p className="mt-1 text-xs text-[#174A63]/45">Min. order ₹{coupon.minOrderValue}</p>}</div><button type="button" onClick={() => selectCoupon(coupon.code)} className="shrink-0 rounded-lg bg-[#174A63] px-3 py-2 text-xs font-semibold text-white hover:bg-gold">Apply</button></div></div>) : <p className="py-12 text-center text-sm text-[#174A63]/55">No coupons are available right now.</p>}</div></aside></div>}
+      {couponDrawerOpen && <div className="fixed inset-0 z-50"><button type="button" aria-label="Close coupons" className="absolute inset-0 bg-black/40" onClick={() => setCouponDrawerOpen(false)} /><aside role="dialog" aria-modal="true" aria-label="Available coupons" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div className="flex items-center justify-between border-b border-[#174A63]/10 p-6"><div><h2 className="font-display text-2xl text-[#174A63]">Available Coupons</h2><p className="mt-1 text-xs text-[#174A63]/50">Select a coupon to apply it.</p></div><button type="button" onClick={() => setCouponDrawerOpen(false)} className="rounded-full p-2 text-[#174A63] hover:bg-[#174A63]/10" aria-label="Close"><X size={20} /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-5">{availableCoupons.length ? availableCoupons.map((coupon) => <div key={coupon.id} className="rounded-2xl border border-[#174A63]/10 p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-[#174A63]">{coupon.code}</p><p className="mt-1 text-sm text-[#174A63]/65">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? `, up to ${formatPrice(coupon.maxDiscountAmount)}` : ""}` : `${formatPrice(coupon.discountValue)} off`}</p>{coupon.minOrderValue && <p className="mt-1 text-xs text-[#174A63]/45">Min. order {formatPrice(coupon.minOrderValue)}</p>}</div><button type="button" onClick={() => selectCoupon(coupon.code)} className="shrink-0 rounded-lg bg-[#174A63] px-3 py-2 text-xs font-semibold text-white hover:bg-gold">Apply</button></div></div>) : <p className="py-12 text-center text-sm text-[#174A63]/55">No coupons are available right now.</p>}</div></aside></div>}
     </div>
   );
 }

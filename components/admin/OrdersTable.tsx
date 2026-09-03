@@ -7,6 +7,7 @@ import {
   Download,
   Loader2,
   RefreshCw,
+  RotateCcw,
   Search,
   Trash2,
 } from "lucide-react";
@@ -15,6 +16,8 @@ import { formatPrice } from "@/lib/utils";
 import {
   deleteOrderAction,
   deleteOrdersAction,
+  restoreOrderAction,
+  restoreOrdersAction,
 } from "@/lib/actions/order.actions";
 
 interface OrderItem {
@@ -51,6 +54,7 @@ interface Order {
 }
 
 type Filters = { search?: string; from?: string; to?: string };
+type OrderView = "active" | "deleted";
 
 function formatDate(value: string | Date) {
   const date = value instanceof Date ? value : new Date(value);
@@ -71,12 +75,18 @@ const PAYMENT_BADGE: Record<string, string> = {
 export default function OrdersTable({
   orders,
   filters,
+  view = "active",
+  hiddenCount = 0,
 }: {
   orders: Order[];
   filters: Filters;
+  view?: OrderView;
+  hiddenCount?: number;
 }) {
   const router = useRouter();
   const selectAllRef = useRef<HTMLInputElement>(null);
+
+  const isDeletedView = view === "deleted";
 
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [deleting, setDeleting] = useState(false);
@@ -93,6 +103,16 @@ export default function OrdersTable({
     }
   }, [someSelected]);
 
+  const buildQuery = (overrides: { view?: OrderView } = {}) => {
+    const params = new URLSearchParams();
+    if (search.trim()) params.set("search", search.trim());
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    const nextView = overrides.view ?? view;
+    if (nextView === "deleted") params.set("view", "deleted");
+    return params.toString();
+  };
+
   const exportUrl = useMemo(() => {
     const params = new URLSearchParams();
     if (search.trim()) params.set("search", search.trim());
@@ -104,11 +124,13 @@ export default function OrdersTable({
 
   const applyFilters = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (search.trim()) params.set("search", search.trim());
-    if (from) params.set("from", from);
-    if (to) params.set("to", to);
-    const qs = params.toString();
+    const qs = buildQuery();
+    router.push(qs ? `/admin/orders?${qs}` : "/admin/orders");
+  };
+
+  const switchView = (nextView: OrderView) => {
+    setSelected(new Set());
+    const qs = buildQuery({ view: nextView });
     router.push(qs ? `/admin/orders?${qs}` : "/admin/orders");
   };
 
@@ -117,7 +139,7 @@ export default function OrdersTable({
     setFrom("");
     setTo("");
     setSelected(new Set());
-    router.push("/admin/orders");
+    router.push(isDeletedView ? "/admin/orders?view=deleted" : "/admin/orders");
   };
 
   const toggleOne = (id: string) => {
@@ -137,20 +159,38 @@ export default function OrdersTable({
   };
 
   const handleDeleteOne = async (id: string, orderNumber: string) => {
-    if (!window.confirm(`Delete order ${orderNumber}?`)) return;
+    if (
+      !window.confirm(
+        `Remove order ${orderNumber} from the admin panel? The customer will still see it in their order history.`,
+      )
+    ) {
+      return;
+    }
     const result = await deleteOrderAction(id);
     if (result.success) {
-      toast.success(`Order ${orderNumber} deleted.`);
+      toast.success(`Order ${orderNumber} removed from the panel.`);
       router.refresh();
     } else {
       toast.error(result.error ?? "Failed to delete order.");
     }
   };
 
+  const handleRestoreOne = async (id: string, orderNumber: string) => {
+    const result = await restoreOrderAction(id);
+    if (result.success) {
+      toast.success(`Order ${orderNumber} restored.`);
+      router.refresh();
+    } else {
+      toast.error(result.error ?? "Failed to restore order.");
+    }
+  };
+
   const handleDeleteSelected = async () => {
     if (selected.size === 0) return;
     if (
-      !window.confirm(`Delete ${selected.size} selected order(s)? This cannot be undone.`)
+      !window.confirm(
+        `Remove ${selected.size} selected order(s) from the admin panel? Customers keep them in their order history, and you can restore them from the Deleted tab.`,
+      )
     ) {
       return;
     }
@@ -158,7 +198,7 @@ export default function OrdersTable({
     const result = await deleteOrdersAction([...selected]);
     setDeleting(false);
     if (result.success) {
-      toast.success("Selected orders deleted.");
+      toast.success("Selected orders removed from the panel.");
       setSelected(new Set());
       router.refresh();
     } else {
@@ -166,8 +206,61 @@ export default function OrdersTable({
     }
   };
 
+  const handleRestoreSelected = async () => {
+    if (selected.size === 0) return;
+    setDeleting(true);
+    const result = await restoreOrdersAction([...selected]);
+    setDeleting(false);
+    if (result.success) {
+      toast.success("Selected orders restored.");
+      setSelected(new Set());
+      router.refresh();
+    } else {
+      toast.error(result.error ?? "Failed to restore selected orders.");
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Active / Deleted tabs */}
+      <div className="flex items-center gap-2 border-b border-gray-200">
+        <button
+          type="button"
+          onClick={() => switchView("active")}
+          className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors ${
+            isDeletedView
+              ? "border-transparent text-gray-500 hover:text-gray-800"
+              : "border-zinc-950 text-zinc-950"
+          }`}
+        >
+          Active
+        </button>
+        <button
+          type="button"
+          onClick={() => switchView("deleted")}
+          className={`-mb-px flex items-center gap-2 border-b-2 px-4 py-2.5 text-sm font-semibold transition-colors ${
+            isDeletedView
+              ? "border-zinc-950 text-zinc-950"
+              : "border-transparent text-gray-500 hover:text-gray-800"
+          }`}
+        >
+          Deleted
+          {hiddenCount > 0 && (
+            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-600">
+              {hiddenCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {isDeletedView && (
+        <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          These orders are hidden from the Active list but still appear in each
+          customer&apos;s order history and still count toward your totals.
+          Restore one to bring it back into the panel.
+        </p>
+      )}
+
       {/* Filters */}
       <form
         onSubmit={applyFilters}
@@ -242,16 +335,22 @@ export default function OrdersTable({
 
         <button
           type="button"
-          onClick={handleDeleteSelected}
+          onClick={isDeletedView ? handleRestoreSelected : handleDeleteSelected}
           disabled={selected.size === 0 || deleting}
-          className="flex h-10 items-center gap-2 rounded-lg border border-red-200 px-4 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className={`flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+            isDeletedView
+              ? "border-green-200 text-green-700 hover:bg-green-50"
+              : "border-red-200 text-red-600 hover:bg-red-50"
+          }`}
         >
           {deleting ? (
             <Loader2 size={15} className="animate-spin" />
+          ) : isDeletedView ? (
+            <RotateCcw size={15} />
           ) : (
             <Trash2 size={15} />
           )}
-          Delete ({selected.size})
+          {isDeletedView ? "Restore" : "Delete"} ({selected.size})
         </button>
       </form>
 
@@ -259,9 +358,13 @@ export default function OrdersTable({
       <div className="overflow-hidden rounded-2xl border bg-white shadow-sm">
         {orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-4 px-6 py-20 text-center">
-            <h2 className="text-xl font-semibold">No orders found</h2>
+            <h2 className="text-xl font-semibold">
+              {isDeletedView ? "No deleted orders" : "No orders found"}
+            </h2>
             <p className="text-gray-500 mt-1">
-              Try adjusting your filters or search.
+              {isDeletedView
+                ? "Orders you remove from the panel will show up here."
+                : "Try adjusting your filters or search."}
             </p>
           </div>
         ) : (
@@ -374,16 +477,29 @@ export default function OrdersTable({
                       />
                     </td>
                     <td className="px-4 py-4">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleDeleteOne(order.id, order.orderNumber)
-                        }
-                        title={`Delete ${order.orderNumber}`}
-                        className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      {isDeletedView ? (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleRestoreOne(order.id, order.orderNumber)
+                          }
+                          title={`Restore ${order.orderNumber}`}
+                          className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-green-50 hover:text-green-700"
+                        >
+                          <RotateCcw size={16} />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            handleDeleteOne(order.id, order.orderNumber)
+                          }
+                          title={`Remove ${order.orderNumber} from the panel`}
+                          className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

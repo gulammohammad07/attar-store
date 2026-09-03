@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/lib/store/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { getStoreSettings } from "@/lib/services/settings.service";
+import { siteUrl } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -19,6 +20,9 @@ const cormorant = Cormorant_Garamond({
 });
 
 const metadataDefaults: Metadata = {
+  // Needed so relative OG/twitter image paths resolve to absolute URLs, and so
+  // the canonical origin matches what robots.ts and sitemap.ts advertise.
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Danish Perfumes — Luxury Attars & Fragrances",
     template: "%s | Danish Perfumes",

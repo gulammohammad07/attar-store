@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { getImageProps } from "next/image";
 import { m as motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 import { Sparkles, Droplets, Clock, ChevronRight } from "lucide-react";
@@ -68,6 +68,45 @@ export default function BrandStory({
   const [imgError, setImgError] = useState(false);
   const showImage = !!fallbackImage && !imgError;
 
+  // Same art-direction-with-optimisation approach as the hero: a raw <source>
+  // beside a <next/image> bypasses the optimiser entirely on small screens.
+  const storyShared = {
+    alt: banner?.title ?? "The art of attar making",
+    sizes: "(max-width: 1024px) 100vw, 50vw",
+    quality: 75,
+  };
+
+  const storyDesktop = showImage
+    ? getImageProps({ ...storyShared, src: fallbackImage, width: 1200, height: 1500 })
+    : null;
+
+  const storyVariants = showImage
+    ? [
+        banner?.mobileImageUrl
+          ? {
+              media: "(max-width: 767px)",
+              srcSet: getImageProps({
+                ...storyShared,
+                src: banner.mobileImageUrl,
+                width: 828,
+                height: 1035,
+              }).props.srcSet,
+            }
+          : null,
+        banner?.tabletImageUrl
+          ? {
+              media: "(min-width: 768px) and (max-width: 1023px)",
+              srcSet: getImageProps({
+                ...storyShared,
+                src: banner.tabletImageUrl,
+                width: 1024,
+                height: 1280,
+              }).props.srcSet,
+            }
+          : null,
+      ].filter((v): v is { media: string; srcSet: string } => Boolean(v?.srcSet))
+    : [];
+
   return (
     <section id="story" className="overflow-hidden bg-[#F8FCFE] py-28 text-[#174A63]">
       <div className="mx-auto max-w-7xl px-6">
@@ -92,26 +131,22 @@ export default function BrandStory({
                 className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-gold/25 shadow-[0_40px_80px_-40px_rgba(23,74,99,0.45)]"
               >
                 <picture>
-                  {banner?.mobileImageUrl && (
+                  {storyVariants.map((v) => (
                     <source
-                      srcSet={banner.mobileImageUrl}
-                      media="(max-width: 767px)"
+                      key={v.media}
+                      media={v.media}
+                      srcSet={v.srcSet}
+                      sizes={storyShared.sizes}
+                    />
+                  ))}
+                  {storyDesktop && (
+                    /* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */
+                    <img
+                      {...storyDesktop.props}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                      onError={() => setImgError(true)}
                     />
                   )}
-                  {banner?.tabletImageUrl && (
-                    <source
-                      srcSet={banner.tabletImageUrl}
-                      media="(max-width: 1023px)"
-                    />
-                  )}
-                  <Image
-                    src={fallbackImage}
-                    alt={banner?.title ?? "The art of attar making"}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition-transform duration-700 hover:scale-105"
-                    onError={() => setImgError(true)}
-                  />
                 </picture>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#F8FCFE]/35 to-transparent" />
               </motion.div>

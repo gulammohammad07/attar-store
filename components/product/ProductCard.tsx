@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
@@ -9,7 +10,13 @@ import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
-import QuickViewModal from "@/components/product/QuickViewModal";
+// The quick-view dialog is a whole extra product UI (sizes, gallery, CTA).
+// Loading it eagerly from every card bloats every grid's chunk; it's only
+// fetched the first time a shopper actually opens it.
+const QuickViewModal = dynamic(
+  () => import("@/components/product/QuickViewModal"),
+  { ssr: false },
+);
 import { toast } from "sonner";
 
 export default function ProductCard({
@@ -26,6 +33,7 @@ export default function ProductCard({
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [quickViewLoaded, setQuickViewLoaded] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches,
@@ -133,7 +141,7 @@ export default function ProductCard({
               onClick={() => toggleWishlist(product)}
               aria-label="Add to wishlist"
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
+                "flex h-11 w-11 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
                 dark
                   ? "bg-[#0a1b26]/70 text-[#dceff7]/60 hover:text-red-400"
                   : "bg-white/90 text-[#174A63]/50 hover:text-red-500",
@@ -145,10 +153,13 @@ export default function ProductCard({
 
             <button
               type="button"
-              onClick={() => setQuickViewOpen(true)}
+              onClick={() => {
+                setQuickViewLoaded(true);
+                setQuickViewOpen(true);
+              }}
               aria-label="Quick view"
               className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
+                "flex h-11 w-11 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
                 dark
                   ? "bg-[#0a1b26]/70 text-[#dceff7]/60"
                   : "bg-white/90 text-[#174A63]/50"
@@ -195,7 +206,7 @@ export default function ProductCard({
                   onClick={prevImage}
                   aria-label="Previous image"
                   className={cn(
-                    "absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
+                    "absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
                     dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
                   )}
                 >
@@ -207,14 +218,14 @@ export default function ProductCard({
                   onClick={nextImage}
                   aria-label="Next image"
                   className={cn(
-                    "absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
+                    "absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
                     dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
                   )}
                 >
                   <ChevronRight size={16} />
                 </button>
 
-                <div className="absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-1.5">
+                <div className="absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
                   {images.map((_, i) => (
                     <button
                       key={i}
@@ -225,13 +236,20 @@ export default function ProductCard({
                         setImgIndex(i);
                       }}
                       aria-label={`View image ${i + 1}`}
-                      className={cn(
-                        "h-1.5 rounded-full transition-all duration-300",
-                        i === imgIndex
-                          ? "w-4 bg-gold"
-                          : dark ? "w-1.5 bg-[#dceff7]/40 hover:bg-gold/70" : "w-1.5 bg-white/80 hover:bg-gold/70",
-                      )}
-                    />
+                      aria-current={i === imgIndex}
+                      className="group/dot flex h-6 w-5 items-center justify-center"
+                    >
+                      <span
+                        className={cn(
+                          "h-1.5 rounded-full transition-all duration-300",
+                          i === imgIndex
+                            ? "w-4 bg-gold"
+                            : dark
+                              ? "w-1.5 bg-[#dceff7]/40 group-hover/dot:bg-gold/70"
+                              : "w-1.5 bg-white/80 group-hover/dot:bg-gold/70",
+                        )}
+                      />
+                    </button>
                   ))}
                 </div>
               </>
@@ -298,12 +316,14 @@ export default function ProductCard({
         </div>
       </motion.div>
 
-      <QuickViewModal
-        key={`${product.id}-${quickViewOpen}`}
-        product={product}
-        open={quickViewOpen}
-        onClose={() => setQuickViewOpen(false)}
-      />
+      {quickViewLoaded && (
+        <QuickViewModal
+          key={`${product.id}-${quickViewOpen}`}
+          product={product}
+          open={quickViewOpen}
+          onClose={() => setQuickViewOpen(false)}
+        />
+      )}
     </>
   );
 }

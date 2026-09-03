@@ -1,7 +1,7 @@
 import { getCurrentUser } from "@/lib/auth/dal";
 import { ROLES } from "@/lib/auth/config";
 import { prisma } from "@/lib/prisma";
-import { buildOrderWhere } from "@/lib/services/order.service";
+import { buildOrderSearchWhere } from "@/lib/services/order.service";
 
 export const runtime = "nodejs";
 
@@ -29,7 +29,9 @@ export async function GET(request: Request) {
   const to = url.searchParams.get("to") ?? "";
 
   const orders = await prisma.order.findMany({
-    where: buildOrderWhere({ search, from, to }),
+    // Uses the search-only filter so the export stays a complete record and
+    // still includes orders the admin has removed from their list.
+    where: buildOrderSearchWhere({ search, from, to }),
     include: {
       items: { orderBy: { id: "asc" } },
       user: { select: { id: true, name: true, email: true } },

@@ -34,7 +34,7 @@ export default async function StorefrontLayout({
         }}
       />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer freeShippingThreshold={settings.freeShippingThreshold} />
     </>
   );
 }

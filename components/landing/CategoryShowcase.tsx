@@ -13,12 +13,17 @@ import {
 import { ArrowUpRight } from "lucide-react";
 import type { StorefrontCategory } from "@/lib/services/storefront-data";
 import SectionHeading from "@/components/landing/SectionHeading";
+import { useHoverCapable } from "@/lib/hooks/use-media-query";
 
 export default function CategoryShowcase({
   categories,
 }: {
   categories: StorefrontCategory[];
 }) {
+  // Resolved once here rather than per card — one media-query subscription
+  // instead of one per category tile.
+  const tiltOk = useHoverCapable();
+
   return (
     <section className="relative overflow-hidden bg-[#f8fcfe] py-28 sm:py-36">
       <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
@@ -38,6 +43,7 @@ export default function CategoryShowcase({
               key={category.slug}
               category={category}
               index={index}
+              tiltOk={tiltOk}
             />
           ))}
         </div>
@@ -49,9 +55,11 @@ export default function CategoryShowcase({
 const TiltCard = memo(function TiltCard({
   category,
   index,
+  tiltOk,
 }: {
   category: StorefrontCategory;
   index: number;
+  tiltOk: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
@@ -63,6 +71,7 @@ const TiltCard = memo(function TiltCard({
   const glare = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, rgba(224,199,149,0.32), transparent 55%)`;
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!tiltOk) return;
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -88,14 +97,23 @@ const TiltCard = memo(function TiltCard({
           ref={ref}
           onMouseMove={handleMove}
           onMouseLeave={reset}
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d", perspective: 1000 }}
+          style={
+            tiltOk
+              ? {
+                  rotateX,
+                  rotateY,
+                  transformStyle: "preserve-3d",
+                  perspective: 1000,
+                }
+              : undefined
+          }
           className="relative overflow-hidden rounded-[2.5rem] border border-gold/15 bg-white shadow-[0_24px_60px_-20px_rgba(15,40,56,0.15)] transition-all duration-700 group-hover:border-gold/50 group-hover:shadow-[0_40px_80px_-30px_rgba(201,169,110,0.25)]"
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-b from-[#f0f7fb] via-[#f8fcfe] to-[#faf9f7]">
             {category.imageUrl ? (
               <Image
                 src={category.imageUrl}
-                alt={category.name}
+                alt=""
                 fill
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:-translate-y-2"
@@ -108,12 +126,17 @@ const TiltCard = memo(function TiltCard({
               </div>
             )}
 
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0f2838]/10 via-[#0f2838]/5 to-transparent opacity-60 transition-opacity duration-700 group-hover:opacity-80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a1b26]/85 via-[#0a1b26]/30 to-transparent transition-opacity duration-700 group-hover:from-[#0a1b26]/90" />
 
-            <motion.div
-              style={{ background: glare }}
-              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            />
+            {/* Cursor-following glare — pointless without a cursor, and it
+                rebuilds a radial-gradient string every frame, so keep it off
+                touch devices entirely. */}
+            {tiltOk && (
+              <motion.div
+                style={{ background: glare }}
+                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+              />
+            )}
 
             <div className="absolute right-6 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-gold/40 bg-white/70 text-gold opacity-0 shadow-lg backdrop-blur-xl transition-all duration-700 group-hover:opacity-100">
               <ArrowUpRight size={18} />
@@ -127,7 +150,7 @@ const TiltCard = memo(function TiltCard({
                 {category.name}
               </h3>
               {category.tagline && (
-                <p className="mt-2 text-sm tracking-wide text-[#5f7788]/70 bg-[#fff]">
+                <p className="mt-2 text-sm tracking-wide text-[#dceff7]/85">
                   {category.tagline}
                 </p>
               )}

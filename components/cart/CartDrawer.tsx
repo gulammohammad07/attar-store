@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion, AnimatePresence } from "framer-motion";
@@ -10,6 +11,16 @@ import { formatPrice } from "@/lib/utils";
 export default function CartDrawer() {
   const { items, isOpen, closeCart, updateQuantity, removeFromCart, subtotal } =
     useCart();
+
+  // Lock page scroll while the bag is open so the page behind doesn't move
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
@@ -66,9 +77,9 @@ export default function CartDrawer() {
               <>
                 <div className="flex-1 overflow-y-auto px-6 py-6">
                   <ul className="space-y-6">
-                    {items.map(({ product, quantity }) => (
+                    {items.map(({ product, quantity, size }) => (
                       <li
-                        key={product.id}
+                        key={`${product.id}-${size ?? "default"}`}
                         className="flex gap-4 border-b border-[#174A63]/10 pb-6"
                       >
                         <Link
@@ -93,11 +104,14 @@ export default function CartDrawer() {
                               </p>
                               <p className="text-xs text-[#174A63]/50">
                                 {product.volume}
+                                {size && size !== product.volume
+                                  ? ` • ${size}`
+                                  : ""}
                               </p>
                             </div>
                             <button
                               type="button"
-                              onClick={() => removeFromCart(product.id)}
+                              onClick={() => removeFromCart(product.id, size)}
                               className="text-[#174A63]/40 hover:text-red-600"
                               aria-label="Remove item"
                             >
@@ -110,7 +124,11 @@ export default function CartDrawer() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  updateQuantity(product.id, quantity - 1)
+                                  updateQuantity(
+                                    product.id,
+                                    quantity - 1,
+                                    size,
+                                  )
                                 }
                                 className="text-[#174A63]/60"
                                 aria-label="Decrease quantity"
@@ -123,7 +141,11 @@ export default function CartDrawer() {
                               <button
                                 type="button"
                                 onClick={() =>
-                                  updateQuantity(product.id, quantity + 1)
+                                  updateQuantity(
+                                    product.id,
+                                    quantity + 1,
+                                    size,
+                                  )
                                 }
                                 className="text-[#174A63]/60"
                                 aria-label="Increase quantity"

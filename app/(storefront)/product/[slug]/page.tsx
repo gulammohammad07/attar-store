@@ -4,6 +4,7 @@ import {
   getStorefrontProductBySlug,
   getStorefrontProducts,
 } from "@/lib/services/storefront-data";
+import { getStoreSettings } from "@/lib/services/settings.service";
 import ProductDetails from "@/components/product/ProductDetails";
 
 export const dynamic = "force-dynamic";
@@ -38,6 +39,7 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const allProducts = await getStorefrontProducts();
+  const settings = await getStoreSettings();
 
   const related = allProducts
     .filter(
@@ -53,6 +55,7 @@ export default async function ProductPage({
       product={product}
       related={related}
       allProducts={allProducts}
+      freeShippingThreshold={settings.freeShippingThreshold}
     />
   );
 }

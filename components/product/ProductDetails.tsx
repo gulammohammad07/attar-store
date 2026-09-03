@@ -19,6 +19,7 @@ import type { Product } from "@/lib/data/products";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
+import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
 import { toast } from "sonner";
 import ProductViewer from "@/components/product/ProductViewer";
 import NotesPyramid from "@/components/product/NotesPyramid";
@@ -31,10 +32,12 @@ export default function ProductDetails({
   product,
   related,
   allProducts,
+  freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
 }: {
   product: Product;
   related: Product[];
   allProducts: Product[];
+  freeShippingThreshold?: number;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -403,10 +406,7 @@ export default function ProductDetails({
                   </span>
                 )}
                 {activeTab === tab && (
-                  <motion.div
-                    layoutId="active-tab"
-                    className="absolute inset-x-0 bottom-0 h-0.5 bg-gold"
-                  />
+                  <span className="animate-underline absolute inset-x-0 bottom-0 h-0.5 origin-left bg-gold" />
                 )}
               </button>
             ))}
@@ -449,7 +449,8 @@ export default function ProductDetails({
                     Delivery:{" "}
                   </span>
                   Dispatched within 24 hours. Free standard shipping on orders
-                  over ₹1,500; express delivery available at checkout.
+                  over {formatPrice(freeShippingThreshold)}; express delivery
+                  available at checkout.
                 </p>
                 <p>
                   <span className="font-semibold text-[#174A63]">Returns: </span>

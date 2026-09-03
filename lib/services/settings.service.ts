@@ -1,6 +1,10 @@
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
+import {
+  DEFAULT_FREE_SHIPPING_THRESHOLD,
+  DEFAULT_SHIPPING_FEE,
+} from "@/lib/constants/shipping";
 
 export type StoreSettingsDTO = {
   storeName: string;
@@ -21,8 +25,8 @@ const DEFAULTS: StoreSettingsDTO = {
   supportEmail: "support@danishperfumes.com",
   supportPhone: "",
   address: "",
-  freeShippingThreshold: 1500,
-  shippingFee: 99,
+  freeShippingThreshold: DEFAULT_FREE_SHIPPING_THRESHOLD,
+  shippingFee: DEFAULT_SHIPPING_FEE,
   currency: "INR",
   navbarTitle: "Danish Perfumes",
   navbarTitleColor: "#0f2838",
