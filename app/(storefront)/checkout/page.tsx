@@ -8,6 +8,12 @@ import { CreditCard, Gift, Loader2, Lock, Ticket, X } from "lucide-react";
 import { useCart } from "@/lib/store/cart-context";
 import { useAuth } from "@/lib/store/auth-context";
 import { createOrder } from "@/lib/actions/order.actions";
+import PlaceAutocomplete from "@/components/checkout/PlaceAutocomplete";
+import {
+  COUNTRIES,
+  citiesForCountry,
+  statesForCountry,
+} from "@/lib/data/geo";
 import { getCheckoutCouponsAction, validateCouponAction } from "@/lib/actions/coupon.actions";
 import { getActiveOccasions } from "@/lib/actions/occasion.actions";
 import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
@@ -38,6 +44,9 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [country, setCountry] = useState("India");
+  const [city, setCity] = useState("");
+  const [stateName, setStateName] = useState("");
   const [couponDrawerOpen, setCouponDrawerOpen] = useState(false);
   const [availableCoupons, setAvailableCoupons] = useState<CheckoutCoupon[]>([]);
   const [storeSettings, setStoreSettings] = useState<PublicStoreSettings>({
@@ -103,6 +112,7 @@ export default function CheckoutPage() {
       street: (form.get("street") as string) ?? "",
       city: (form.get("city") as string) ?? "",
       state: (form.get("state") as string) ?? "",
+      country: (form.get("country") as string) ?? "India",
       pincode: (form.get("pincode") as string) ?? "",
       occasion: (form.get("occasion") as string) ?? "",
       items: items.map(({ product, quantity }) => ({
@@ -315,18 +325,36 @@ export default function CheckoutPage() {
                   placeholder="Street address"
                   className="rounded-xl border border-[#174A63]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
                 />
+                <PlaceAutocomplete
+                  name="country"
+                  value={country}
+                  onChange={(next) => {
+                    setCountry(next);
+                    // A different country means a different address book —
+                    // drop any State/City picked for the previous one.
+                    setStateName("");
+                    setCity("");
+                  }}
+                  options={COUNTRIES}
+                  placeholder="Country"
+                  required
+                />
                 <div className="grid gap-4 sm:grid-cols-3">
-                  <input
-                    required
+                  <PlaceAutocomplete
                     name="city"
+                    value={city}
+                    onChange={setCity}
+                    options={citiesForCountry(country)}
                     placeholder="City"
-                    className="rounded-xl border border-[#174A63]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
-                  />
-                  <input
                     required
+                  />
+                  <PlaceAutocomplete
                     name="state"
+                    value={stateName}
+                    onChange={setStateName}
+                    options={statesForCountry(country)}
                     placeholder="State"
-                    className="rounded-xl border border-[#174A63]/15 px-4 py-3 text-sm focus:border-gold focus:outline-none"
+                    required
                   />
                   <input
                     required

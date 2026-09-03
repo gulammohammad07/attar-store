@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import WhatsAppButton from "@/components/contact/WhatsAppButton";
 import SmoothScroll from "@/components/landing/SmoothScroll";
 import {
   getStorefrontCategories,
@@ -35,6 +36,7 @@ export default async function StorefrontLayout({
       />
       <main className="flex-1">{children}</main>
       <Footer freeShippingThreshold={settings.freeShippingThreshold} />
+      <WhatsAppButton phone={settings.supportPhone} storeName={settings.storeName} />
     </>
   );
 }

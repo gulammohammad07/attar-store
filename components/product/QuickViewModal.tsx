@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { m as motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, Heart, ShoppingBag, Star, X } from "lucide-react";
+import { Heart, ShoppingBag, Star, X } from "lucide-react";
 import type { Product } from "@/lib/data/products";
+import ImageNavArrow from "@/components/product/ImageNavArrow";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
@@ -80,41 +81,36 @@ export default function QuickViewModal({
 
                 {hasMultiple && (
                   <>
-                    <button
-                      type="button"
+                    <ImageNavArrow
+                      direction="left"
                       onClick={() =>
                         setImgIndex((i) => (i - 1 + images.length) % images.length)
                       }
-                      aria-label="Previous image"
-                      className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md transition-all hover:scale-110 hover:text-[#174A63]"
-                    >
-                      <ChevronLeft size={18} />
-                    </button>
-
-                    <button
-                      type="button"
+                      ariaLabel="Previous image"
+                    />
+                    <ImageNavArrow
+                      direction="right"
                       onClick={() => setImgIndex((i) => (i + 1) % images.length)}
-                      aria-label="Next image"
-                      className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#174A63]/70 shadow-md transition-all hover:scale-110 hover:text-[#174A63]"
-                    >
-                      <ChevronRight size={18} />
-                    </button>
+                      ariaLabel="Next image"
+                    />
 
-                    <div className="absolute inset-x-0 bottom-3 z-10 flex items-center justify-center gap-1.5">
-                      {images.map((_, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => setImgIndex(i)}
-                          aria-label={`View image ${i + 1}`}
-                          className={cn(
-                            "h-1.5 rounded-full transition-all duration-300",
-                            i === imgIndex
-                              ? "w-4 bg-gold"
-                              : "w-1.5 bg-white/80 hover:bg-gold/70",
-                          )}
-                        />
-                      ))}
+                    <div className="pointer-events-none absolute inset-x-0 bottom-2 z-10 flex justify-center">
+                      <div className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-[#0f2838]/30 px-2 py-1 shadow-sm backdrop-blur-sm">
+                        {images.map((_, i) => (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => setImgIndex(i)}
+                            aria-label={`View image ${i + 1}`}
+                            className={cn(
+                              "h-1 rounded-full transition-all duration-300",
+                              i === imgIndex
+                                ? "w-3.5 bg-gold shadow-[0_0_6px_rgba(201,169,110,0.8)]"
+                                : "w-1 bg-white/65 hover:bg-gold/90",
+                            )}
+                          />
+                        ))}
+                      </div>
                     </div>
                   </>
                 )}

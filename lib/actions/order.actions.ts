@@ -20,6 +20,7 @@ export type CreateOrderInput = {
   city: string;
   state: string;
   pincode: string;
+  country?: string;
   occasion?: string;
   paymentMethod?: "COD" | "RAZORPAY";
   couponCode?: string;
@@ -77,6 +78,7 @@ export async function createOrder(
   const city = (input.city ?? "").trim();
   const state = (input.state ?? "").trim();
   const pincode = (input.pincode ?? "").trim();
+  const country = (input.country ?? "India").trim() || "India";
   const occasion = (input.occasion ?? "").trim() || null;
 
   if (
@@ -152,6 +154,7 @@ export async function createOrder(
           city,
           state,
           pincode,
+          country,
           subtotal,
           shippingFee,
           total,
@@ -179,6 +182,41 @@ export async function createOrder(
     const { revalidatePath } = await import("next/cache");
     revalidatePath("/account/orders");
     revalidatePath("/admin/orders");
+
+    // Notify the store (support email) as soon as a COD order is placed.
+    // Online orders are notified separately, once payment is confirmed.
+    if (paymentMethod === "COD") {
+      const { sendNewOrderNotificationMail } = await import(
+        "@/lib/services/order-mail.service"
+      );
+      void sendNewOrderNotificationMail({
+        orderNumber: order.orderNumber,
+        createdAt: new Date(),
+        customerName,
+        customerEmail,
+        customerPhone,
+        street,
+        city,
+        state,
+        pincode,
+        country,
+        paymentMethod: "COD",
+        paymentStatus: "PENDING",
+        status: "PENDING",
+        subtotal,
+        shippingFee,
+        discountAmount: coupon.discount,
+        couponCode: coupon.code ?? null,
+        occasion,
+        total,
+        items: resolvedItems.map(({ product, quantity }) => ({
+          productName: product.name,
+          quantity,
+          unitPrice: product.salePrice ?? product.price,
+          lineTotal: (product.salePrice ?? product.price) * quantity,
+        })),
+      });
+    }
 
     return { success: true, orderId: order.id, orderNumber: order.orderNumber };
   } catch (error) {

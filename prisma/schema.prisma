@@ -187,6 +187,7 @@ model Order {
   city           String
   state          String
   pincode        String
+  country        String         @default("India")
 
   subtotal       Float
   shippingFee    Float

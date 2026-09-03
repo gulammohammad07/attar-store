@@ -5,8 +5,9 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { ChevronLeft, ChevronRight, Eye, Heart, ShoppingBag, Star } from "lucide-react";
+import { Eye, Heart, ShoppingBag, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
+import ImageNavArrow from "@/components/product/ImageNavArrow";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
@@ -201,56 +202,45 @@ export default function ProductCard({
 
             {hasMultiple && (
               <>
-                <button
-                  type="button"
+                <ImageNavArrow
+                  direction="left"
                   onClick={prevImage}
-                  aria-label="Previous image"
-                  className={cn(
-                    "absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
-                    dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
-                  )}
-                >
-                  <ChevronLeft size={16} />
-                </button>
-
-                <button
-                  type="button"
+                  ariaLabel="Previous image"
+                  variant={dark ? "dark" : "light"}
+                />
+                <ImageNavArrow
+                  direction="right"
                   onClick={nextImage}
-                  aria-label="Next image"
-                  className={cn(
-                    "absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full shadow-md backdrop-blur transition-all hover:scale-110",
-                    dark ? "bg-[#0a1b26]/70 text-[#dceff7]/70" : "bg-white/90 text-[#174A63]/70"
-                  )}
-                >
-                  <ChevronRight size={16} />
-                </button>
+                  ariaLabel="Next image"
+                  variant={dark ? "dark" : "light"}
+                />
 
-                <div className="absolute inset-x-0 bottom-1 z-10 flex items-center justify-center">
-                  {images.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setImgIndex(i);
-                      }}
-                      aria-label={`View image ${i + 1}`}
-                      aria-current={i === imgIndex}
-                      className="group/dot flex h-6 w-5 items-center justify-center"
-                    >
-                      <span
-                        className={cn(
-                          "h-1.5 rounded-full transition-all duration-300",
-                          i === imgIndex
-                            ? "w-4 bg-gold"
-                            : dark
-                              ? "w-1.5 bg-[#dceff7]/40 group-hover/dot:bg-gold/70"
-                              : "w-1.5 bg-white/80 group-hover/dot:bg-gold/70",
-                        )}
-                      />
-                    </button>
-                  ))}
+                <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-10 flex justify-center">
+                  <div className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-[#0f2838]/30 px-2 py-1 shadow-sm backdrop-blur-sm">
+                    {images.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setImgIndex(i);
+                        }}
+                        aria-label={`View image ${i + 1}`}
+                        aria-current={i === imgIndex}
+                        className="group/dot flex h-5 w-4 items-center justify-center"
+                      >
+                        <span
+                          className={cn(
+                            "h-1 rounded-full transition-all duration-300",
+                            i === imgIndex
+                              ? "w-3.5 bg-gold shadow-[0_0_6px_rgba(201,169,110,0.8)]"
+                              : "w-1 bg-white/65 group-hover/dot:bg-gold/90",
+                          )}
+                        />
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </>
             )}
