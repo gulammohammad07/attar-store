@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { ZoomIn } from "lucide-react";
 import type { Product } from "@/lib/data/products";
+import ImageNavArrow from "@/components/product/ImageNavArrow";
 import { cn } from "@/lib/utils";
 
 export default function ProductViewer({ product }: { product: Product }) {
@@ -89,20 +90,19 @@ export default function ProductViewer({ product }: { product: Product }) {
   return (
     <div className="grid gap-4 md:grid-cols-[80px_1fr]">
       {/* Thumbnails */}
-      <div className="order-2 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:order-1 md:flex-col md:overflow-visible md:pb-0">
-        {images.map((image, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => selectImage(index)}
-            className={cn(
-              "relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition-all",
-              active === index && !showVideo
-                ? "border-gold shadow-md"
-                : "border-transparent opacity-60 hover:opacity-100",
-            )}
-            aria-label={`View image ${index + 1}`}
-          >
+      <div className="order-2 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:order-1 md:flex-col md:overflow-visible md:pb-0">            {images.map((image, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => selectImage(index)}
+                className={cn(
+                  "relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 bg-white transition-all",
+                  active === index && !showVideo
+                    ? "border-gold shadow-md"
+                    : "border-transparent opacity-60 hover:opacity-100",
+                )}
+                aria-label={`View image ${index + 1}`}
+              >
             <Image
               src={image}
               alt={`${product.name} view ${index + 1}`}
@@ -209,29 +209,24 @@ export default function ProductViewer({ product }: { product: Product }) {
 
         {!showVideo && images.length > 1 && (
           <>
-            <button
-              type="button"
+            <ImageNavArrow
+              direction="left"
               onClick={(e) => {
                 e.stopPropagation();
                 selectImage((active - 1 + images.length) % images.length);
               }}
-              aria-label="Previous image"
-              className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#174A63]/70 shadow backdrop-blur transition-all hover:scale-110 hover:text-[#174A63] md:opacity-0 md:group-hover:opacity-100"
-            >
-              <ChevronLeft size={20} />
-            </button>
-
-            <button
-              type="button"
+              ariaLabel="Previous image"
+              className="md:opacity-0 md:group-hover:opacity-100"
+            />
+            <ImageNavArrow
+              direction="right"
               onClick={(e) => {
                 e.stopPropagation();
                 selectImage((active + 1) % images.length);
               }}
-              aria-label="Next image"
-              className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-[#174A63]/70 shadow backdrop-blur transition-all hover:scale-110 hover:text-[#174A63] md:opacity-0 md:group-hover:opacity-100"
-            >
-              <ChevronRight size={20} />
-            </button>
+              ariaLabel="Next image"
+              className="md:opacity-0 md:group-hover:opacity-100"
+            />
           </>
         )}
 

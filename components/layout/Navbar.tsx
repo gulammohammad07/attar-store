@@ -161,7 +161,7 @@ export default function Navbar({
               <Link
                 href="/wishlist"
                 prefetch={false}
-                className="relative hidden transition-colors duration-300 hover:text-gold sm:block"
+                className="relative transition-colors duration-300 hover:text-gold"
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
