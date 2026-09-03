@@ -12,12 +12,14 @@ export default function ImageNavArrow({
   onClick,
   ariaLabel,
   variant = "light",
+  size = 18,
   className,
 }: {
   direction: "left" | "right";
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   ariaLabel: string;
   variant?: "light" | "dark";
+  size?: number;
   className?: string;
 }) {
   const Icon = direction === "left" ? ChevronLeft : ChevronRight;
@@ -36,7 +38,7 @@ export default function ImageNavArrow({
         className,
       )}
     >
-      <Icon size={18} strokeWidth={2.5} />
+      <Icon size={size} strokeWidth={2.5} />
     </button>
   );
 }

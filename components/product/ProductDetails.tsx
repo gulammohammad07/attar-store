@@ -25,6 +25,7 @@ import ProductViewer from "@/components/product/ProductViewer";
 import NotesPyramid from "@/components/product/NotesPyramid";
 import ProductReviews from "@/components/product/ProductReviews";
 import ProductCarousel from "@/components/product/ProductCarousel";
+import type { ReviewAggregate } from "@/lib/actions/review.actions";
 
 const tabs = ["Description", "Fragrance Notes", "Reviews", "Shipping"] as const;
 
@@ -49,6 +50,13 @@ export default function ProductDetails({
     "Description",
   );
   const [recentlyViewed, setRecentlyViewed] = useState<Product[]>([]);
+
+  // Single owner of review state: the header count, the summary average and
+  // the distribution bars all render from this aggregate, which the Reviews
+  // tab refreshes after every load or submit.
+  const [reviewAgg, setReviewAgg] = useState<ReviewAggregate | null>(null);
+  const displayRating = reviewAgg?.average ?? product.rating;
+  const displayReviewCount = reviewAgg?.count ?? product.reviewCount;
 
   const wished = isWishlisted(product.id);
   const price = useMemo(() => {
@@ -170,7 +178,7 @@ export default function ProductDetails({
                     key={i}
                     size={15}
                     className={
-                      i < Math.round(product.rating)
+                      i < Math.round(displayRating)
                         ? "fill-gold text-gold"
                         : "text-[#174A63]/20"
                     }
@@ -178,10 +186,10 @@ export default function ProductDetails({
                 ))}
               </div>
               <span className="text-sm font-medium text-[#174A63]">
-                {product.rating}
+                {displayRating}
               </span>
               <span className="text-sm text-[#174A63]/45">
-                ({product.reviewCount} reviews)
+                ({displayReviewCount} reviews)
               </span>
             </div>
 
@@ -402,7 +410,7 @@ export default function ProductDetails({
                 {tab}
                 {tab === "Reviews" && (
                   <span className="ml-1 text-xs text-gold">
-                    ({product.reviewCount})
+                    ({displayReviewCount})
                   </span>
                 )}
                 {activeTab === tab && (
@@ -439,7 +447,11 @@ export default function ProductDetails({
             )}
 
             {activeTab === "Reviews" && (
-              <ProductReviews product={product} />
+              <ProductReviews
+                product={product}
+                aggregate={reviewAgg}
+                onAggregateChange={setReviewAgg}
+              />
             )}
 
             {activeTab === "Shipping" && (

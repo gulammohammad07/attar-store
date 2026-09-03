@@ -199,7 +199,7 @@ export default function ProductViewer({ product }: { product: Product }) {
                     priority={index === 0}
                     quality={75}
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover p-10"
+                    className="object-cover"
                   />
                 </div>
               </div>

@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: "/**",
       },
+      // Google OAuth profile pictures (lh3/lh4/lh5… googleusercontent.com).
+      {
+        protocol: "https",
+        hostname: "lh*.googleusercontent.com",
+        pathname: "/**",
+      },
     ],
     minimumCacheTTL: 14400,
   },
