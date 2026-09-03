@@ -5,28 +5,31 @@ function toNote(name: string): FragranceNote {
   return { name, intensity: 70 };
 }
 
-function mapDbProduct(db: {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  salePrice: number | null;
-  description: string | null;
-  imageUrl: string;
-  videoUrl: string | null;
-  gallery: string[];
-  stock: number;
-  volume: string;
-  notes: string[];
-  bestSeller: boolean;
-  newArrival: boolean;
-  featured: boolean;
-  productType: string;
-  category: { name: string };
-  brand: { name: string };
-  occasions: { name: string }[];
-  sizes: { id: string; size: string; price: number; salePrice: number | null; stock: number }[];
-}): Product {
+function mapDbProduct(
+  db: {
+    id: string;
+    name: string;
+    slug: string;
+    price: number;
+    salePrice: number | null;
+    description: string | null;
+    imageUrl: string;
+    videoUrl: string | null;
+    gallery: string[];
+    stock: number;
+    volume: string;
+    notes: string[];
+    bestSeller: boolean;
+    newArrival: boolean;
+    featured: boolean;
+    productType: string;
+    category: { name: string };
+    brand: { name: string };
+    occasions: { name: string }[];
+    sizes: { id: string; size: string; price: number; salePrice: number | null; stock: number }[];
+  },
+  reviewStats?: { rating: number; count: number } | null,
+): Product {
   const noteNames =
     (db.notes ?? []).length > 0 ? db.notes : [db.category.name];
 
@@ -60,8 +63,8 @@ function mapDbProduct(db: {
     gallery: db.gallery.length > 0 ? db.gallery : [db.imageUrl],
     description: db.description ?? "",
     stock: db.stock,
-    rating: 4.5,
-    reviewCount: 0,
+    rating: reviewStats?.rating ?? 4.5,
+    reviewCount: reviewStats?.count ?? 0,
     badge,
     featured: db.featured,
     sizes: db.sizes,
@@ -136,7 +139,25 @@ export async function getStorefrontProducts(): Promise<Product[]> {
     },
   });
 
-  return dbProducts.map(mapDbProduct);
+  // Live ratings: average + count of real customer reviews per product.
+  const reviewAggs = await prisma.review.groupBy({
+    by: ["productId"],
+    _count: { id: true },
+    _avg: { rating: true },
+  });
+  const reviewStats = new Map(
+    reviewAggs.map((agg) => [
+      agg.productId,
+      {
+        rating: Math.round((agg._avg.rating ?? 4.5) * 10) / 10,
+        count: agg._count.id,
+      },
+    ]),
+  );
+
+  return dbProducts.map((dbProduct) =>
+    mapDbProduct(dbProduct, reviewStats.get(dbProduct.id)),
+  );
 }
 
 export async function getStorefrontProductBySlug(
@@ -152,7 +173,22 @@ export async function getStorefrontProductBySlug(
     },
   });
 
-  if (dbProduct) return mapDbProduct(dbProduct);
+  if (dbProduct) {
+    const reviewAgg = await prisma.review.aggregate({
+      where: { productId: dbProduct.id },
+      _count: { id: true },
+      _avg: { rating: true },
+    });
+    return mapDbProduct(
+      dbProduct,
+      reviewAgg._count.id > 0
+        ? {
+            rating: Math.round((reviewAgg._avg.rating ?? 4.5) * 10) / 10,
+            count: reviewAgg._count.id,
+          }
+        : null,
+    );
+  }
 
   return undefined;
 }

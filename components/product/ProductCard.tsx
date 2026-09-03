@@ -1,23 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { m as motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import { Eye, Heart, ShoppingBag, Star } from "lucide-react";
+import { Heart, ShoppingBag, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
 import ImageNavArrow from "@/components/product/ImageNavArrow";
 import { useWishlist } from "@/lib/store/wishlist-context";
 import { useCart } from "@/lib/store/cart-context";
 import { cn, formatPrice } from "@/lib/utils";
-// The quick-view dialog is a whole extra product UI (sizes, gallery, CTA).
-// Loading it eagerly from every card bloats every grid's chunk; it's only
-// fetched the first time a shopper actually opens it.
-const QuickViewModal = dynamic(
-  () => import("@/components/product/QuickViewModal"),
-  { ssr: false },
-);
 import { toast } from "sonner";
 
 export default function ProductCard({
@@ -33,8 +25,6 @@ export default function ProductCard({
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const [quickViewOpen, setQuickViewOpen] = useState(false);
-  const [quickViewLoaded, setQuickViewLoaded] = useState(false);
   const [imgIndex, setImgIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches,
@@ -152,22 +142,6 @@ export default function ProductCard({
               <Heart size={16} fill={wished ? "currentColor" : "none"} />
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setQuickViewLoaded(true);
-                setQuickViewOpen(true);
-              }}
-              aria-label="Quick view"
-              className={cn(
-                "flex h-11 w-11 items-center justify-center rounded-full shadow backdrop-blur transition-all hover:scale-110",
-                dark
-                  ? "bg-[#0a1b26]/70 text-[#dceff7]/60"
-                  : "bg-white/90 text-[#174A63]/50"
-              )}
-            >
-              <Eye size={16} />
-            </button>
           </div>
 
           <div className={cn(
@@ -207,16 +181,20 @@ export default function ProductCard({
                   onClick={prevImage}
                   ariaLabel="Previous image"
                   variant={dark ? "dark" : "light"}
+                  size={14}
+                  className="h-7 w-7 opacity-60 sm:h-8 sm:w-8 sm:opacity-50"
                 />
                 <ImageNavArrow
                   direction="right"
                   onClick={nextImage}
                   ariaLabel="Next image"
                   variant={dark ? "dark" : "light"}
+                  size={14}
+                  className="h-7 w-7 opacity-60 sm:h-8 sm:w-8 sm:opacity-50"
                 />
 
                 <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-10 flex justify-center">
-                  <div className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-[#0f2838]/30 px-2 py-1 shadow-sm backdrop-blur-sm">
+                  <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#0f2838]/20 px-1.5 py-0.5 shadow-sm backdrop-blur-sm">
                     {images.map((_, i) => (
                       <button
                         key={i}
@@ -228,14 +206,14 @@ export default function ProductCard({
                         }}
                         aria-label={`View image ${i + 1}`}
                         aria-current={i === imgIndex}
-                        className="group/dot flex h-5 w-4 items-center justify-center"
+                        className="group/dot flex h-3.5 w-3 items-center justify-center"
                       >
                         <span
                           className={cn(
-                            "h-1 rounded-full transition-all duration-300",
+                            "h-0.5 rounded-full transition-all duration-300",
                             i === imgIndex
-                              ? "w-3.5 bg-gold shadow-[0_0_6px_rgba(201,169,110,0.8)]"
-                              : "w-1 bg-white/65 group-hover/dot:bg-gold/90",
+                              ? "w-2.5 bg-gold/90"
+                              : "w-0.5 bg-white/50 group-hover/dot:bg-gold/70",
                           )}
                         />
                       </button>
@@ -305,15 +283,6 @@ export default function ProductCard({
           </div>
         </div>
       </motion.div>
-
-      {quickViewLoaded && (
-        <QuickViewModal
-          key={`${product.id}-${quickViewOpen}`}
-          product={product}
-          open={quickViewOpen}
-          onClose={() => setQuickViewOpen(false)}
-        />
-      )}
     </>
   );
 }

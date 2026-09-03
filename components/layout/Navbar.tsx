@@ -211,11 +211,21 @@ export default function Navbar({
                 <Link
                   href="/account"
                   prefetch={false}
-                  className="hidden h-9 w-9 items-center justify-center rounded-full bg-gradient-to-r from-gold to-gold-light text-xs font-bold text-[#0a1b26] ring-1 ring-gold/30 transition-all duration-500 hover:shadow-[0_0_20px_rgba(201,169,110,0.4)] sm:flex"
+                  className="hidden h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-gold to-gold-light text-xs font-bold text-[#0a1b26] ring-1 ring-gold/30 transition-all duration-500 hover:shadow-[0_0_20px_rgba(201,169,110,0.4)] sm:flex"
                   aria-label="Account"
-                  title={user.name}
+                  title={user.email || user.name}
                 >
-                  {user.name.charAt(0).toUpperCase()}
+                  {user.image ? (
+                    <Image
+                      src={user.image}
+                      alt={user.name}
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 object-cover"
+                    />
+                  ) : (
+                    user.name.charAt(0).toUpperCase()
+                  )}
                 </Link>
               ) : (
                 <Link
@@ -436,12 +446,35 @@ export default function Navbar({
 
                   {user ? (
                     <>
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-gold to-gold-light font-display text-lg font-semibold text-[#0a1b26] ring-1 ring-gold/30">
+                          {user.image ? (
+                            <Image
+                              src={user.image}
+                              alt={user.name}
+                              width={44}
+                              height={44}
+                              className="h-11 w-11 object-cover"
+                            />
+                          ) : (
+                            user.name.charAt(0).toUpperCase()
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-[#0f2838]">
+                            {user.name}
+                          </p>
+                          <p className="truncate text-xs text-[#5f7788]/60">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
                       <Link
                         href="/account"
                         onClick={() => setMobileOpen(false)}
                         className="transition-colors duration-300 hover:text-gold"
                       >
-                        Account {user.name ? `(${user.name.split(" ")[0]})` : ""}
+                        Account
                       </Link>
                       {isAdmin ? (
                         <Link

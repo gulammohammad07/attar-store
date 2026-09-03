@@ -197,7 +197,8 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
         </div>
       </div>
 
-      <div className="animate-fade-in-slow absolute bottom-10 left-1/2 -translate-x-1/2">
+      {/* Mouse-shaped scroll hint — desktop only; it clutters small screens */}
+      <div className="animate-fade-in-slow absolute bottom-10 left-1/2 hidden -translate-x-1/2 sm:block">
         <div className="flex h-10 w-6 items-start justify-center rounded-full border border-[#e0ecf2]">
           <div className="animate-scroll-hint mt-2 h-2 w-1 rounded-full bg-gold" />
         </div>

@@ -1,10 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { m as motion } from "framer-motion";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import type { Product } from "@/lib/data/products";
+import {
+  getProductReviewAggregateAction,
+  submitReviewAction,
+  type ReviewAggregate,
+} from "@/lib/actions/review.actions";
+import { useAuth } from "@/lib/store/auth-context";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const REVIEWERS = [
   { name: "Aarav S.", location: "Mumbai" },
@@ -24,31 +32,127 @@ const COMMENTS = [
   "Perfect for special occasions. The projection is outstanding.",
 ];
 
-function buildReviews(product: Product) {
+const ZERO_DISTRIBUTION = [5, 4, 3, 2, 1].map((stars) => ({
+  stars,
+  percent: 0,
+}));
+
+// Sample reviews fill a brand-new product's tab so it never looks empty. They
+// are placeholder content: no verified badge, clearly labelled as samples.
+function buildSeedReviews(product: Product) {
   const seed = product.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
   return REVIEWERS.map((reviewer, i) => {
     const rating = product.rating >= 4.8 ? 5 : product.rating >= 4.5 ? 4 : 4;
     return {
-      ...reviewer,
+      key: `seed-${i}`,
+      name: reviewer.name,
+      location: reviewer.location,
       rating,
       comment: COMMENTS[(seed + i) % COMMENTS.length],
       date: `${10 + ((seed + i) % 9)} ${["Jan", "Feb", "Mar", "Apr", "May", "Jun"][i % 6]} 2026`,
+      verified: false,
+      sample: true,
     };
   }).slice(0, 4);
 }
 
-export default function ProductReviews({ product }: { product: Product }) {
-  const reviews = useMemo(() => buildReviews(product), [product]);
+function formatDate(iso: string) {
+  try {
+    return new Date(iso).toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return "";
+  }
+}
+
+type DisplayReview = {
+  key: string;
+  name: string;
+  location: string;
+  rating: number;
+  comment: string;
+  date: string;
+  verified: boolean;
+  sample: boolean;
+};
+
+export default function ProductReviews({
+  product,
+  aggregate,
+  onAggregateChange,
+}: {
+  product: Product;
+  aggregate: ReviewAggregate | null;
+  onAggregateChange: (aggregate: ReviewAggregate) => void;
+}) {
+  const router = useRouter();
+  const { user, status } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [userRating, setUserRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  const distribution = [
-    { stars: 5, percent: product.rating >= 4.8 ? 82 : 60 },
-    { stars: 4, percent: 14 },
-    { stars: 3, percent: 3 },
-    { stars: 2, percent: 1 },
-    { stars: 1, percent: 0 },
-  ];
+  // Keep the aggregate fresh whenever the tab opens.
+  useEffect(() => {
+    let active = true;
+    getProductReviewAggregateAction(product.id).then((next) => {
+      if (active) onAggregateChange(next);
+    });
+    return () => {
+      active = false;
+    };
+  }, [product.id, onAggregateChange]);
+
+  const realReviews =
+    aggregate && aggregate.reviews.length > 0 ? aggregate.reviews : null;
+  const displayReviews: DisplayReview[] = realReviews
+    ? realReviews.map((review) => ({
+        key: review.id,
+        name: review.name,
+        location: "Verified buyer",
+        rating: review.rating,
+        comment: review.comment,
+        date: formatDate(review.createdAt),
+        verified: review.verified,
+        sample: false,
+      }))
+    : buildSeedReviews(product);
+
+  const average = aggregate?.average ?? product.rating;
+  const count = aggregate?.count ?? product.reviewCount;
+  const verifiedCount = aggregate?.verifiedCount ?? 0;
+  const distribution = aggregate?.distribution ?? ZERO_DISTRIBUTION;
+
+  const handleSubmit = async () => {
+    if (status === "loading") return;
+    if (!user) {
+      router.push(`/sign-in?next=/product/${product.slug}`);
+      return;
+    }
+    setSubmitting(true);
+    const result = await submitReviewAction({
+      productId: product.id,
+      rating: userRating,
+      comment,
+    });
+    setSubmitting(false);
+
+    if (!result.success) {
+      toast.error(result.message ?? "Could not submit your review.");
+      return;
+    }
+
+    toast.success(result.message);
+    setShowForm(false);
+    setUserRating(5);
+    setComment("");
+    if (result.aggregate) onAggregateChange(result.aggregate);
+    // Server-side: cards and the product page recompute their ratings.
+    router.refresh();
+  };
 
   return (
     <div className="grid gap-12 lg:grid-cols-[320px_1fr]">
@@ -56,7 +160,7 @@ export default function ProductReviews({ product }: { product: Product }) {
       <div>
         <div className="rounded-3xl border border-[#174A63]/10 bg-white p-8 text-center">
           <p className="font-display text-6xl font-semibold text-[#174A63]">
-            {product.rating}
+            {average}
           </p>
           <div className="mt-2 flex justify-center gap-1">
             {Array.from({ length: 5 }).map((_, i) => (
@@ -64,7 +168,7 @@ export default function ProductReviews({ product }: { product: Product }) {
                 key={i}
                 size={16}
                 className={
-                  i < Math.round(product.rating)
+                  i < Math.round(average)
                     ? "fill-gold text-gold"
                     : "text-[#174A63]/20"
                 }
@@ -72,7 +176,13 @@ export default function ProductReviews({ product }: { product: Product }) {
             ))}
           </div>
           <p className="mt-2 text-sm text-[#174A63]/50">
-            {product.reviewCount} verified reviews
+            {count} reviews
+            {verifiedCount > 0 && (
+              <>
+                {" "}
+                • <span className="text-gold">{verifiedCount} verified</span>
+              </>
+            )}
           </p>
 
           <div className="mt-6 space-y-2">
@@ -97,7 +207,13 @@ export default function ProductReviews({ product }: { product: Product }) {
 
         <button
           type="button"
-          onClick={() => setShowForm((s) => !s)}
+          onClick={() => {
+            if (!user) {
+              router.push(`/sign-in?next=/product/${product.slug}`);
+              return;
+            }
+            setShowForm((s) => !s);
+          }}
           className="mt-4 w-full rounded-full bg-[#174A63] py-3.5 text-sm font-medium text-white transition-colors hover:bg-gold"
         >
           Write a Review
@@ -132,18 +248,19 @@ export default function ProductReviews({ product }: { product: Product }) {
             </div>
             <textarea
               rows={3}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               placeholder="Share your experience..."
               className="w-full rounded-xl border border-[#174A63]/15 p-3 text-sm focus:border-gold focus:outline-none"
             />
             <button
               type="button"
-              onClick={() => {
-                setShowForm(false);
-                setUserRating(5);
-              }}
-              className="mt-3 rounded-full bg-gold px-6 py-2.5 text-sm font-medium text-white"
+              disabled={submitting}
+              onClick={handleSubmit}
+              className="mt-3 flex items-center gap-2 rounded-full bg-gold px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#174A63] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Submit Review
+              {submitting && <Loader2 size={14} className="animate-spin" />}
+              {submitting ? "Submitting…" : "Submit Review"}
             </button>
           </motion.div>
         )}
@@ -151,9 +268,9 @@ export default function ProductReviews({ product }: { product: Product }) {
 
       {/* Review list */}
       <div className="space-y-6">
-        {reviews.map((review, index) => (
+        {displayReviews.map((review, index) => (
           <motion.div
-            key={index}
+            key={review.key}
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -193,9 +310,16 @@ export default function ProductReviews({ product }: { product: Product }) {
               &ldquo;{review.comment}&rdquo;
             </p>
 
-            <p className="mt-3 text-[10px] font-medium tracking-wider text-gold uppercase">
-              ✓ Verified Purchase
-            </p>
+            {review.verified && (
+              <p className="mt-3 text-[10px] font-medium tracking-wider text-gold uppercase">
+                ✓ Verified Purchase
+              </p>
+            )}
+            {review.sample && (
+              <p className="mt-3 text-[10px] font-medium tracking-wider text-[#5f7788]/45 uppercase">
+                Sample review
+              </p>
+            )}
           </motion.div>
         ))}
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { m as motion } from "framer-motion";
@@ -8,6 +9,7 @@ import {
   Heart,
   LogOut,
   Mail,
+  MapPin,
   Package,
   ShieldCheck,
   ShoppingBag,
@@ -80,6 +82,12 @@ export default function AccountPage() {
       href: "/wishlist",
     },
     {
+      icon: MapPin,
+      title: "Addresses",
+      description: "Manage your delivery addresses.",
+      href: "/account/addresses",
+    },
+    {
       icon: ShoppingBag,
       title: "Browse the collection",
       description: "Discover new attars and ouds.",
@@ -98,8 +106,18 @@ export default function AccountPage() {
         {/* Header */}
         <div className="flex flex-col items-start gap-6 rounded-3xl border border-[#174A63]/10 bg-white p-8 shadow-xl sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#174A63] font-display text-xl font-semibold text-gold">
-              {initials}
+            <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#174A63] font-display text-xl font-semibold text-gold ring-2 ring-gold/30">
+              {user.image ? (
+                <Image
+                  src={user.image}
+                  alt={user.name}
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 object-cover"
+                />
+              ) : (
+                initials
+              )}
             </div>
             <div>
               <h1 className="font-display text-3xl font-medium text-[#174A63]">
@@ -138,7 +156,7 @@ export default function AccountPage() {
         </div>
 
         {/* Cards */}
-        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {cards.map((card) => {
             const Icon = card.icon;
             return (
