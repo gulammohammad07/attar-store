@@ -8,21 +8,10 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useRef, useSyncExternalStore } from "react";
+import { useRef } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import BottleVisual from "@/components/plp/BottleVisual";
-
-function useMediaQuery(query: string): boolean {
-  return useSyncExternalStore(
-    (onChange) => {
-      const mq = window.matchMedia(query);
-      mq.addEventListener("change", onChange);
-      return () => mq.removeEventListener("change", onChange);
-    },
-    () => window.matchMedia(query).matches,
-    () => false,
-  );
-}
+import { useHoverCapable } from "@/lib/hooks/use-media-query";
 
 const particles = [
   { top: "18%", left: "8%", size: 5, delay: 0, duration: 8 },
@@ -47,9 +36,7 @@ const floatingChips = [
 
 export default function PlpHero() {
   const ref = useRef<HTMLElement>(null);
-  const finePointer = useMediaQuery("(pointer: fine)");
-  const prefersReduced = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const motionOk = finePointer && !prefersReduced;
+  const motionOk = useHoverCapable();
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);

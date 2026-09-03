@@ -406,10 +406,7 @@ export default function ProductDetails({
                   </span>
                 )}
                 {activeTab === tab && (
-                  <motion.div
-                    layoutId="active-tab"
-                    className="absolute inset-x-0 bottom-0 h-0.5 bg-gold"
-                  />
+                  <span className="animate-underline absolute inset-x-0 bottom-0 h-0.5 origin-left bg-gold" />
                 )}
               </button>
             ))}

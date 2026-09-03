@@ -1,6 +1,5 @@
 "use client";
 
-import { m as motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { getPublicStoreSettings } from "@/lib/actions/settings.actions";
 import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
@@ -47,15 +46,14 @@ export default function AnnouncementBar() {
 
 function AnimatedMessage({ message }: { message: string }) {
   return (
-    <motion.p
+    // CSS animation, not framer-motion: this bar re-keys every 4s for the
+    // whole page lifetime, so a motion component here is pure main-thread
+    // cost in the load window.
+    <p
       key={message}
-      initial={{ y: 16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: -16, opacity: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="flex h-9 items-center justify-center text-[11px] font-medium tracking-[0.2em] uppercase"
+      className="flex h-9 animate-fade-in items-center justify-center text-[11px] font-medium tracking-[0.2em] uppercase"
     >
       {message}
-    </motion.p>
+    </p>
   );
 }

@@ -36,7 +36,10 @@ export default function LazyMount({
           }
         }
       },
-      { rootMargin: "900px 0px" },
+      // Pre-mount only slightly before a section scrolls into view. A large
+      // margin (900px+) used to hydrate every below-fold section during the
+      // initial load on phones, pushing long tasks into the load window.
+      { rootMargin: "0px 0px 120px 0px" },
     );
 
     io.observe(el);

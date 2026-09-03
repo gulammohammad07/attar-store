@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ShieldCheck, Truck, BadgeCheck } from "lucide-react";
 import {
@@ -8,7 +6,6 @@ import {
   XIcon,
   YoutubeIcon,
 } from "@/components/layout/SocialIcons";
-import { m as motion } from "framer-motion";
 import { formatPrice } from "@/lib/utils";
 import { DEFAULT_FREE_SHIPPING_THRESHOLD } from "@/lib/constants/shipping";
 
@@ -70,13 +67,7 @@ export default function Footer({
         <div className="absolute -right-40 top-1/4 h-[500px] w-[500px] bg-[radial-gradient(circle,rgba(201,169,110,0.08),transparent_70%)]" />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="relative border-b border-white/[0.06]"
-      >
+      <div className="relative border-b border-white/[0.06]">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-10 px-6 py-14 sm:grid-cols-3">
           {trustBadges.map((badge) => (
             <div key={badge.label} className="flex items-center gap-5">
@@ -94,17 +85,11 @@ export default function Footer({
             </div>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       <div className="relative mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-14 lg:grid-cols-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-5"
-          >
+          <div className="lg:col-span-5">
             <p className="font-display text-3xl font-semibold tracking-[0.2em] text-[#f8fcfe]">
               DANISH<span className="bg-gradient-to-r from-gold to-gold-light bg-clip-text text-transparent"> PERFUMES</span>
             </p>
@@ -131,15 +116,11 @@ export default function Footer({
                 </a>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {columns.map((column) => (
-            <motion.div
+            <div
               key={column.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
               className="lg:col-span-2"
             >
               <h4 className="mb-6 text-[11px] font-semibold tracking-[0.24em] text-gold uppercase">
@@ -158,7 +139,7 @@ export default function Footer({
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

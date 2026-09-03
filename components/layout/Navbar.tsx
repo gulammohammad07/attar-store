@@ -141,11 +141,7 @@ export default function Navbar({
                   >
                     {item.label}
                     {activeMenu === item.label && (
-                      <motion.span
-                        layoutId="nav-indicator"
-                        className="absolute -bottom-1 left-0 h-px w-full bg-gradient-to-r from-gold to-gold-light"
-                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                      />
+                      <span className="animate-underline absolute -bottom-1 left-0 h-px w-full origin-left bg-gradient-to-r from-gold to-gold-light" />
                     )}
                   </Link>
                 </div>
