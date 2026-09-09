@@ -22,3 +22,7 @@ export default async function BrandsPage() {
     </div>
   );
 }
+
+
+
+// revert the changes 
