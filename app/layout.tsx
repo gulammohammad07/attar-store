@@ -37,6 +37,12 @@ const metadataDefaults: Metadata = {
     "musk",
     "Danish Perfumes",
   ],
+  // Google Search Console ownership verification (HTML tag method).
+  // Code matches the public/googlee2d45e51890ac94d.html file method —
+  // either one is enough to verify in GSC.
+  verification: {
+    google: "e2d45e51890ac94d",
+  },
   openGraph: {
     title: "Danish Perfumes — Luxury Attars & Fragrances",
     description:
