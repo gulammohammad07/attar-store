@@ -46,7 +46,7 @@ export default function OrderStatusSelect({
         value={status}
         onChange={handleChange}
         disabled={pending}
-        className="h-9 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 pr-8 text-xs font-semibold text-gray-700 transition-colors focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+        className="h-9 cursor-pointer rounded-lg border border-gray-300 bg-white px-3 pr-8 text-xs font-semibold text-gray-700 transition-colors focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       >
         {ORDER_STATUSES.map((option) => (
           <option key={option} value={option}>
@@ -57,7 +57,7 @@ export default function OrderStatusSelect({
       {pending && (
         <Loader2
           size={14}
-          className="pointer-events-none absolute right-2 animate-spin text-gold"
+          className="pointer-events-none absolute right-2 animate-spin text-black"
         />
       )}
     </div>

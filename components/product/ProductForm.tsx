@@ -262,13 +262,13 @@ export default function ProductForm({
             <button
               type="button"
               onClick={() => setShowBrandForm(true)}
-              className="mt-2 text-sm font-medium text-[#174a63] underline underline-offset-4 hover:text-gold"
+              className="mt-2 text-sm font-medium text-[#111111] underline underline-offset-4 hover:text-black"
             >
               + Create new brand
             </button>
           ) : (
-            <div className="mt-3 rounded-lg border border-dashed border-[#174a63]/20 bg-[#f8fcfe] p-3">
-              <p className="mb-2 text-xs font-medium text-[#174a63]/60">
+            <div className="mt-3 rounded-lg border border-dashed border-[#111111]/20 bg-[#f5f5f0] p-3">
+              <p className="mb-2 text-xs font-medium text-[#111111]/60">
                 Create a new brand and select it automatically.
               </p>
               <div className="flex flex-col gap-2 sm:flex-row">
@@ -276,19 +276,19 @@ export default function ProductForm({
                   value={newBrandName}
                   onChange={(e) => setNewBrandName(e.target.value)}
                   placeholder="Brand name"
-                  className="flex-1 rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm focus:border-gold focus:outline-none"
+                  className="flex-1 rounded-lg border border-[#111111]/15 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none"
                 />
                 <input
                   value={newBrandSlug}
                   onChange={(e) => setNewBrandSlug(e.target.value)}
                   placeholder="slug (optional)"
-                  className="flex-1 rounded-lg border border-[#174a63]/15 bg-white px-3 py-2 text-sm focus:border-gold focus:outline-none"
+                  className="flex-1 rounded-lg border border-[#111111]/15 bg-white px-3 py-2 text-sm focus:border-black focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleCreateBrand}
                   disabled={brandPending}
-                  className="rounded-lg bg-[#174a63] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gold disabled:opacity-50"
+                  className="rounded-lg bg-[#111111] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#1f1f1f] disabled:opacity-50"
                 >
                   {brandPending ? "Creating..." : "Create"}
                 </button>
@@ -296,7 +296,7 @@ export default function ProductForm({
               <button
                 type="button"
                 onClick={() => setShowBrandForm(false)}
-                className="mt-2 text-xs text-[#174a63]/50 hover:text-[#174a63]"
+                className="mt-2 text-xs text-[#111111]/50 hover:text-[#111111]"
               >
                 Cancel
               </button>
@@ -402,7 +402,7 @@ export default function ProductForm({
           <button
             type="button"
             onClick={addSize}
-            className="text-sm font-medium text-[#174a63] underline underline-offset-4 hover:text-gold"
+            className="text-sm font-medium text-[#111111] underline underline-offset-4 hover:text-black"
           >
             + Add Size
           </button>
@@ -416,7 +416,7 @@ export default function ProductForm({
         ) : (
           <div className="space-y-3">
             {sizes.map((sizeItem, index) => (
-              <div key={index} className="grid gap-3 rounded-xl border border-[#174a63]/10 bg-[#f8fcfe] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
+              <div key={index} className="grid gap-3 rounded-xl border border-[#111111]/10 bg-[#f5f5f0] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
                 <div>
                   <input
                     type="text"

@@ -279,7 +279,7 @@ export default function OrdersTable({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Order ID, name or email…"
-              className="h-10 w-full rounded-lg border border-gray-300 pr-3 pl-9 text-sm focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none"
+              className="h-10 w-full rounded-lg border border-gray-300 pr-3 pl-9 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none"
             />
           </div>
         </div>
@@ -292,7 +292,7 @@ export default function OrdersTable({
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none"
+            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none"
           />
         </div>
 
@@ -304,7 +304,7 @@ export default function OrdersTable({
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none"
+            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none"
           />
         </div>
 

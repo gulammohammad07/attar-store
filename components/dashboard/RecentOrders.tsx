@@ -29,28 +29,28 @@ export default async function RecentOrders() {
 
   if (orders.length === 0) {
     return (
-      <div className="rounded-2xl border bg-white p-6 shadow-sm">
-        <h2 className="mb-5 text-xl font-semibold">Recent Orders</h2>
-        <div className="text-gray-500">No orders yet.</div>
+      <div className="rounded-2xl border border-[#e5e5e0] bg-white p-6 shadow-sm">
+        <h2 className="mb-5 text-xl font-semibold text-[#111111]">Recent Orders</h2>
+        <div className="text-[#6b7280]">No orders yet.</div>
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border bg-white p-6 shadow-sm">
-      <h2 className="mb-5 text-xl font-semibold">Recent Orders</h2>
+    <div className="rounded-2xl border border-[#e5e5e0] bg-white p-6 shadow-sm">
+      <h2 className="mb-5 text-xl font-semibold text-[#111111]">Recent Orders</h2>
 
       <div className="space-y-4">
         {orders.map((order) => (
           <div
             key={order.id}
-            className="flex items-center justify-between gap-4 border-b border-gray-100 pb-4 last:border-0 last:pb-0"
+            className="flex items-center justify-between gap-4 border-b border-[#e5e5e0] pb-4 last:border-0 last:pb-0"
           >
             <div className="min-w-0">
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-[#111111]">
                 {order.orderNumber}
               </p>
-              <p className="truncate text-sm text-gray-500">
+              <p className="truncate text-sm text-[#6b7280]">
                 {order.customerName} ·{" "}
                 {order.items[0]?.productName ?? "—"}
               </p>
@@ -59,11 +59,11 @@ export default async function RecentOrders() {
                   {order.occasion}
                 </p>
               ) : null}
-              <p className="text-xs text-gray-400">{formatDate(order.createdAt)}</p>
+              <p className="text-xs text-[#9ca3af]">{formatDate(order.createdAt)}</p>
             </div>
 
             <div className="text-right">
-              <p className="font-semibold text-gray-900">
+              <p className="font-semibold text-[#111111]">
                 {formatPrice(order.total)}
               </p>
               <span

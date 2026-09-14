@@ -12,7 +12,7 @@ import ImageUploader, { type ImageValue } from "@/components/admin/ImageUploader
 const initialState: UpdateSettingsResult = { success: false };
 
 const inputClass =
-  "w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none";
+  "w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none";
 
 export default function SettingsForm({
   settings,

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -38,8 +37,14 @@ export function GoogleButton({
 }) {
   const query = next ? `?next=${encodeURIComponent(next)}` : "";
   return (
-    <Link
-      href={`/api/auth/google/start${query}`}
+    <button
+      type="button"
+      onClick={() => {
+        // Full browser navigation (not client-side routing): this URL is a 307
+        // redirect to accounts.google.com, which the Next.js router fetch would
+        // otherwise report as a cross-origin "Failed to fetch".
+        window.location.assign(`/api/auth/google/start${query}`);
+      }}
       className={cn(
         "group flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-ink/12 bg-white text-sm font-semibold text-ink transition-all hover:border-ink/25 hover:bg-cream active:translate-y-px focus-visible:ring-4 focus-visible:ring-gold/20 focus-visible:outline-none",
         className,
@@ -47,7 +52,7 @@ export function GoogleButton({
     >
       <GoogleMark />
       {label}
-    </Link>
+    </button>
   );
 }
 

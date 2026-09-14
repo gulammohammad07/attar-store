@@ -11,6 +11,13 @@
 
   --color-gold: var(--gold);
   --color-gold-light: var(--gold-light);
+  /* Admin panel (Libaas-style black & cream theme) */
+  --color-admin-sidebar: #0a0a0a;
+  --color-admin-surface: #f5f5f0;
+  --color-admin-border: #e5e5e0;
+  --color-admin-ink: #111111;
+  --color-admin-muted: #6b7280;
+  --color-admin-hover: #1f1f1f;
   --color-ink: var(--ink);
   --color-cream: var(--cream);
   --color-cream-dark: var(--cream-dark);

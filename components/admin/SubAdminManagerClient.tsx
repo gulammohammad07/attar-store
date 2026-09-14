@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 const SubAdminManager = dynamic(() => import("./SubAdminManager"), {
   ssr: false,
   loading: () => (
-    <div aria-busy="true" className="h-48 rounded-2xl border border-[#174a63]/10 bg-white" />
+    <div aria-busy="true" className="h-48 rounded-2xl border border-[#111111]/10 bg-white" />
   ),
 });
 
