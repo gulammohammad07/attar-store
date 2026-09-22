@@ -59,8 +59,8 @@ export default function HomeSections({
           <SectionSkeleton
             eyebrow="Most Loved"
             title="Best Sellers"
-            description="The fragrances our clients return for, again and again."
-            className="bg-[#F8FCFE]"
+            description="The products our clients return for, again and again."
+            className="bg-[#faf7f0]"
             style={{ minHeight: 820 }}
           />
         }

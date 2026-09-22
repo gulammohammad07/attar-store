@@ -69,7 +69,7 @@ export default function OccasionForm() {
       <button
         type="submit"
         disabled={pending}
-        className="mt-5 rounded-xl bg-black px-6 py-3 text-white disabled:opacity-50"
+        className="mt-5 w-full rounded-xl bg-black px-6 py-3 text-white disabled:opacity-50 sm:w-auto"
       >
         {pending ? "Creating..." : "Create Occasion"}
       </button>

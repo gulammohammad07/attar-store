@@ -42,32 +42,32 @@ export default async function OrdersPage({
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Orders</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Orders</h1>
         <p className="text-muted-foreground mt-2">
           Manage your customer orders. Deleting an order only removes it from
           this panel — the customer still sees it in their order history.
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+      <div className="grid gap-4 sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
+        <div className="rounded-2xl border bg-white p-5 shadow-sm sm:p-6">
           <p className="text-sm text-gray-500">Total Orders</p>
-          <h2 className="mt-3 text-4xl font-bold">{totals.totalOrders}</h2>
+          <h2 className="mt-3 text-2xl font-bold sm:text-4xl">{totals.totalOrders}</h2>
           <p className="mt-1 text-xs text-gray-400">
             Includes {totals.hiddenCount} hidden from this panel
           </p>
         </div>
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 shadow-sm sm:p-6">
           <p className="text-sm text-gray-500">Revenue (Delivered)</p>
-          <h2 className="mt-3 text-4xl font-bold">
+          <h2 className="mt-3 break-words text-2xl font-bold sm:text-4xl">
             {formatPrice(totals.deliveredRevenue)}
           </h2>
         </div>
 
-        <div className="rounded-2xl border bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border bg-white p-5 shadow-sm sm:p-6">
           <p className="text-sm text-gray-500">Pending (Not Delivered)</p>
-          <h2 className="mt-3 text-4xl font-bold">
+          <h2 className="mt-3 break-words text-2xl font-bold sm:text-4xl">
             {formatPrice(totals.pendingRevenue)}
           </h2>
         </div>

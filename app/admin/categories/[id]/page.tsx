@@ -17,7 +17,7 @@ export default async function EditCategoryPage({
   if (!category) notFound();
 
   return (
-    <div className="max-w-3xl p-6">
+    <div className="max-w-3xl">
       <CategoryForm
         initial={{
           id: category.id,

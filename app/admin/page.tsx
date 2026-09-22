@@ -23,11 +23,11 @@ export default async function AdminDashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-[#111111]">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-[#111111] sm:text-4xl">Dashboard</h1>
         <p className="text-gray-500 mt-2">Welcome back 👋</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-5">
         <StatsCard
           title="Products"
           value={totalProducts}

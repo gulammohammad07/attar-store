@@ -58,9 +58,9 @@ export default function LuxuryProductGrid({
   };
 
   return (
-    <section className="scroll-mt-24 bg-[#f8fcfe] py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-14 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+    <section className="scroll-mt-24 bg-[#f8fcfe] py-14 sm:py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mb-10 flex flex-col gap-8 sm:mb-14 md:flex-row md:items-end md:justify-between">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -70,7 +70,7 @@ export default function LuxuryProductGrid({
             <p className="text-[11px] font-semibold tracking-[0.34em] text-gold uppercase">
               {sectionEyebrow}
             </p>
-            <h2 className="mt-4 font-display text-5xl font-medium tracking-tight text-[#0f2838] sm:text-6xl lg:text-7xl">
+            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-[#0f2838] sm:text-5xl lg:text-6xl xl:text-7xl">
               {sectionTitle}
             </h2>
             <p className="mt-5 text-sm text-[#5f7788]/60">

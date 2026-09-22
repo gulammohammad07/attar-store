@@ -12,7 +12,7 @@ export default async function OccasionsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Occasions</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Occasions</h1>
         <p className="text-gray-500">
           Manage the occasions products can be linked to.
         </p>

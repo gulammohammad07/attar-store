@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { m as motion } from "framer-motion";
 import type { Product } from "@/lib/data/products";
 import ProductCard from "@/components/product/ProductCard";
-import SectionHeading from "@/components/landing/SectionHeading";
 
 export default function BestSellers({ products }: { products: Product[] }) {
   const bestSellers = products.filter(
@@ -24,53 +25,72 @@ export default function BestSellers({ products }: { products: Product[] }) {
   if (items.length === 0) return null;
 
   return (
-    <section className="relative overflow-hidden bg-[#f8fcfe] py-24 sm:py-32">
-      <div className="pointer-events-none absolute left-1/2 top-0 h-px w-[60%] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-      <div className="pointer-events-none absolute -right-40 top-1/3 h-[420px] w-[420px] bg-[radial-gradient(circle,rgba(201,169,110,0.1),transparent_70%)]" />
-
-      <div className="mx-auto max-w-7xl px-6">
-        <SectionHeading
-          eyebrow="Most Loved"
-          title="Best Sellers"
-          description="The fragrances our clients return for, again and again."
-        />
-      </div>
-
-      <div className="relative">
-        <button
-          type="button"
-          onClick={() => scroll(-1)}
-          className="absolute top-1/2 left-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#174A63]/15 bg-white/90 text-[#174A63] shadow-[0_8px_24px_-8px_rgba(15,40,56,0.3)] backdrop-blur transition-all hover:bg-[#174A63] hover:text-white sm:left-4 sm:h-12 sm:w-12"
-          aria-label="Scroll left"
+    <section className="relative overflow-hidden bg-[#faf7f0] py-20 sm:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 sm:mb-12"
         >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => scroll(1)}
-          className="absolute top-1/2 right-2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[#174A63]/15 bg-white/90 text-[#174A63] shadow-[0_8px_24px_-8px_rgba(15,40,56,0.3)] backdrop-blur transition-all hover:bg-[#174A63] hover:text-white sm:right-4 sm:h-12 sm:w-12"
-          aria-label="Scroll right"
-        >
-          <ChevronRight size={18} />
-        </button>
+          <p className="text-[11px] font-bold tracking-[0.35em] text-[#b4532a]/70 uppercase">
+            Most Loved
+          </p>
+          <div className="mt-4 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-xl">
+              <h2 className="font-display text-4xl font-medium tracking-tight text-[#1a1a1a] sm:text-5xl lg:text-[3.5rem]">
+                Best Sellers
+              </h2>
+              <p className="mt-4 text-[15px] leading-[1.7] text-[#8a857c]">
+                The products our clients return for, again and again.
+              </p>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-4 sm:gap-6">
+              <Link
+                href="/shop"
+                className="group inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.22em] text-[#1a1a1a] uppercase transition-colors hover:text-[#b4532a]"
+              >
+                View All
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => scroll(-1)}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#8a857c] shadow-[0_4px_16px_-4px_rgba(26,26,26,0.15)] transition-all duration-300 hover:bg-[#1a1a1a] hover:text-white active:scale-95"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scroll(1)}
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#1a1a1a] shadow-[0_4px_16px_-4px_rgba(26,26,26,0.15)] transition-all duration-300 hover:bg-[#1a1a1a] hover:text-white active:scale-95"
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
 
         <div
           ref={trackRef}
           role="region"
           aria-label="Best sellers"
-          className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-2 scroll-pl-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:gap-6 sm:px-6 sm:scroll-pl-6"
         >
           {items.map((product) => (
             <div
               key={product.id}
-              className="w-[300px] shrink-0 snap-start sm:w-[320px]"
+              className="w-[280px] shrink-0 snap-start sm:w-[320px]"
             >
               <ProductCard product={product} loading="eager" />
             </div>
           ))}
         </div>
       </div>
-
     </section>
   );
 }

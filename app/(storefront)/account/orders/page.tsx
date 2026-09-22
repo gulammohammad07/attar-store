@@ -29,9 +29,9 @@ export default async function AccountOrdersPage() {
   const orders = await getOrdersByUser(user.id);
 
   return (
-    <div className="min-h-screen bg-[#F8FCFE] px-4 py-14 sm:px-8">
+    <div className="min-h-screen bg-[#F8FCFE] px-4 py-10 sm:px-8 sm:py-14">
       <div className="mx-auto max-w-4xl">
-        <h1 className="font-display text-4xl font-medium text-[#174A63]">
+        <h1 className="font-display text-3xl font-medium text-[#174A63] sm:text-4xl">
           My Orders
         </h1>
         <p className="mt-2 text-sm text-[#174A63]/50">
@@ -65,7 +65,7 @@ export default async function AccountOrdersPage() {
                 key={order.id}
                 className="overflow-hidden rounded-3xl border border-[#174A63]/10 bg-white shadow-sm"
               >
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#174A63]/10 bg-[#F8FCFE]/60 px-6 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#174A63]/10 bg-[#F8FCFE]/60 px-4 py-4 sm:px-6">
                   <div>
                     <p className="font-display text-lg font-medium text-[#174A63]">
                       {order.orderNumber}
@@ -109,7 +109,7 @@ export default async function AccountOrdersPage() {
                   {order.items.map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between gap-4 px-6 py-4"
+                      className="flex items-center justify-between gap-3 px-4 py-4 sm:gap-4 sm:px-6"
                     >
                       <div className="flex min-w-0 items-center gap-4">
                         {item.productImage ? (
@@ -117,7 +117,7 @@ export default async function AccountOrdersPage() {
                           <img
                             src={item.productImage}
                             alt={item.productName}
-                            className="h-14 w-14 shrink-0 rounded-xl object-cover"
+                            className="h-14 w-14 shrink-0 rounded-xl bg-[#F8FCFE] object-contain p-1"
                           />
                         ) : (
                           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#F8FCFE]">
@@ -140,7 +140,7 @@ export default async function AccountOrdersPage() {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#174A63]/10 px-6 py-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#174A63]/10 px-4 py-4 sm:px-6">
                   <p className="text-xs leading-relaxed text-[#174A63]/45">
                     Deliver to: {order.street}, {order.city}, {order.state}{" "}
                     {order.pincode}

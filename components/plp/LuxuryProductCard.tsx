@@ -49,7 +49,7 @@ export default function LuxuryProductCard({
         className,
       )}
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#f0f7fb] via-[#f8fcfe] to-[#faf9f7]">
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-[#f0f7fb] via-[#f8fcfe] to-[#faf9f7] sm:aspect-[4/5]">
         <div className="absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(201,169,110,0.18),transparent_70%)]" />
 
         <Link href={`/product/${product.slug}`} className="block h-full w-full">
@@ -58,7 +58,7 @@ export default function LuxuryProductCard({
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-contain p-7 transition-transform duration-700 ease-out group-hover:scale-[1.08]"
+            className="object-contain p-4 transition-transform duration-700 ease-out group-hover:scale-[1.05] sm:p-7"
           />
         </Link>
 

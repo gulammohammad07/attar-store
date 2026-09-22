@@ -264,9 +264,9 @@ export default function OrdersTable({
       {/* Filters */}
       <form
         onSubmit={applyFilters}
-        className="flex flex-wrap items-end gap-3 rounded-2xl border bg-white p-4 shadow-sm"
+        className="flex flex-col gap-3 rounded-2xl border bg-white p-4 shadow-sm sm:flex-row sm:flex-wrap sm:items-end"
       >
-        <div className="min-w-[240px] flex-1">
+        <div className="w-full sm:min-w-[240px] sm:flex-1">
           <label className="mb-1.5 block text-xs font-semibold text-gray-500 uppercase">
             Search order
           </label>
@@ -284,7 +284,7 @@ export default function OrdersTable({
           </div>
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="mb-1.5 block text-xs font-semibold text-gray-500 uppercase">
             From
           </label>
@@ -292,11 +292,11 @@ export default function OrdersTable({
             type="date"
             value={from}
             onChange={(e) => setFrom(e.target.value)}
-            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none sm:w-auto"
           />
         </div>
 
-        <div>
+        <div className="w-full sm:w-auto">
           <label className="mb-1.5 block text-xs font-semibold text-gray-500 uppercase">
             To
           </label>
@@ -304,13 +304,13 @@ export default function OrdersTable({
             type="date"
             value={to}
             onChange={(e) => setTo(e.target.value)}
-            className="h-10 rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none"
+            className="h-10 w-full rounded-lg border border-gray-300 px-3 text-sm focus:border-black focus:ring-2 focus:ring-black/20 focus:outline-none sm:w-auto"
           />
         </div>
 
         <button
           type="submit"
-          className="flex h-10 items-center gap-2 rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800"
+          className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg bg-zinc-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-zinc-800 sm:flex-none"
         >
           <Search size={15} />
           Apply
@@ -319,7 +319,7 @@ export default function OrdersTable({
         <button
           type="button"
           onClick={resetFilters}
-          className="flex h-10 items-center gap-2 rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
+          className="flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 sm:flex-none"
         >
           <RefreshCw size={15} />
           Reset
@@ -327,7 +327,7 @@ export default function OrdersTable({
 
         <a
           href={exportUrl}
-          className="ml-auto flex h-10 items-center gap-2 rounded-lg border border-green-600 px-5 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50"
+          className="flex h-10 items-center justify-center gap-2 rounded-lg border border-green-600 px-5 text-sm font-semibold text-green-700 transition-colors hover:bg-green-50 sm:ml-auto"
         >
           <Download size={15} />
           Download Excel
@@ -337,7 +337,7 @@ export default function OrdersTable({
           type="button"
           onClick={isDeletedView ? handleRestoreSelected : handleDeleteSelected}
           disabled={selected.size === 0 || deleting}
-          className={`flex h-10 items-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+          className={`flex h-10 flex-1 items-center justify-center gap-2 rounded-lg border px-4 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:flex-none ${
             isDeletedView
               ? "border-green-200 text-green-700 hover:bg-green-50"
               : "border-red-200 text-red-600 hover:bg-red-50"
@@ -368,8 +368,100 @@ export default function OrdersTable({
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1000px] text-left text-sm">
+          <>
+            {/* Mobile cards */}
+            <ul className="divide-y divide-gray-100 lg:hidden">
+              {orders.map((order) => (
+                <li
+                  key={order.id}
+                  className={`space-y-3 p-4 ${selected.has(order.id) ? "bg-amber-50/50" : ""}`}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={selected.has(order.id)}
+                          onChange={() => toggleOne(order.id)}
+                          className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-zinc-950"
+                        />
+                        <span className="truncate font-semibold text-gray-900">
+                          {order.orderNumber}
+                        </span>
+                      </label>
+                      <p className="mt-0.5 text-xs text-gray-400">
+                        {formatDate(order.createdAt)}
+                      </p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="font-semibold text-gray-900">
+                        {formatPrice(order.total)}
+                      </p>
+                      <span
+                        className={`mt-1 inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide uppercase ${
+                          PAYMENT_BADGE[order.paymentStatus] ??
+                          "bg-gray-100 text-gray-600"
+                        }`}
+                      >
+                        {order.paymentStatus}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-600">
+                    <p className="font-medium text-gray-900">{order.customerName}</p>
+                    <p className="text-xs">{order.customerPhone}</p>
+                    <p className="mt-1 text-xs text-gray-400">
+                      {order.street}, {order.city}, {order.state} {order.pincode}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-1 text-sm text-gray-600">
+                    {order.items.map((item) => (
+                      <li key={item.id}>
+                        {item.productName}{" "}
+                        <span className="text-gray-400">
+                          × {item.quantity} · {formatPrice(item.lineTotal)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {order.occasion ? (
+                    <span className="inline-block rounded-full bg-amber-50 px-3 py-1 text-[11px] font-semibold tracking-wide text-amber-700 uppercase">
+                      {order.occasion}
+                    </span>
+                  ) : null}
+
+                  <div className="flex items-center gap-3 pt-1">
+                    <OrderStatusSelect orderId={order.id} status={order.status} />
+                    {isDeletedView ? (
+                      <button
+                        type="button"
+                        onClick={() => handleRestoreOne(order.id, order.orderNumber)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-green-200 px-3 py-2 text-xs font-semibold text-green-700 transition-colors hover:bg-green-50"
+                      >
+                        <RotateCcw size={14} />
+                        Restore
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteOne(order.id, order.orderNumber)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
+                      >
+                        <Trash2 size={14} />
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {/* Desktop table */}
+            <div className="hidden overflow-x-auto lg:block">
+              <table className="w-full min-w-[1000px] text-left text-sm">
               <thead>
                 <tr className="border-b bg-gray-50 text-xs text-gray-500 uppercase">
                   <th className="w-12 px-4 py-3">
@@ -503,9 +595,10 @@ export default function OrdersTable({
                     </td>
                   </tr>
                 ))}
-              </tbody>
-            </table>
-          </div>
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -101,12 +101,12 @@ export default async function ShopPage({
 
   return (
     <>
-      <section className="scroll-mt-24 bg-[#f8fcfe] pb-6 pt-10 sm:pb-8 sm:pt-14">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-wrap items-center gap-3 text-sm">
+      <section className="scroll-mt-24 bg-[#f8fcfe] pb-6 pt-8 sm:pb-8 sm:pt-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="flex items-center gap-3 overflow-x-auto pb-1 text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <Link
               href="/shop"
-              className={`rounded-full border px-4 py-2 transition-colors ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 transition-colors ${
                 !typeParam
                   ? "border-[#0f2838] bg-[#0f2838] text-white"
                   : "border-gold/30 bg-white/70 text-[#0f2838]/70 hover:border-gold"
@@ -116,7 +116,7 @@ export default async function ShopPage({
             </Link>
             <Link
               href="/shop?type=attar"
-              className={`rounded-full border px-4 py-2 transition-colors ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 transition-colors ${
                 typeParam === "attar"
                   ? "border-[#0f2838] bg-[#0f2838] text-white"
                   : "border-gold/30 bg-white/70 text-[#0f2838]/70 hover:border-gold"
@@ -126,7 +126,7 @@ export default async function ShopPage({
             </Link>
             <Link
               href="/shop?type=perfume"
-              className={`rounded-full border px-4 py-2 transition-colors ${
+              className={`shrink-0 whitespace-nowrap rounded-full border px-4 py-2 transition-colors ${
                 typeParam === "perfume"
                   ? "border-[#0f2838] bg-[#0f2838] text-white"
                   : "border-gold/30 bg-white/70 text-[#0f2838]/70 hover:border-gold"

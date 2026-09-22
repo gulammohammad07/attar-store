@@ -86,7 +86,7 @@ export default function SearchOverlay({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[70] bg-charcoal/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[70] overflow-y-auto bg-charcoal/70 backdrop-blur-sm"
           onClick={onClose}
         >
           <motion.div
@@ -94,10 +94,10 @@ export default function SearchOverlay({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -40, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="mx-auto mt-20 max-w-2xl px-4"
+            className="mx-auto mt-16 w-full max-w-2xl px-4 sm:mt-24"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="glass-dark rounded-2xl p-5 shadow-2xl">
+            <div className="rounded-2xl border border-white/10 bg-[#0f2838] p-5 shadow-2xl">
               <div className="flex items-center gap-3 border-b border-white/10 pb-4">
                 <Search size={20} className="text-gold" />
                 <input

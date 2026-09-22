@@ -271,14 +271,14 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#F8FCFE] py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <h1 className="font-display text-5xl font-medium text-[#174A63]">
+        <h1 className="font-display text-4xl font-medium text-[#174A63] sm:text-5xl">
           Checkout
         </h1>
 
         <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
           <form onSubmit={handlePlaceOrder} className="space-y-8">
             {/* Contact */}
-            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-8">
+            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-5 sm:p-8">
               <h2 className="font-display text-xl font-medium text-[#174A63]">
                 Contact
               </h2>
@@ -314,7 +314,7 @@ export default function CheckoutPage() {
             </section>
 
             {/* Address */}
-            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-8">
+            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-5 sm:p-8">
               <h2 className="font-display text-xl font-medium text-[#174A63]">
                 Delivery Address
               </h2>
@@ -370,7 +370,7 @@ export default function CheckoutPage() {
             </section>
 
             {/* Occasion */}
-            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-8">
+            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-5 sm:p-8">
               <h2 className="flex items-center gap-2 font-display text-xl font-medium text-[#174A63]">
                 <Gift size={18} className="text-gold" /> Occasion
               </h2>
@@ -399,7 +399,7 @@ export default function CheckoutPage() {
             </section>
 
             {/* Payment */}
-            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-8">
+            <section className="rounded-3xl border border-[#174A63]/10 bg-white p-5 sm:p-8">
               <h2 className="flex items-center gap-2 font-display text-xl font-medium text-[#174A63]">
                 <CreditCard size={18} className="text-gold" /> Payment
               </h2>
@@ -435,7 +435,7 @@ export default function CheckoutPage() {
           </form>
 
           {/* Summary */}
-          <div className="h-fit rounded-3xl border border-[#174A63]/10 bg-white p-8 lg:sticky lg:top-24">
+          <div className="h-fit rounded-3xl border border-[#174A63]/10 bg-white p-5 sm:p-8 lg:sticky lg:top-24">
             <h2 className="font-display text-2xl font-medium text-[#174A63]">
               Order Summary
             </h2>
@@ -470,26 +470,26 @@ export default function CheckoutPage() {
             </div>
 
             <div className="mt-6 space-y-2 border-t border-[#174A63]/10 pt-4 text-sm">
-              <div className="flex justify-between text-[#174A63]/60">
+              <div className="flex justify-between gap-3 text-[#174A63]/60">
                 <span>Subtotal</span>
-                <span className="text-[#174A63]">{formatPrice(subtotal)}</span>
+                <span className="text-right text-[#174A63]">{formatPrice(subtotal)}</span>
               </div>
-              {appliedCoupon && <div className="flex justify-between text-green-700"><span>Discount ({appliedCoupon.code})</span><span>−{formatPrice(appliedCoupon.discount)}</span></div>}
-              <div className="flex justify-between text-[#174A63]/60">
+              {appliedCoupon && <div className="flex justify-between gap-3 text-green-700"><span>Discount ({appliedCoupon.code})</span><span className="text-right">−{formatPrice(appliedCoupon.discount)}</span></div>}
+              <div className="flex justify-between gap-3 text-[#174A63]/60">
                 <span>Shipping</span>
-                <span className="text-[#174A63]">
+                <span className="text-right text-[#174A63]">
                   {shipping === 0 ? "Free" : formatPrice(shipping)}
                 </span>
               </div>
-              <div className="flex justify-between border-t border-[#174A63]/10 pt-4 text-base font-semibold text-[#174A63]">
+              <div className="flex justify-between gap-3 border-t border-[#174A63]/10 pt-4 text-base font-semibold text-[#174A63]">
                 <span>Total</span>
-                <span>{formatPrice(total)}</span>
+                <span className="text-right">{formatPrice(total)}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {couponDrawerOpen && <div className="fixed inset-0 z-50"><button type="button" aria-label="Close coupons" className="absolute inset-0 bg-black/40" onClick={() => setCouponDrawerOpen(false)} /><aside role="dialog" aria-modal="true" aria-label="Available coupons" className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"><div className="flex items-center justify-between border-b border-[#174A63]/10 p-6"><div><h2 className="font-display text-2xl text-[#174A63]">Available Coupons</h2><p className="mt-1 text-xs text-[#174A63]/50">Select a coupon to apply it.</p></div><button type="button" onClick={() => setCouponDrawerOpen(false)} className="rounded-full p-2 text-[#174A63] hover:bg-[#174A63]/10" aria-label="Close"><X size={20} /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-5">{availableCoupons.length ? availableCoupons.map((coupon) => <div key={coupon.id} className="rounded-2xl border border-[#174A63]/10 p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-[#174A63]">{coupon.code}</p><p className="mt-1 text-sm text-[#174A63]/65">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? `, up to ${formatPrice(coupon.maxDiscountAmount)}` : ""}` : `${formatPrice(coupon.discountValue)} off`}</p>{coupon.minOrderValue && <p className="mt-1 text-xs text-[#174A63]/45">Min. order {formatPrice(coupon.minOrderValue)}</p>}</div><button type="button" onClick={() => selectCoupon(coupon.code)} className="shrink-0 rounded-lg bg-[#174A63] px-3 py-2 text-xs font-semibold text-white hover:bg-gold">Apply</button></div></div>) : <p className="py-12 text-center text-sm text-[#174A63]/55">No coupons are available right now.</p>}</div></aside></div>}
+      {couponDrawerOpen && <div className="fixed inset-0 z-50"><button type="button" aria-label="Close coupons" className="absolute inset-0 bg-black/40" onClick={() => setCouponDrawerOpen(false)} /><aside role="dialog" aria-modal="true" aria-label="Available coupons" className="absolute bottom-0 right-0 top-0 flex h-[88dvh] w-full flex-col rounded-t-2xl bg-white shadow-2xl sm:h-full sm:max-w-md sm:rounded-none"><div className="flex items-center justify-between border-b border-[#174A63]/10 p-5 sm:p-6"><div><h2 className="font-display text-xl text-[#174A63] sm:text-2xl">Available Coupons</h2><p className="mt-1 text-xs text-[#174A63]/50">Select a coupon to apply it.</p></div><button type="button" onClick={() => setCouponDrawerOpen(false)} className="rounded-full p-2 text-[#174A63] hover:bg-[#174A63]/10" aria-label="Close"><X size={20} /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-4 sm:p-5">{availableCoupons.length ? availableCoupons.map((coupon) => <div key={coupon.id} className="rounded-2xl border border-[#174A63]/10 p-4"><div className="flex items-start justify-between gap-3"><div><p className="font-semibold text-[#174A63]">{coupon.code}</p><p className="mt-1 text-sm text-[#174A63]/65">{coupon.discountType === "PERCENTAGE" ? `${coupon.discountValue}% off${coupon.maxDiscountAmount ? `, up to ${formatPrice(coupon.maxDiscountAmount)}` : ""}` : `${formatPrice(coupon.discountValue)} off`}</p>{coupon.minOrderValue && <p className="mt-1 text-xs text-[#174A63]/45">Min. order {formatPrice(coupon.minOrderValue)}</p>}</div><button type="button" onClick={() => selectCoupon(coupon.code)} className="shrink-0 rounded-lg bg-[#174A63] px-3 py-2 text-xs font-semibold text-white hover:bg-gold">Apply</button></div></div>) : <p className="py-12 text-center text-sm text-[#174A63]/55">No coupons are available right now.</p>}</div></aside></div>}
     </div>
   );
 }

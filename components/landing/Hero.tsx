@@ -144,7 +144,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
         <div className="absolute left-1/4 bottom-1/4 h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(142,201,232,0.12),transparent_70%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-28 text-center lg:py-32">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 py-28 text-center sm:px-6 sm:py-32">
         {/* CSS animation, not framer-motion, on purpose. The <h1> here is the
             LCP element on mobile; a JS-driven initial={{ opacity: 0 }} keeps it
             unpaintable until the motion bundle hydrates, which cost us over a
@@ -157,7 +157,7 @@ export default function Hero({ banner }: { banner?: HeroBanner }) {
           )}
 
           {banner?.title && (
-            <h1 className="mt-8 font-display text-[3.2rem] font-medium leading-[0.98] tracking-tight text-[#fff] sm:text-7xl lg:text-[7.5rem]">
+            <h1 className="mt-8 font-display text-5xl font-medium leading-[1.02] tracking-tight text-[#fff] min-[400px]:text-[3.2rem] sm:text-7xl sm:leading-[0.98] lg:text-[7.5rem]">
               {banner.title}
             </h1>
           )}

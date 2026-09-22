@@ -68,9 +68,9 @@ export default function Footer({
       </div>
 
       <div className="relative border-b border-white/[0.06]">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-10 px-6 py-14 sm:grid-cols-3">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-6 py-10 min-[420px]:grid-cols-2 sm:grid-cols-3 sm:py-14">
           {trustBadges.map((badge) => (
-            <div key={badge.label} className="flex items-center gap-5">
+            <div key={badge.label} className="flex items-center gap-4 min-[420px]:gap-5">
               <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/30 bg-white/10 text-gold">
                 <badge.icon size={22} />
               </div>

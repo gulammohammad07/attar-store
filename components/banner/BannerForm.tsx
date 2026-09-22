@@ -204,7 +204,7 @@ export default function BannerForm({
       <button
         type="submit"
         disabled={pending}
-        className="mt-6 rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800 disabled:opacity-50"
+        className="mt-6 w-full rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800 disabled:opacity-50 sm:w-auto"
       >
         {pending ? "Saving..." : "Save Banner"}
       </button>

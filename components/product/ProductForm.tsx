@@ -166,9 +166,9 @@ export default function ProductForm({
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="rounded-2xl border bg-white p-6 shadow-sm"
+      className="rounded-2xl border bg-white p-4 shadow-sm sm:p-6"
     >
-      <h2 className="mb-6 text-2xl font-semibold">Add Product</h2>
+      <h2 className="mb-6 text-xl font-semibold sm:text-2xl">Add Product</h2>
 
       {state.message && (
         <p
@@ -416,7 +416,7 @@ export default function ProductForm({
         ) : (
           <div className="space-y-3">
             {sizes.map((sizeItem, index) => (
-              <div key={index} className="grid gap-3 rounded-xl border border-[#111111]/10 bg-[#f5f5f0] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
+              <div key={index} className="grid grid-cols-2 gap-3 rounded-xl border border-[#111111]/10 bg-[#f5f5f0] p-3 sm:grid-cols-[1.2fr_1fr_1fr_1fr_auto]">
                 <div>
                   <input
                     type="text"
@@ -455,7 +455,7 @@ export default function ProductForm({
                     className="w-full rounded-lg border p-2.5 text-sm"
                   />
                 </div>
-                <div className="flex items-center justify-end">
+                <div className="col-span-2 flex items-center justify-end sm:col-span-1">
                   <button
                     type="button"
                     onClick={() => removeSize(index)}
@@ -629,7 +629,7 @@ export default function ProductForm({
       <button
         type="submit"
         disabled={pending}
-        className="mt-6 rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800 disabled:opacity-50"
+        className="mt-6 w-full rounded-xl bg-black px-8 py-3 text-white hover:bg-zinc-800 disabled:opacity-50 sm:w-auto"
       >
         {pending ? "Saving..." : "Save Product"}
       </button>

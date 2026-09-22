@@ -124,7 +124,7 @@ export default function ProductDetails({
     <div className="min-h-screen bg-[#F8FCFE] pb-20">
       {/* Breadcrumb */}
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6">
-        <nav className="flex items-center gap-2 text-xs text-[#174A63]/45">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 overflow-x-auto whitespace-nowrap text-xs text-[#174A63]/45 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <Link href="/" className="hover:text-gold">
             Home
           </Link>
@@ -140,7 +140,7 @@ export default function ProductDetails({
             {product.category}
           </Link>
           <span>/</span>
-          <span className="font-medium text-[#174A63]">{product.name}</span>
+          <span className="truncate font-medium text-[#174A63]">{product.name}</span>
         </nav>
       </div>
 

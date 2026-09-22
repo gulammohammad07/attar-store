@@ -39,7 +39,7 @@ export default async function BannersPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Banners</h1>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Banners</h1>
         <p className="text-muted-foreground mt-2">
           Manage the banners shown across the storefront. All images are
           uploaded to Cloudinary.

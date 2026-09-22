@@ -89,7 +89,7 @@ export default function Navbar({
               : "bg-white/80 backdrop-blur-xl"
           }`}
         >
-          <div className="mx-auto flex h-20 items-center justify-start gap-3 px-4 sm:gap-8 sm:px-8 lg:4 lg:justify-between">
+          <div className="mx-auto flex h-16 items-center justify-start gap-3 px-4 sm:h-20 sm:gap-8 sm:px-8 lg:justify-between lg:px-12">
             <button
               type="button"
               className="text-[#0f2838] lg:hidden transition-colors hover:text-gold"
@@ -376,7 +376,7 @@ export default function Navbar({
             className="fixed inset-0 z-[60] bg-white/[0.97] backdrop-blur-2xl lg:hidden"
           >
             <div className="flex h-full flex-col">
-              <div className="flex h-20 items-center justify-between px-6">
+              <div className="flex h-16 items-center justify-between px-4 sm:h-20 sm:px-6">
                 <Link href="/" className="-ml-2 flex min-w-0 items-center gap-2 sm:-ml-4" onClick={() => setMobileOpen(false)}>
                   {showLogo && (
                     <Image

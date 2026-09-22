@@ -21,8 +21,8 @@ export default function TrendingNow({ products }: { products: Product[] }) {
   };
 
   return (
-    <section className="bg-[#faf9f7] py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+    <section className="bg-[#faf9f7] py-14 sm:py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -34,7 +34,7 @@ export default function TrendingNow({ products }: { products: Product[] }) {
             <p className="text-[11px] font-semibold tracking-[0.34em] text-gold uppercase">
               Most Coveted
             </p>
-            <h2 className="mt-4 font-display text-5xl font-medium tracking-tight text-[#0f2838] sm:text-6xl">
+            <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-[#0f2838] sm:text-5xl lg:text-6xl">
               Trending Now
             </h2>
           </div>
@@ -61,7 +61,7 @@ export default function TrendingNow({ products }: { products: Product[] }) {
 
         <div
           ref={trackRef}
-          className="-mx-6 flex snap-x snap-mandatory gap-7 overflow-x-auto px-6 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto px-4 pb-4 scroll-pl-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 sm:scroll-pl-6"
         >
           {products.map((product, i) => (
             <motion.div
@@ -95,7 +95,7 @@ export default function TrendingNow({ products }: { products: Product[] }) {
                       toast.success(`${product.name} added to bag`);
                     }}
                     aria-label={`Add ${product.name} to bag`}
-                    className="absolute bottom-5 right-5 z-10 flex h-11 w-11 translate-y-3 items-center justify-center rounded-full bg-[#0f2838] text-white opacity-0 shadow-xl transition-all duration-700 hover:bg-gold hover:text-[#0a1b26] group-hover:translate-y-0 group-hover:opacity-100"
+                    className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#0f2838] text-white shadow-xl transition-all duration-500 hover:bg-gold hover:text-[#0a1b26] lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
                   >
                     <Plus size={18} />
                   </button>

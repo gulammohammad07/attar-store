@@ -96,7 +96,7 @@ export default function AccountPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FCFE] px-4 py-14 sm:px-8">
+    <div className="min-h-screen bg-[#F8FCFE] px-4 py-10 sm:px-8 sm:py-14">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ export default function AccountPage() {
         className="mx-auto max-w-4xl"
       >
         {/* Header */}
-        <div className="flex flex-col items-start gap-6 rounded-3xl border border-[#174A63]/10 bg-white p-8 shadow-xl sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-start gap-6 rounded-3xl border border-[#174A63]/10 bg-white p-6 shadow-xl sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="flex items-center gap-4">
             <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-[#174A63] font-display text-xl font-semibold text-gold ring-2 ring-gold/30">
               {user.image ? (
@@ -133,7 +133,7 @@ export default function AccountPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex w-full flex-wrap items-center gap-3">
             {user.role === "ADMIN" || user.role === "SUBADMIN" ? (
               <Link
                 href="/admin"
