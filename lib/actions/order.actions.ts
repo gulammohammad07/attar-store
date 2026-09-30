@@ -183,12 +183,25 @@ export async function createOrder(
     revalidatePath("/account/orders");
     revalidatePath("/admin/orders");
 
-    // Notify the store (support email) as soon as a COD order is placed.
-    // Online orders are notified separately, once payment is confirmed.
+    // Notify the store (support email + WhatsApp) as soon as a COD order is
+    // placed. Online orders are notified separately, once payment is confirmed.
     if (paymentMethod === "COD") {
       const { sendNewOrderNotificationMail } = await import(
         "@/lib/services/order-mail.service"
       );
+      const whatsappData = {
+        orderNumber: order.orderNumber,
+        customerName,
+        customerPhone,
+        city,
+        state,
+        paymentMethod: "COD",
+        paymentStatus: "PENDING",
+        total,
+        itemCount: resolvedItems.length,
+        firstItemName: resolvedItems[0].product.name,
+      };
+
       void sendNewOrderNotificationMail({
         orderNumber: order.orderNumber,
         createdAt: new Date(),
@@ -216,6 +229,10 @@ export async function createOrder(
           lineTotal: (product.salePrice ?? product.price) * quantity,
         })),
       });
+      const { sendOrderWhatsappNotification } = await import(
+        "@/lib/services/whatsapp.service"
+      );
+      void sendOrderWhatsappNotification(whatsappData);
     }
 
     return { success: true, orderId: order.id, orderNumber: order.orderNumber };
