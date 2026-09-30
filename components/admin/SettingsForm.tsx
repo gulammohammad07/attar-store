@@ -5,7 +5,10 @@ import { toast } from "sonner";
 import {
   updateStoreSettingsAction,
   sendTestEmailAction,
+<<<<<<< HEAD
   sendTestWhatsappAction,
+=======
+>>>>>>> 0cf879092d23695e57dbada43ba968b94cba8eb1
   type UpdateSettingsResult,
 } from "@/lib/actions/settings.actions";
 import type { StoreSettingsDTO } from "@/lib/services/settings.service";
@@ -24,7 +27,10 @@ export default function SettingsForm({
   const [state, setState] = useState<UpdateSettingsResult>(initialState);
   const [pending, startTransition] = useTransition();
   const [testing, setTesting] = useState(false);
+<<<<<<< HEAD
   const [testingWa, setTestingWa] = useState(false);
+=======
+>>>>>>> 0cf879092d23695e57dbada43ba968b94cba8eb1
   const [navbarLogo, setNavbarLogo] = useState<ImageValue>({ url: settings.navbarLogoUrl ?? "", publicId: null });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -230,6 +236,7 @@ export default function SettingsForm({
           notifications work.
         </p>
       </div>
+<<<<<<< HEAD
 
       <div className="mt-4 flex flex-wrap items-center gap-4">
         <button
@@ -259,6 +266,8 @@ export default function SettingsForm({
           + WHATSAPP_APIKEY env vars).
         </p>
       </div>
+=======
+>>>>>>> 0cf879092d23695e57dbada43ba968b94cba8eb1
     </form>
   );
 }

@@ -117,6 +117,7 @@ export async function sendTestEmailAction(): Promise<SendTestEmailResult> {
     return { success: false, message: `SMTP error: ${detail}` };
   }
 }
+<<<<<<< HEAD
 
 export type SendTestWhatsappResult = { success: boolean; message: string };
 
@@ -143,3 +144,5 @@ export async function sendTestWhatsappAction(): Promise<SendTestWhatsappResult> 
     return { success: false, message: `WhatsApp error: ${detail}` };
   }
 }
+=======
+>>>>>>> 0cf879092d23695e57dbada43ba968b94cba8eb1
