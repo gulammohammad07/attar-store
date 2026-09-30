@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth/dal";
 import { getStoreSettings } from "@/lib/services/settings.service";
 
 export type UpdateSettingsResult = {
@@ -92,4 +93,27 @@ export async function getPublicStoreSettings(): Promise<PublicStoreSettings> {
     shippingFee: settings.shippingFee,
     currency: settings.currency,
   };
+}
+
+export type SendTestEmailResult = { success: boolean; message: string };
+
+/**
+ * Sends a test email to the store's support email so the admin can verify the
+ * SMTP credentials in .env actually work before a real order comes in.
+ */
+export async function sendTestEmailAction(): Promise<SendTestEmailResult> {
+  await requireAdmin();
+
+  try {
+    const { sendTestEmail } = await import("@/lib/services/order-mail.service");
+    const result = await sendTestEmail();
+    if (result.ok) {
+      return { success: true, message: `Test email sent to ${result.recipient}.` };
+    }
+    return { success: false, message: result.message ?? "Could not send the test email." };
+  } catch (error) {
+    console.error("[mail] Test email failed:", error);
+    const detail = error instanceof Error ? error.message : "Unknown error.";
+    return { success: false, message: `SMTP error: ${detail}` };
+  }
 }

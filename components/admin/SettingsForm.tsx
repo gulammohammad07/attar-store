@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
   updateStoreSettingsAction,
+  sendTestEmailAction,
   type UpdateSettingsResult,
 } from "@/lib/actions/settings.actions";
 import type { StoreSettingsDTO } from "@/lib/services/settings.service";
@@ -21,6 +22,7 @@ export default function SettingsForm({
 }) {
   const [state, setState] = useState<UpdateSettingsResult>(initialState);
   const [pending, startTransition] = useTransition();
+  const [testing, setTesting] = useState(false);
   const [navbarLogo, setNavbarLogo] = useState<ImageValue>({ url: settings.navbarLogoUrl ?? "", publicId: null });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -191,13 +193,41 @@ export default function SettingsForm({
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="mt-6 rounded-xl bg-black px-6 py-3 text-white disabled:opacity-50"
-      >
-        {pending ? "Saving..." : "Save Settings"}
-      </button>
+      <div className="mt-6 flex flex-wrap items-center gap-4">
+        <button
+          type="submit"
+          disabled={pending}
+          className="rounded-xl bg-black px-6 py-3 text-white disabled:opacity-50"
+        >
+          {pending ? "Saving..." : "Save Settings"}
+        </button>
+        <button
+          type="button"
+          disabled={testing}
+          onClick={() => {
+            setTesting(true);
+            startTransition(async () => {
+              try {
+                const result = await sendTestEmailAction();
+                if (result.success) {
+                  toast.success(result.message);
+                } else {
+                  toast.error(result.message, { duration: 8000 });
+                }
+              } finally {
+                setTesting(false);
+              }
+            });
+          }}
+          className="rounded-xl border border-black px-6 py-3 font-medium text-black transition-colors hover:bg-black hover:text-white disabled:opacity-50"
+        >
+          {testing ? "Sending..." : "Send test email"}
+        </button>
+        <p className="text-xs text-gray-500">
+          Sends a test email to the support email above to verify order
+          notifications work.
+        </p>
+      </div>
     </form>
   );
 }

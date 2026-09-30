@@ -76,12 +76,22 @@ function formatDate(date: Date): string {
 }
 
 function isMailConfigured(): boolean {
-  return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_USER &&
-      process.env.SMTP_PASS &&
-      process.env.SMTP_FROM_EMAIL,
-  );
+  const missing = [
+    "SMTP_HOST",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "SMTP_FROM_EMAIL",
+  ].filter((key) => !process.env[key]);
+
+  if (missing.length > 0) {
+    console.warn(
+      `[mail] SMTP is not configured — order notification emails are disabled. ` +
+        `Missing .env variables: ${missing.join(", ")}. ` +
+        `Fill these in (e.g. for Gmail: SMTP_HOST=smtp.gmail.com, SMTP_PORT=587, SMTP_USER=your@gmail.com, SMTP_PASS=app password) and restart the server.`,
+    );
+    return false;
+  }
+  return true;
 }
 
 let transporter: nodemailer.Transporter | null = null;
@@ -296,5 +306,72 @@ export async function sendNewOrderNotificationMail(
     );
   } catch (error) {
     console.error("[mail] Failed to send admin order notification:", error);
+  }
+}
+
+/**
+ * Sends a test email to the store's support email. Unlike the order
+ * notification, errors propagate so the admin sees exactly why mail failed.
+ */
+export async function sendTestEmail(): Promise<
+  { ok: true; recipient: string } | { ok: false; message: string }
+> {
+  if (!isMailConfigured()) {
+    return {
+      ok: false,
+      message:
+        "SMTP is not configured. Fill SMTP_HOST, SMTP_USER, SMTP_PASS and SMTP_FROM_EMAIL in .env, then restart the server.",
+    };
+  }
+
+  const settings = await getStoreSettings();
+  const recipient = (settings.supportEmail ?? "").trim();
+  if (!recipient) {
+    return {
+      ok: false,
+      message:
+        "No support email set. Save one under Support Email above, then retry.",
+    };
+  }
+
+  try {
+    await getTransporter().sendMail({
+      from: {
+        name: process.env.SMTP_FROM_NAME || settings.storeName,
+        address: process.env.SMTP_FROM_EMAIL as string,
+      },
+      to: recipient,
+      subject: `Test email — ${settings.storeName} order notifications are working`,
+      text: `This is a test email from ${settings.storeName}. If you are reading this, order notification emails will arrive correctly when a customer places an order.`,
+      html: `
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f8fcfe;">
+  <div style="margin:0 auto;max-width:640px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="background:#0f2838;padding:28px 32px;">
+      <div style="font-size:20px;font-weight:bold;color:#ffffff;">${escapeHtml(settings.storeName)}</div>
+      <div style="font-size:13px;color:#cfe4f0;margin-top:4px;">Test email</div>
+    </div>
+    <div style="background:#ffffff;padding:32px;">
+      <p style="margin:0 0 12px;font-size:17px;font-weight:bold;color:#174a63;">Your email setup works</p>
+      <p style="margin:0;font-size:14px;color:#5f7788;line-height:1.7;">
+        This is a test email sent from the admin settings page. When a customer
+        places an order, a notification like the order emails will arrive at
+        <strong style="color:#174a63;">${escapeHtml(recipient)}</strong>.
+      </p>
+    </div>
+    <div style="padding:20px 32px;text-align:center;font-size:12px;color:#5f7788;">
+      ${escapeHtml(settings.storeName)} · automatic test email
+    </div>
+  </div>
+</body>
+</html>`,
+    });
+
+    return { ok: true, recipient };
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error("[mail] Test email failed:", error);
+    return { ok: false, message: detail };
   }
 }
