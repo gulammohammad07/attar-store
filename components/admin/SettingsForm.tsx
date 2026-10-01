@@ -195,68 +195,137 @@ export default function SettingsForm({
         </p>
       )}
 
-      <div className="mt-6 flex flex-wrap items-center gap-4">
+      <div className="mt-6 flex items-center gap-4">
         <button
           type="submit"
           disabled={pending}
-          className="rounded-xl bg-black px-6 py-3 text-white disabled:opacity-50"
+          className="rounded-xl bg-black px-6 py-3 font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {pending ? "Saving..." : "Save Settings"}
         </button>
-        <button
-          type="button"
-          disabled={testing}
-          onClick={() => {
-            setTesting(true);
-            startTransition(async () => {
-              try {
-                const result = await sendTestEmailAction();
-                if (result.success) {
-                  toast.success(result.message);
-                } else {
-                  toast.error(result.message, { duration: 8000 });
-                }
-              } finally {
-                setTesting(false);
-              }
-            });
-          }}
-          className="rounded-xl border border-black px-6 py-3 font-medium text-black transition-colors hover:bg-black hover:text-white disabled:opacity-50"
-        >
-          {testing ? "Sending..." : "Send test email"}
-        </button>
-        <p className="text-xs text-gray-500">
-          Sends a test email to the support email above to verify order
-          notifications work.
-        </p>
       </div>
-      <div className="mt-4 flex flex-wrap items-center gap-4">
-        <button
-          type="button"
-          disabled={testingWa}
-          onClick={() => {
-            setTestingWa(true);
-            startTransition(async () => {
-              try {
-                const result = await sendTestWhatsappAction();
-                if (result.success) {
-                  toast.success(result.message);
-                } else {
-                  toast.error(result.message, { duration: 10000 });
-                }
-              } finally {
-                setTestingWa(false);
-              }
-            });
-          }}
-          className="rounded-xl border border-black px-6 py-3 font-medium text-black transition-colors hover:bg-black hover:text-white disabled:opacity-50"
-        >
-          {testingWa ? "Sending..." : "Send test WhatsApp"}
-        </button>
-        <p className="text-xs text-gray-500">
-          Sends a WhatsApp order notification test to your number (WHATSAPP_PHONE
-          + WHATSAPP_APIKEY env vars).
+
+      <div className="mt-8 border-t pt-6">
+        <h3 className="text-base font-semibold text-[#174A63]">
+          Order Notifications & Alerts
+        </h3>
+        <p className="mt-1 text-xs text-gray-500">
+          Whenever a customer places an order successfully (Cash on Delivery or Razorpay), Nodemailer sends an instant email alert containing all customer details and complete order items.
         </p>
+
+        {/* Email Setup Card */}
+        <div className="mt-4 rounded-2xl border border-sky-200/80 bg-sky-50/50 p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">📧</span>
+                <span className="font-semibold text-[#174A63]">Email Notifications (Nodemailer)</span>
+              </div>
+              <p className="mt-1 text-xs text-gray-600">
+                Alerts are delivered to Support Email: <strong className="text-black">{settings.supportEmail}</strong>
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={testing}
+              onClick={() => {
+                setTesting(true);
+                startTransition(async () => {
+                  try {
+                    const result = await sendTestEmailAction();
+                    if (result.success) {
+                      toast.success(result.message);
+                    } else {
+                      toast.error(result.message, { duration: 9000 });
+                    }
+                  } finally {
+                    setTesting(false);
+                  }
+                });
+              }}
+              className="rounded-xl border border-[#174A63] bg-white px-5 py-2.5 text-xs font-semibold text-[#174A63] shadow-sm transition hover:bg-[#174A63] hover:text-white disabled:opacity-50"
+            >
+              {testing ? "Testing connection..." : "Send Test Order Alert"}
+            </button>
+          </div>
+
+          <div className="mt-4 rounded-xl border border-sky-200 bg-white p-3.5 text-xs text-gray-600">
+            <p className="font-semibold text-gray-800">💡 Gmail SMTP Quick Setup in <code>.env</code>:</p>
+            <ol className="mt-1.5 list-decimal space-y-1 pl-4 text-gray-600">
+              <li>
+                Turn on <strong>2-Step Verification</strong> on your Google Account:{" "}
+                <a
+                  href="https://myaccount.google.com/signinoptions/two-step-verification"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-sky-700 underline"
+                >
+                  Google 2-Step Verification
+                </a>
+              </li>
+              <li>
+                Generate a 16-letter App Password at:{" "}
+                <a
+                  href="https://myaccount.google.com/apppasswords"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-sky-700 underline"
+                >
+                  myaccount.google.com/apppasswords
+                </a>
+              </li>
+              <li>
+                In your <code>.env</code> file, set:
+                <div className="mt-1 rounded bg-gray-900 p-2 font-mono text-[11px] text-gray-200">
+                  SMTP_HOST=smtp.gmail.com<br />
+                  SMTP_PORT=465<br />
+                  SMTP_SECURE=true<br />
+                  SMTP_USER={settings.supportEmail || "your-email@gmail.com"}<br />
+                  SMTP_PASS=your-16-char-app-password<br />
+                  ADMIN_NOTIFICATION_EMAIL={settings.supportEmail || "your-email@gmail.com"}
+                </div>
+              </li>
+              <li>Restart your development server (<code>npm run dev</code>) and click the test button above.</li>
+            </ol>
+          </div>
+        </div>
+
+        {/* WhatsApp Setup Card */}
+        <div className="mt-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-lg">💬</span>
+                <span className="font-semibold text-emerald-950">WhatsApp Order Alerts</span>
+              </div>
+              <p className="mt-1 text-xs text-emerald-800">
+                Sends automated WhatsApp messages to your mobile phone via CallMeBot.
+              </p>
+            </div>
+            <button
+              type="button"
+              disabled={testingWa}
+              onClick={() => {
+                setTestingWa(true);
+                startTransition(async () => {
+                  try {
+                    const result = await sendTestWhatsappAction();
+                    if (result.success) {
+                      toast.success(result.message);
+                    } else {
+                      toast.error(result.message, { duration: 9000 });
+                    }
+                  } finally {
+                    setTestingWa(false);
+                  }
+                });
+              }}
+              className="rounded-xl border border-emerald-700 bg-white px-5 py-2.5 text-xs font-semibold text-emerald-800 shadow-sm transition hover:bg-emerald-700 hover:text-white disabled:opacity-50"
+            >
+              {testingWa ? "Sending..." : "Send Test WhatsApp"}
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   );

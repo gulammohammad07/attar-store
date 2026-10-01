@@ -137,9 +137,28 @@ export async function sendTestWhatsappAction(): Promise<SendTestWhatsappResult> 
     }
     return { success: false, message: result.message };
   } catch (error) {
-    console.error("[whatsapp] Test message failed:", error);
     const detail = error instanceof Error ? error.message : "Unknown error.";
     return { success: false, message: `WhatsApp error: ${detail}` };
   }
 }
+
+export type SmtpStatusResult = {
+  configured: boolean;
+  host: string | null;
+  port: number;
+  user: string | null;
+  fromEmail: string | null;
+  adminEmail: string | null;
+  missing: string[];
+};
+
+/**
+ * Returns diagnostic SMTP status so the admin panel can show whether email is ready.
+ */
+export async function getSmtpStatusAction(): Promise<SmtpStatusResult> {
+  await requireAdmin();
+  const { getSmtpDiagnosticInfo } = await import("@/lib/services/order-mail.service");
+  return getSmtpDiagnosticInfo();
+}
+
 

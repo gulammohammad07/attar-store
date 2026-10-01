@@ -18,22 +18,34 @@ function isSmtpConfigured(): boolean {
 
 function buildTransporter(): Transporter | null {
   if (!isSmtpConfigured()) return null;
+  const host = (process.env.SMTP_HOST ?? "").trim();
   const rawPort = process.env.SMTP_PORT;
   const isExplicitSecure = process.env.SMTP_SECURE === "true";
   const port = rawPort ? Number(rawPort) : (isExplicitSecure ? 465 : 587);
   const secure = isExplicitSecure || port === 465;
 
+  const user = (process.env.SMTP_USER ?? "").trim();
+  const pass = (process.env.SMTP_PASS ?? "").replace(/\s+/g, "");
+
+  const isGmail = host.toLowerCase().includes("gmail");
+  if (isGmail) {
+    return nodemailer.createTransport({
+      service: "gmail",
+      auth: { user, pass },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 15_000,
+    });
+  }
+
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host,
     port,
     secure,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: (process.env.SMTP_PASS ?? "").replace(/\s+/g, ""),
-    },
-    connectionTimeout: 8_000,
-    greetingTimeout: 8_000,
-    socketTimeout: 10_000,
+    auth: { user, pass },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
   });
 }
 
