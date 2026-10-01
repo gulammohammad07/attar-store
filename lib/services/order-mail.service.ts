@@ -94,24 +94,27 @@ function isMailConfigured(): boolean {
   return true;
 }
 
-let transporter: nodemailer.Transporter | null = null;
-
 function getTransporter(): nodemailer.Transporter {
-  if (transporter) return transporter;
-  transporter = nodemailer.createTransport({
+  const rawPort = process.env.SMTP_PORT;
+  const isExplicitSecure = process.env.SMTP_SECURE === "true";
+  const port = rawPort ? Number(rawPort) : (isExplicitSecure ? 465 : 587);
+  const secure = isExplicitSecure || port === 465;
+
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: process.env.SMTP_SECURE === "true",
+    port,
+    secure,
     auth: {
       user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      // Strip any whitespace (users often copy Gmail App Passwords with spaces like 'abcd efgh ijkl mnop')
+      pass: (process.env.SMTP_PASS ?? "").replace(/\s+/g, ""),
     },
-    connectionTimeout: 10_000,
-    greetingTimeout: 10_000,
-    socketTimeout: 15_000,
+    connectionTimeout: 8_000,
+    greetingTimeout: 8_000,
+    socketTimeout: 10_000,
   });
-  return transporter;
 }
+
 
 function buildOrderEmailHtml(
   order: OrderMailData,
@@ -265,10 +268,139 @@ function buildOrderEmailText(order: OrderMailData, storeName: string): string {
   return lines.join("\n");
 }
 
+function buildCustomerOrderEmailHtml(
+  order: OrderMailData,
+  storeName: string,
+): string {
+  const rows = order.items
+    .map(
+      (item) => `
+        <tr>
+          <td style="padding:10px 12px;border-bottom:1px solid #e0ecf2;font-size:14px;color:#174a63;">
+            ${escapeHtml(item.productName)}
+            <div style="font-size:12px;color:#5f7788;margin-top:2px;">
+              ${item.quantity} × ${formatPrice(item.unitPrice)}
+            </div>
+          </td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e0ecf2;font-size:14px;color:#174a63;text-align:right;white-space:nowrap;">
+            ${formatPrice(item.lineTotal)}
+          </td>
+        </tr>`,
+    )
+    .join("");
+
+  const couponLine = order.couponCode
+    ? `
+      <tr>
+        <td style="padding:4px 0;font-size:14px;color:#5f7788;">Discount (${escapeHtml(order.couponCode)})</td>
+        <td style="padding:4px 0;font-size:14px;color:#0f8a4d;text-align:right;">−${formatPrice(order.discountAmount)}</td>
+      </tr>`
+    : "";
+
+  const ordersUrl = `${getAppUrl()}/account/orders`;
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f8fcfe;">
+  <div style="margin:0 auto;max-width:640px;font-family:Arial,Helvetica,sans-serif;">
+    <div style="background:#0f2838;padding:28px 32px;text-align:center;">
+      <div style="font-size:22px;font-weight:bold;color:#c9a96e;letter-spacing:2px;">${escapeHtml(storeName).toUpperCase()}</div>
+      <div style="font-size:14px;color:#cfe4f0;margin-top:6px;">Thank you for your order!</div>
+    </div>
+
+    <div style="background:#ffffff;padding:32px;">
+      <p style="margin:0 0 8px;font-size:18px;font-weight:bold;color:#174a63;">
+        Hello ${escapeHtml(order.customerName)},
+      </p>
+      <p style="margin:0 0 20px;font-size:14px;color:#5f7788;line-height:1.6;">
+        We have received your order <strong style="color:#174a63;">${escapeHtml(order.orderNumber)}</strong> and are preparing it. You can check the status of your order anytime in your account.
+      </p>
+
+      <div style="background:#f8fcfe;border:1px solid #e0ecf2;border-radius:12px;padding:16px 20px;margin-bottom:24px;">
+        <div style="font-size:12px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;color:#5f7788;margin-bottom:6px;">Delivery Details</div>
+        <div style="font-size:14px;color:#174a63;line-height:1.6;">
+          ${escapeHtml(order.customerName)}<br />
+          ${escapeHtml(order.street)}<br />
+          ${escapeHtml(order.city)}, ${escapeHtml(order.state)} — ${escapeHtml(order.pincode)}<br />
+          Phone: ${escapeHtml(order.customerPhone)}
+        </div>
+      </div>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #e0ecf2;border-radius:12px;">
+        <tr>
+          <th align="left" style="padding:10px 12px;font-size:11px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;color:#5f7788;border-bottom:1px solid #e0ecf2;">Item</th>
+          <th align="right" style="padding:10px 12px;font-size:11px;font-weight:bold;letter-spacing:0.06em;text-transform:uppercase;color:#5f7788;border-bottom:1px solid #e0ecf2;">Amount</th>
+        </tr>
+        ${rows}
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:16px;">
+        <tr>
+          <td style="padding:4px 0;font-size:14px;color:#5f7788;">Subtotal</td>
+          <td style="padding:4px 0;font-size:14px;color:#174a63;text-align:right;">${formatPrice(order.subtotal)}</td>
+        </tr>
+        <tr>
+          <td style="padding:4px 0;font-size:14px;color:#5f7788;">Shipping</td>
+          <td style="padding:4px 0;font-size:14px;color:#174a63;text-align:right;">${order.shippingFee === 0 ? "Free" : formatPrice(order.shippingFee)}</td>
+        </tr>
+        ${couponLine}
+        <tr>
+          <td style="padding:12px 0 4px;font-size:16px;font-weight:bold;color:#174a63;">Total</td>
+          <td style="padding:12px 0 4px;font-size:18px;font-weight:bold;color:#c9a96e;text-align:right;">${formatPrice(order.total)}</td>
+        </tr>
+      </table>
+
+      <div style="margin-top:28px;text-align:center;">
+        <a href="${ordersUrl}" style="display:inline-block;padding:12px 28px;border-radius:999px;background:#174a63;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;">View Your Order</a>
+      </div>
+    </div>
+
+    <div style="padding:20px 32px;text-align:center;font-size:12px;color:#5f7788;">
+      Thank you for shopping with ${escapeHtml(storeName)}!
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+function buildCustomerOrderEmailText(order: OrderMailData, storeName: string): string {
+  const lines = [
+    `Thank you for your order with ${storeName}!`,
+    `Order Number: ${order.orderNumber}`,
+    `Placed on: ${formatDate(order.createdAt)}`,
+    `Payment: ${paymentMethodLabel(order.paymentMethod)} (${statusLabel(order.paymentStatus)})`,
+    "",
+    "Delivery Address:",
+    `  ${order.customerName}`,
+    `  ${order.street}`,
+    `  ${order.city}, ${order.state} — ${order.pincode}`,
+    `  ${order.customerPhone}`,
+    "",
+    "Items:",
+  ];
+
+  for (const item of order.items) {
+    lines.push(`  ${item.productName} — ${item.quantity} × ${formatPrice(item.unitPrice)} = ${formatPrice(item.lineTotal)}`);
+  }
+
+  lines.push(
+    "",
+    `Subtotal: ${formatPrice(order.subtotal)}`,
+    `Shipping: ${order.shippingFee === 0 ? "Free" : formatPrice(order.shippingFee)}`,
+  );
+  if (order.couponCode) {
+    lines.push(`Discount (${order.couponCode}): −${formatPrice(order.discountAmount)}`);
+  }
+  lines.push(`Total: ${formatPrice(order.total)}`);
+  lines.push("", `View your order: ${getAppUrl()}/account/orders`);
+
+  return lines.join("\n");
+}
+
 /**
- * Emails the store's support email (Admin → Settings) with full order details
- * whenever a customer places an order. Never throws — a mail failure must not
- * break checkout, so problems are logged and ignored.
+ * Emails the store's support email and the customer with order details
+ * whenever an order is confirmed. Never throws — problems are logged and ignored.
  */
 export async function sendNewOrderNotificationMail(
   order: OrderMailData,
@@ -276,36 +408,61 @@ export async function sendNewOrderNotificationMail(
   try {
     if (!isMailConfigured()) {
       console.warn(
-        `[mail] SMTP not configured; skipping admin notification for ${order.orderNumber}.`,
+        `[mail] SMTP not configured; skipping order email for ${order.orderNumber}.`,
       );
       return;
     }
 
     const settings = await getStoreSettings();
-    const recipient = (settings.supportEmail ?? "").trim();
-    if (!recipient) {
+    const adminRecipient = (settings.supportEmail ?? "").trim();
+    const customerRecipient = (order.customerEmail ?? "").trim().toLowerCase();
+    const fromName = process.env.SMTP_FROM_NAME || settings.storeName;
+    const fromEmail = process.env.SMTP_FROM_EMAIL as string;
+
+    const transporter = getTransporter();
+    const sendTasks: Promise<unknown>[] = [];
+
+    // 1. Send notification to store admin / support email
+    if (adminRecipient) {
+      sendTasks.push(
+        transporter.sendMail({
+          from: { name: fromName, address: fromEmail },
+          to: adminRecipient,
+          subject: `New order ${order.orderNumber} — ${formatPrice(order.total)} (${settings.storeName})`,
+          html: buildOrderEmailHtml(order, settings.storeName),
+          text: buildOrderEmailText(order, settings.storeName),
+        }).then(() => {
+          console.log(`[mail] Admin order notification sent for ${order.orderNumber} → ${adminRecipient}`);
+        }).catch((err) => {
+          console.error(`[mail] Failed to send admin notification for ${order.orderNumber}:`, err);
+        })
+      );
+    } else {
       console.warn(
         `[mail] No support email set; skipping admin notification for ${order.orderNumber}.`,
       );
-      return;
     }
 
-    await getTransporter().sendMail({
-      from: {
-        name: process.env.SMTP_FROM_NAME || settings.storeName,
-        address: process.env.SMTP_FROM_EMAIL as string,
-      },
-      to: recipient,
-      subject: `New order ${order.orderNumber} — ${formatPrice(order.total)} (${settings.storeName})`,
-      html: buildOrderEmailHtml(order, settings.storeName),
-      text: buildOrderEmailText(order, settings.storeName),
-    });
+    // 2. Send confirmation email to customer
+    if (customerRecipient && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerRecipient)) {
+      sendTasks.push(
+        transporter.sendMail({
+          from: { name: fromName, address: fromEmail },
+          to: customerRecipient,
+          subject: `Order Confirmation — ${order.orderNumber} (${settings.storeName})`,
+          html: buildCustomerOrderEmailHtml(order, settings.storeName),
+          text: buildCustomerOrderEmailText(order, settings.storeName),
+        }).then(() => {
+          console.log(`[mail] Customer order confirmation sent for ${order.orderNumber} → ${customerRecipient}`);
+        }).catch((err) => {
+          console.error(`[mail] Failed to send customer confirmation for ${order.orderNumber}:`, err);
+        })
+      );
+    }
 
-    console.log(
-      `[mail] Admin order notification sent for ${order.orderNumber} → ${recipient}`,
-    );
+    await Promise.allSettled(sendTasks);
   } catch (error) {
-    console.error("[mail] Failed to send admin order notification:", error);
+    console.error("[mail] Failed to process order notification mail:", error);
   }
 }
 

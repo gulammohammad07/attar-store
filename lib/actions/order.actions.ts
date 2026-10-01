@@ -202,37 +202,42 @@ export async function createOrder(
         firstItemName: resolvedItems[0].product.name,
       };
 
-      void sendNewOrderNotificationMail({
-        orderNumber: order.orderNumber,
-        createdAt: new Date(),
-        customerName,
-        customerEmail,
-        customerPhone,
-        street,
-        city,
-        state,
-        pincode,
-        country,
-        paymentMethod: "COD",
-        paymentStatus: "PENDING",
-        status: "PENDING",
-        subtotal,
-        shippingFee,
-        discountAmount: coupon.discount,
-        couponCode: coupon.code ?? null,
-        occasion,
-        total,
-        items: resolvedItems.map(({ product, quantity }) => ({
-          productName: product.name,
-          quantity,
-          unitPrice: product.salePrice ?? product.price,
-          lineTotal: (product.salePrice ?? product.price) * quantity,
-        })),
-      });
       const { sendOrderWhatsappNotification } = await import(
         "@/lib/services/whatsapp.service"
       );
-      void sendOrderWhatsappNotification(whatsappData);
+
+      // In Vercel serverless, unawaited promises get frozen/killed immediately upon returning.
+      // Awaiting Promise.allSettled ensures both finish without blocking order success if an error occurs.
+      await Promise.allSettled([
+        sendNewOrderNotificationMail({
+          orderNumber: order.orderNumber,
+          createdAt: new Date(),
+          customerName,
+          customerEmail,
+          customerPhone,
+          street,
+          city,
+          state,
+          pincode,
+          country,
+          paymentMethod: "COD",
+          paymentStatus: "PENDING",
+          status: "PENDING",
+          subtotal,
+          shippingFee,
+          discountAmount: coupon.discount,
+          couponCode: coupon.code ?? null,
+          occasion,
+          total,
+          items: resolvedItems.map(({ product, quantity }) => ({
+            productName: product.name,
+            quantity,
+            unitPrice: product.salePrice ?? product.price,
+            lineTotal: (product.salePrice ?? product.price) * quantity,
+          })),
+        }),
+        sendOrderWhatsappNotification(whatsappData),
+      ]);
     }
 
     return { success: true, orderId: order.id, orderNumber: order.orderNumber };

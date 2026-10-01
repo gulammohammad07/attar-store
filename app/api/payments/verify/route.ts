@@ -19,20 +19,23 @@ export async function POST(request: Request) {
         const fullOrder = await prisma.order.findUnique({ where: { id: order.id }, include: { items: { select: { productName: true, quantity: true, unitPrice: true, lineTotal: true } } } });
         if (fullOrder) {
           const { sendNewOrderNotificationMail } = await import("@/lib/services/order-mail.service");
-          void sendNewOrderNotificationMail(fullOrder);
           const { sendOrderWhatsappNotification } = await import("@/lib/services/whatsapp.service");
-          void sendOrderWhatsappNotification({
-            orderNumber: fullOrder.orderNumber,
-            customerName: fullOrder.customerName,
-            customerPhone: fullOrder.customerPhone,
-            city: fullOrder.city,
-            state: fullOrder.state,
-            paymentMethod: fullOrder.paymentMethod,
-            paymentStatus: fullOrder.paymentStatus,
-            total: fullOrder.total,
-            itemCount: fullOrder.items.length,
-            firstItemName: fullOrder.items[0]?.productName ?? "",
-          });
+
+          await Promise.allSettled([
+            sendNewOrderNotificationMail(fullOrder),
+            sendOrderWhatsappNotification({
+              orderNumber: fullOrder.orderNumber,
+              customerName: fullOrder.customerName,
+              customerPhone: fullOrder.customerPhone,
+              city: fullOrder.city,
+              state: fullOrder.state,
+              paymentMethod: fullOrder.paymentMethod,
+              paymentStatus: fullOrder.paymentStatus,
+              total: fullOrder.total,
+              itemCount: fullOrder.items.length,
+              firstItemName: fullOrder.items[0]?.productName ?? "",
+            }),
+          ]);
         }
       } catch (error) { console.error("Failed to send admin order notification:", error); }
     }
