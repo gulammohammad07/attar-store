@@ -35,15 +35,21 @@ export default function ProductDetails({
   allProducts,
   freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
   initialReviewAggregate = null,
+<<<<<<< HEAD
   deliveryDate = null,
+=======
+>>>>>>> 85be7ab0cb56fdb0dc7ca75e778c00253357a111
 }: {
   product: Product;
   related: Product[];
   allProducts: Product[];
   freeShippingThreshold?: number;
   initialReviewAggregate?: ReviewAggregate | null;
+<<<<<<< HEAD
   // Server-formatted (fixed timezone) so SSR and hydration always agree.
   deliveryDate?: string | null;
+=======
+>>>>>>> 85be7ab0cb56fdb0dc7ca75e778c00253357a111
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -63,6 +69,15 @@ export default function ProductDetails({
     initialReviewAggregate,
   );
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    if (initialReviewAggregate) {
+      setReviewAgg(initialReviewAggregate);
+    }
+  }, [initialReviewAggregate]);
+
+>>>>>>> 85be7ab0cb56fdb0dc7ca75e778c00253357a111
   const displayRating =
     reviewAgg && reviewAgg.count > 0 ? reviewAgg.average : product.rating;
   const displayReviewCount = reviewAgg ? reviewAgg.count : product.reviewCount;
