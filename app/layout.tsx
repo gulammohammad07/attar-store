@@ -53,9 +53,11 @@ export async function generateMetadata(): Promise<Metadata> {
     ...metadataDefaults,
     title: { default: title, template: `%s | ${title}` },
     openGraph: { ...metadataDefaults.openGraph, title },
+    // Only override the file-based icon (app/icon.svg) when a custom logo is
+    // configured — an empty `icons` object otherwise hides the default favicon.
     icons: settings.navbarLogoUrl
       ? { icon: [{ url: settings.navbarLogoUrl }], apple: [{ url: settings.navbarLogoUrl }] }
-      : { icon: [] },
+      : undefined,
   };
 }
 

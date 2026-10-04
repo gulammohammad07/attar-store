@@ -207,6 +207,19 @@ describe("review round trip", () => {
       name: "Test Reviewer",
     });
   });
+
+  it("allows guests to submit reviews with custom name and email", async () => {
+    const result = await submitProductReview({
+      productId,
+      guestName: "Fatima Al-Sayed",
+      guestEmail: "fatima@example.com",
+      rating: 5,
+      comment: "Incredible projection and royal rose scent.",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.aggregate!.reviews.some((r) => r.name === "Fatima Al-Sayed")).toBe(true);
+  });
 });
 
 const distributionCases: Array<{

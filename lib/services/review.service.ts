@@ -55,6 +55,27 @@ async function getPurchasedUserIds(
   return new Set(purchasedItems.map((item) => item.order.userId));
 }
 
+/** Customer emails who ordered this product — verifies guest buyer reviews. */
+async function getPurchasedEmails(
+  productId: string,
+  emails: string[],
+): Promise<Set<string>> {
+  const cleanEmails = emails.map((e) => e.trim().toLowerCase()).filter(Boolean);
+  if (cleanEmails.length === 0) return new Set();
+  const purchasedItems = await prisma.orderItem.findMany({
+    where: {
+      productId,
+      order: {
+        customerEmail: { in: cleanEmails, mode: "insensitive" },
+      },
+    },
+    select: { order: { select: { customerEmail: true } } },
+  });
+  return new Set(
+    purchasedItems.map((item) => item.order.customerEmail.toLowerCase()),
+  );
+}
+
 function toAggregate(items: ReviewItem[]): ReviewAggregate {
   const count = items.length;
   const verifiedCount = items.filter((item) => item.verified).length;
@@ -82,14 +103,22 @@ export async function getProductReviewAggregate(
     where: { productId },
     orderBy: { createdAt: "desc" },
     include: {
-      user: { select: { id: true, name: true } },
+      user: { select: { id: true, name: true, email: true } },
     },
   });
 
-  const purchasedUserIds = await getPurchasedUserIds(
-    productId,
-    reviews.map((review) => review.userId),
-  );
+  const userIds = reviews
+    .map((review) => review.userId)
+    .filter((id): id is string => Boolean(id));
+
+  const guestEmails = reviews
+    .map((review) => review.guestEmail)
+    .filter((e): e is string => Boolean(e));
+
+  const [purchasedUserIds, purchasedEmails] = await Promise.all([
+    getPurchasedUserIds(productId, userIds),
+    getPurchasedEmails(productId, guestEmails),
+  ]);
 
   return toAggregate(
     reviews.map((review) => ({
@@ -97,18 +126,28 @@ export async function getProductReviewAggregate(
       rating: review.rating,
       comment: review.comment,
       createdAt: review.createdAt.toISOString(),
-      name: review.user.name,
-      verified: purchasedUserIds.has(review.userId),
+      name: review.user?.name || review.guestName || "Customer",
+      verified: Boolean(
+        (review.userId && purchasedUserIds.has(review.userId)) ||
+          (review.guestEmail &&
+            purchasedEmails.has(review.guestEmail.toLowerCase())),
+      ),
     })),
   );
 }
 
-export async function submitProductReview(input: {
+export type SubmitProductReviewInput = {
   productId: string;
-  userId: string;
+  userId?: string | null;
+  guestName?: string | null;
+  guestEmail?: string | null;
   rating: number;
   comment: string;
-}): Promise<ReviewSubmitResult> {
+};
+
+export async function submitProductReview(
+  input: SubmitProductReviewInput,
+): Promise<ReviewSubmitResult> {
   const product = await prisma.product.findUnique({
     where: { id: input.productId },
     select: { id: true },
@@ -117,8 +156,8 @@ export async function submitProductReview(input: {
     return { success: false, message: "Product not found." };
   }
 
-  const rating = Math.min(5, Math.max(1, Math.round(input.rating)));
-  const comment = input.comment.trim().slice(0, 1000);
+  const rating = Math.min(5, Math.max(1, Math.round(input.rating || 5)));
+  const comment = (input.comment || "").trim().slice(0, 1000);
   if (comment.length < 5) {
     return {
       success: false,
@@ -127,20 +166,51 @@ export async function submitProductReview(input: {
   }
 
   try {
-    // One review per user per product — resubmitting updates it.
-    await prisma.review.upsert({
-      where: {
-        productId_userId: { productId: input.productId, userId: input.userId },
-      },
-      update: { rating, comment },
-      create: {
-        productId: input.productId,
-        userId: input.userId,
-        rating,
-        comment,
-      },
-    });
-  } catch {
+    if (input.userId) {
+      // One review per user per product — resubmitting updates it.
+      const existing = await prisma.review.findFirst({
+        where: { productId: input.productId, userId: input.userId },
+      });
+
+      if (existing) {
+        await prisma.review.update({
+          where: { id: existing.id },
+          data: { rating, comment },
+        });
+      } else {
+        await prisma.review.create({
+          data: {
+            productId: input.productId,
+            userId: input.userId,
+            rating,
+            comment,
+          },
+        });
+      }
+    } else {
+      const guestName = (input.guestName || "").trim().slice(0, 80);
+      if (!guestName || guestName.length < 2) {
+        return {
+          success: false,
+          message: "Please enter your name (at least 2 characters).",
+        };
+      }
+      const guestEmail = input.guestEmail
+        ? input.guestEmail.trim().slice(0, 120)
+        : null;
+
+      await prisma.review.create({
+        data: {
+          productId: input.productId,
+          guestName,
+          guestEmail,
+          rating,
+          comment,
+        },
+      });
+    }
+  } catch (err) {
+    console.error("Failed to save review:", err);
     return {
       success: false,
       message: "We couldn't save your review. Please try again.",

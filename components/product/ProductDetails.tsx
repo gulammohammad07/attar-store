@@ -25,7 +25,7 @@ import ProductViewer from "@/components/product/ProductViewer";
 import NotesPyramid from "@/components/product/NotesPyramid";
 import ProductReviews from "@/components/product/ProductReviews";
 import ProductCarousel from "@/components/product/ProductCarousel";
-import type { ReviewAggregate } from "@/lib/actions/review.actions";
+import type { ReviewAggregate } from "@/lib/services/review.service";
 
 const tabs = ["Description", "Fragrance Notes", "Reviews", "Shipping"] as const;
 
@@ -34,11 +34,16 @@ export default function ProductDetails({
   related,
   allProducts,
   freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
+  initialReviewAggregate = null,
+  deliveryDate = null,
 }: {
   product: Product;
   related: Product[];
   allProducts: Product[];
   freeShippingThreshold?: number;
+  initialReviewAggregate?: ReviewAggregate | null;
+  // Server-formatted (fixed timezone) so SSR and hydration always agree.
+  deliveryDate?: string | null;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -54,9 +59,13 @@ export default function ProductDetails({
   // Single owner of review state: the header count, the summary average and
   // the distribution bars all render from this aggregate, which the Reviews
   // tab refreshes after every load or submit.
-  const [reviewAgg, setReviewAgg] = useState<ReviewAggregate | null>(null);
-  const displayRating = reviewAgg?.average ?? product.rating;
-  const displayReviewCount = reviewAgg?.count ?? product.reviewCount;
+  const [reviewAgg, setReviewAgg] = useState<ReviewAggregate | null>(
+    initialReviewAggregate,
+  );
+
+  const displayRating =
+    reviewAgg && reviewAgg.count > 0 ? reviewAgg.average : product.rating;
+  const displayReviewCount = reviewAgg ? reviewAgg.count : product.reviewCount;
 
   const wished = isWishlisted(product.id);
   const price = useMemo(() => {
@@ -110,15 +119,8 @@ export default function ProductDetails({
     toast.success(`${product.name} added to bag`);
   };
 
-  const deliveryDate = useMemo(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 3);
-    return d.toLocaleDateString("en-IN", {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-    });
-  }, []);
+  // Server-formatted estimate (pinned timezone) — pure on the client.
+  const deliveryEstimate = deliveryDate ?? "";
 
   return (
     <div className="min-h-screen bg-[#F8FCFE] pb-20">
@@ -171,7 +173,15 @@ export default function ProductDetails({
             </h1>
 
             {/* Rating */}
-            <div className="mt-4 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("Reviews");
+                document.getElementById("pdp-reviews-tab")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="mt-4 flex items-center gap-2 group cursor-pointer text-left transition-transform hover:scale-[1.01]"
+              aria-label={`View ${displayReviewCount} reviews`}
+            >
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -188,10 +198,10 @@ export default function ProductDetails({
               <span className="text-sm font-medium text-[#174A63]">
                 {displayRating}
               </span>
-              <span className="text-sm text-[#174A63]/45">
-                ({displayReviewCount} reviews)
+              <span className="text-sm text-[#174A63]/50 group-hover:text-gold transition-colors underline-offset-4 group-hover:underline">
+                ({displayReviewCount} {displayReviewCount === 1 ? "review" : "reviews"})
               </span>
-            </div>
+            </button>
 
             {/* Price */}
             <div className="mt-6 flex items-center gap-3">
@@ -365,7 +375,7 @@ export default function ProductDetails({
                   Free Delivery
                 </p>
                 <p className="mt-0.5 text-[11px] text-[#174A63]/45">
-                  Arrives by {deliveryDate}
+                  Arrives by {deliveryEstimate}
                 </p>
               </div>
 
@@ -393,7 +403,7 @@ export default function ProductDetails({
         </div>
 
         {/* Tabs */}
-        <div className="mt-20">
+        <div id="pdp-reviews-tab" className="mt-20 scroll-mt-24">
           <div className="flex gap-8 overflow-x-auto border-b border-[#174A63]/15 [scrollbar-width:none]">
             {tabs.map((tab) => (
               <button
