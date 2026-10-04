@@ -34,11 +34,13 @@ export default function ProductDetails({
   related,
   allProducts,
   freeShippingThreshold = DEFAULT_FREE_SHIPPING_THRESHOLD,
+  initialReviewAggregate = null,
 }: {
   product: Product;
   related: Product[];
   allProducts: Product[];
   freeShippingThreshold?: number;
+  initialReviewAggregate?: ReviewAggregate | null;
 }) {
   const { isWishlisted, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
@@ -54,9 +56,19 @@ export default function ProductDetails({
   // Single owner of review state: the header count, the summary average and
   // the distribution bars all render from this aggregate, which the Reviews
   // tab refreshes after every load or submit.
-  const [reviewAgg, setReviewAgg] = useState<ReviewAggregate | null>(null);
-  const displayRating = reviewAgg?.average ?? product.rating;
-  const displayReviewCount = reviewAgg?.count ?? product.reviewCount;
+  const [reviewAgg, setReviewAgg] = useState<ReviewAggregate | null>(
+    initialReviewAggregate,
+  );
+
+  useEffect(() => {
+    if (initialReviewAggregate) {
+      setReviewAgg(initialReviewAggregate);
+    }
+  }, [initialReviewAggregate]);
+
+  const displayRating =
+    reviewAgg && reviewAgg.count > 0 ? reviewAgg.average : product.rating;
+  const displayReviewCount = reviewAgg ? reviewAgg.count : product.reviewCount;
 
   const wished = isWishlisted(product.id);
   const price = useMemo(() => {
@@ -171,7 +183,15 @@ export default function ProductDetails({
             </h1>
 
             {/* Rating */}
-            <div className="mt-4 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setActiveTab("Reviews");
+                document.getElementById("pdp-reviews-tab")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="mt-4 flex items-center gap-2 group cursor-pointer text-left transition-transform hover:scale-[1.01]"
+              aria-label={`View ${displayReviewCount} reviews`}
+            >
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
@@ -188,10 +208,10 @@ export default function ProductDetails({
               <span className="text-sm font-medium text-[#174A63]">
                 {displayRating}
               </span>
-              <span className="text-sm text-[#174A63]/45">
-                ({displayReviewCount} reviews)
+              <span className="text-sm text-[#174A63]/50 group-hover:text-gold transition-colors underline-offset-4 group-hover:underline">
+                ({displayReviewCount} {displayReviewCount === 1 ? "review" : "reviews"})
               </span>
-            </div>
+            </button>
 
             {/* Price */}
             <div className="mt-6 flex items-center gap-3">
@@ -393,7 +413,7 @@ export default function ProductDetails({
         </div>
 
         {/* Tabs */}
-        <div className="mt-20">
+        <div id="pdp-reviews-tab" className="mt-20 scroll-mt-24">
           <div className="flex gap-8 overflow-x-auto border-b border-[#174A63]/15 [scrollbar-width:none]">
             {tabs.map((tab) => (
               <button

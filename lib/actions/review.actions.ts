@@ -23,15 +23,16 @@ export async function submitReviewAction(input: {
   productId: string;
   rating: number;
   comment: string;
+  guestName?: string;
+  guestEmail?: string;
 }): Promise<ReviewSubmitResult> {
   const user = await getCurrentUser();
-  if (!user) {
-    return { success: false, message: "Please sign in to leave a review." };
-  }
 
   const result = await submitProductReview({
     productId: input.productId,
-    userId: user.id,
+    userId: user?.id ?? null,
+    guestName: user ? user.name : input.guestName,
+    guestEmail: user ? user.email : input.guestEmail,
     rating: input.rating,
     comment: input.comment,
   });

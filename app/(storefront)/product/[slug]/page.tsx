@@ -5,6 +5,7 @@ import {
   getStorefrontProducts,
 } from "@/lib/services/storefront-data";
 import { getStoreSettings } from "@/lib/services/settings.service";
+import { getProductReviewAggregate } from "@/lib/services/review.service";
 import ProductDetails from "@/components/product/ProductDetails";
 
 export const dynamic = "force-dynamic";
@@ -38,8 +39,11 @@ export default async function ProductPage({
   const product = await getStorefrontProductBySlug(slug);
   if (!product) notFound();
 
-  const allProducts = await getStorefrontProducts();
-  const settings = await getStoreSettings();
+  const [allProducts, settings, initialReviewAggregate] = await Promise.all([
+    getStorefrontProducts(),
+    getStoreSettings(),
+    getProductReviewAggregate(product.id),
+  ]);
 
   const related = allProducts
     .filter(
@@ -56,6 +60,7 @@ export default async function ProductPage({
       related={related}
       allProducts={allProducts}
       freeShippingThreshold={settings.freeShippingThreshold}
+      initialReviewAggregate={initialReviewAggregate}
     />
   );
 }
