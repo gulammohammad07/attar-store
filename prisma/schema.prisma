@@ -101,6 +101,22 @@ model Banner {
   updatedAt           DateTime  @updatedAt
 }
 
+model Announcement {
+  id            String   @id @default(cuid())
+  badge         String?
+  title         String
+  description   String?
+  imageUrl      String?
+  imagePublicId String?
+  linkUrl       String?
+  isActive      Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("announcements")
+}
+
 model Occasion {
   id        String    @id @default(cuid())
   name      String

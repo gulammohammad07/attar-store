@@ -193,6 +193,33 @@ export async function getStorefrontProductBySlug(
   return undefined;
 }
 
+export type StorefrontAnnouncement = {
+  id: string;
+  badge: string | null;
+  title: string;
+  description: string | null;
+  imageUrl: string | null;
+  linkUrl: string | null;
+};
+
+/** Active announcements for the homepage "Offers & New Launches" section. */
+export async function getStorefrontAnnouncements(): Promise<StorefrontAnnouncement[]> {
+  const rows = await prisma.announcement.findMany({
+    where: { isActive: true },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+    take: 6,
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    badge: row.badge,
+    title: row.title,
+    description: row.description,
+    imageUrl: row.imageUrl,
+    linkUrl: row.linkUrl,
+  }));
+}
+
 export async function getStorefrontRelated(
   product: Product,
   count = 4,

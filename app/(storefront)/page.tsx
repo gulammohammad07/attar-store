@@ -11,7 +11,9 @@ const HomeSections = dynamic(() => import("@/components/landing/HomeSections"), 
   ),
 });
 
+import OffersSection from "@/components/landing/OffersSection";
 import {
+  getStorefrontAnnouncements,
   getStorefrontBanners,
   getStorefrontCategories,
   getStorefrontProducts,
@@ -21,12 +23,14 @@ import { getStoreSettings } from "@/lib/services/settings.service";
 export const revalidate = 60;
 
 export default async function Home() {
-  const [products, categories, banners, settings] = await Promise.all([
-    getStorefrontProducts(),
-    getStorefrontCategories(),
-    getStorefrontBanners(),
-    getStoreSettings(),
-  ]);
+  const [products, categories, banners, announcements, settings] =
+    await Promise.all([
+      getStorefrontProducts(),
+      getStorefrontCategories(),
+      getStorefrontBanners(),
+      getStorefrontAnnouncements(),
+      getStoreSettings(),
+    ]);
 
   const heroBanner = banners.find((b) => b.section === "hero");
 
@@ -34,6 +38,7 @@ export default async function Home() {
     <>
       <Hero banner={heroBanner} />
       <Marquee freeShippingThreshold={settings.freeShippingThreshold} />
+      <OffersSection announcements={announcements} />
       <HomeSections products={products} categories={categories} />
     </>
   );

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, X, Tags, Users, Ticket, ExternalLink } from "lucide-react";
+import { LayoutDashboard, FolderTree, Package, ShoppingCart, Settings, Store, Image as ImageIcon, Gift, LogOut, X, Tags, Users, Ticket, Megaphone, ExternalLink } from "lucide-react";
 import { signOutAction } from "@/lib/actions/auth.actions";
 import { useAuth } from "@/lib/store/auth-context";
 import { toast } from "sonner";
@@ -37,6 +37,11 @@ const menuItems = [
     title: "Banners",
     href: "/admin/banners",
     icon: ImageIcon,
+  },
+  {
+    title: "Offers & Launches",
+    href: "/admin/announcements",
+    icon: Megaphone,
   },
   {
     title: "Orders",
