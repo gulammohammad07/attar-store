@@ -76,10 +76,7 @@ export default async function ProductPage({
       allProducts={allProducts}
       freeShippingThreshold={settings.freeShippingThreshold}
       initialReviewAggregate={initialReviewAggregate}
-<<<<<<< HEAD
       deliveryDate={deliveryDate}
-=======
->>>>>>> 85be7ab0cb56fdb0dc7ca75e778c00253357a111
     />
   );
 }
