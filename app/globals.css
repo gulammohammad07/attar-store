@@ -260,10 +260,13 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    scroll-behavior: smooth;
+    /* No global scroll-behavior here: Next.js App Router resets scroll on
+       route changes, and CSS smooth scrolling turns that reset into an
+       interruptible animation that leaves pages stranded mid-scroll. Smooth
+       behavior is applied explicitly by the code that needs it. */
   }
   html {
-    @apply font-sans scroll-smooth;
+    @apply font-sans;
   }
   ::selection {
     background: var(--gold);
